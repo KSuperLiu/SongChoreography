@@ -1,0 +1,7 @@
+Cipher — Kevin MacLeod (incompetech.com)
+Licensed under Creative Commons: By Attribution 4.0 License
+https://creativecommons.org/licenses/by/4.0/
+Source: https://incompetech.com/music/royalty-free/index.html?Search=Search&isrc=USUAN1100844
+Changes: excerpt 15–55 seconds, PCM WAV conversion; 0.75x and 0.5x pitch-preserving time-stretch versions.
+Original SHA-256: d3d0614535a61d748e2fd8d5117fc4d781022a7624794802a2462d8af3fdd522
+Retrieved: 2026-11-02

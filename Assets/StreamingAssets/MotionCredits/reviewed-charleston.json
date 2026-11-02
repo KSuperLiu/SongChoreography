@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "motions": [
+    {
+      "id": "charleston-review-93_03",
+      "sha256": "769797e00d65c3736b304ad2e4fd40283d5ecfd9c7c28aa87677a8440d1b6378",
+      "name": "轻踢换重 · 右",
+      "energy": 0.62,
+      "reviewer": "Codex: technical checks and rendered-frame visual review, 2026-11-02",
+      "reviewNotes": "2026-11-02: Codex automated 60 Hz full-loop review and 120 Hz transition measurements on GTX 1050 Ti; 88/88 candidate transition tests passed, only the 20 explicitly retained directed connections were visually inspected on female and male characters (40 six-frame boards). No obvious flips, floor penetration or limb intersections in inspected frames. CMU subject 93 Charleston source step patterns; practice adaptation with cycle editing, symmetric smoothing, stabilized ankle, authored arm counter-swing and eight-count retiming. Four source cuts plus four mirrored variants. Technical and Codex visual review; not certification by a dance teacher, not New Jazz. Evidence: TestResults/CharlestonReview and Docs/CHARLESTON_REVIEW.md.",
+      "safeNext": [
+        "charleston-review-93_03",
+        "charleston-review-93_05",
+        "charleston-review-93_04-mirror"
+      ]
+    },
+    {
+      "id": "charleston-review-93_03-mirror",
+      "sha256": "6582eeb91ddfd2da51cba1163dc07ee37ece46b501f28702bfe1409cfbae83a6",
+      "name": "轻踢换重 · 左",
+      "energy": 0.62,
+      "reviewer": "Codex: technical checks and rendered-frame visual review, 2026-11-02",
+      "reviewNotes": "2026-11-02: Codex automated 60 Hz full-loop review and 120 Hz transition measurements on GTX 1050 Ti; 88/88 candidate transition tests passed, only the 20 explicitly retained directed connections were visually inspected on female and male characters (40 six-frame boards). No obvious flips, floor penetration or limb intersections in inspected frames. CMU subject 93 Charleston source step patterns; practice adaptation with cycle editing, symmetric smoothing, stabilized ankle, authored arm counter-swing and eight-count retiming. Four source cuts plus four mirrored variants. Technical and Codex visual review; not certification by a dance teacher, not New Jazz. Evidence: TestResults/CharlestonReview and Docs/CHARLESTON_REVIEW.md.",
+      "safeNext": [
+        "charleston-review-93_03-mirror",
+        "charleston-review-93_05-mirror"
+      ]
+    },
+    {
+      "id": "charleston-review-93_04",
+      "sha256": "e9523e5efba21bb8f664ec4ab1c779b3dd7d714301ce4b2c92ad5f69c18b2701",
+      "name": "并步律动 · 右",
+      "energy": 0.4,
+      "reviewer": "Codex: technical checks and rendered-frame visual review, 2026-11-02",
+      "reviewNotes": "2026-11-02: Codex automated 60 Hz full-loop review and 120 Hz transition measurements on GTX 1050 Ti; 88/88 candidate transition tests passed, only the 20 explicitly retained directed connections were visually inspected on female and male characters (40 six-frame boards). No obvious flips, floor penetration or limb intersections in inspected frames. CMU subject 93 Charleston source step patterns; practice adaptation with cycle editing, symmetric smoothing, stabilized ankle, authored arm counter-swing and eight-count retiming. Four source cuts plus four mirrored variants. Technical and Codex visual review; not certification by a dance teacher, not New Jazz. Evidence: TestResults/CharlestonReview and Docs/CHARLESTON_REVIEW.md.",
+      "safeNext": [
+        "charleston-review-93_04",
+        "charleston-review-93_03-mirror",
+        "charleston-review-93_05-mirror"
+      ]
+    },
+    {
+      "id": "charleston-review-93_04-mirror",
+      "sha256": "fbd29bbfe5f8fa5d989a5d322f14a7eb3def8671d9032459c0d0ad0a528c99e6",
+      "name": "并步律动 · 左",
+      "energy": 0.4,
+      "reviewer": "Codex: technical checks and rendered-frame visual review, 2026-11-02",
+      "reviewNotes": "2026-11-02: Codex automated 60 Hz full-loop review and 120 Hz transition measurements on GTX 1050 Ti; 88/88 candidate transition tests passed, only the 20 explicitly retained directed connections were visually inspected on female and male characters (40 six-frame boards). No obvious flips, floor penetration or limb intersections in inspected frames. CMU subject 93 Charleston source step patterns; practice adaptation with cycle editing, symmetric smoothing, stabilized ankle, authored arm counter-swing and eight-count retiming. Four source cuts plus four mirrored variants. Technical and Codex visual review; not certification by a dance teacher, not New Jazz. Evidence: TestResults/CharlestonReview and Docs/CHARLESTON_REVIEW.md.",
+      "safeNext": [
+        "charleston-review-93_04-mirror",
+        "charleston-review-93_08-mirror",
+        "charleston-review-93_04"
+      ]
+    },
+    {
+      "id": "charleston-review-93_05",
+      "sha256": "0927abbabdf09eb02520092d7050a87e8e1d96821d57cff42e481998abbf4828",
+      "name": "抬膝点步 · 右",
+      "energy": 0.55,
+      "reviewer": "Codex: technical checks and rendered-frame visual review, 2026-11-02",
+      "reviewNotes": "2026-11-02: Codex automated 60 Hz full-loop review and 120 Hz transition measurements on GTX 1050 Ti; 88/88 candidate transition tests passed, only the 20 explicitly retained directed connections were visually inspected on female and male characters (40 six-frame boards). No obvious flips, floor penetration or limb intersections in inspected frames. CMU subject 93 Charleston source step patterns; practice adaptation with cycle editing, symmetric smoothing, stabilized ankle, authored arm counter-swing and eight-count retiming. Four source cuts plus four mirrored variants. Technical and Codex visual review; not certification by a dance teacher, not New Jazz. Evidence: TestResults/CharlestonReview and Docs/CHARLESTON_REVIEW.md.",
+      "safeNext": [
+        "charleston-review-93_05",
+        "charleston-review-93_04-mirror"
+      ]
+    },
+    {
+      "id": "charleston-review-93_05-mirror",
+      "sha256": "62856620ad00ccf5235b54336aa6ff636fb7d92c132a72950dd681ae48edd91d",
+      "name": "抬膝点步 · 左",
+      "energy": 0.55,
+      "reviewer": "Codex: technical checks and rendered-frame visual review, 2026-11-02",
+      "reviewNotes": "2026-11-02: Codex automated 60 Hz full-loop review and 120 Hz transition measurements on GTX 1050 Ti; 88/88 candidate transition tests passed, only the 20 explicitly retained directed connections were visually inspected on female and male characters (40 six-frame boards). No obvious flips, floor penetration or limb intersections in inspected frames. CMU subject 93 Charleston source step patterns; practice adaptation with cycle editing, symmetric smoothing, stabilized ankle, authored arm counter-swing and eight-count retiming. Four source cuts plus four mirrored variants. Technical and Codex visual review; not certification by a dance teacher, not New Jazz. Evidence: TestResults/CharlestonReview and Docs/CHARLESTON_REVIEW.md.",
+      "safeNext": [
+        "charleston-review-93_05-mirror",
+        "charleston-review-93_08",
+        "charleston-review-93_03"
+      ]
+    },
+    {
+      "id": "charleston-review-93_08",
+      "sha256": "ff55a0dd73d1ee25ea312eedc356cba4560c142aabadb05c481fc1ad615978ab",
+      "name": "交叉弹步 · 右",
+      "energy": 0.72,
+      "reviewer": "Codex: technical checks and rendered-frame visual review, 2026-11-02",
+      "reviewNotes": "2026-11-02: Codex automated 60 Hz full-loop review and 120 Hz transition measurements on GTX 1050 Ti; 88/88 candidate transition tests passed, only the 20 explicitly retained directed connections were visually inspected on female and male characters (40 six-frame boards). No obvious flips, floor penetration or limb intersections in inspected frames. CMU subject 93 Charleston source step patterns; practice adaptation with cycle editing, symmetric smoothing, stabilized ankle, authored arm counter-swing and eight-count retiming. Four source cuts plus four mirrored variants. Technical and Codex visual review; not certification by a dance teacher, not New Jazz. Evidence: TestResults/CharlestonReview and Docs/CHARLESTON_REVIEW.md.",
+      "safeNext": [
+        "charleston-review-93_08",
+        "charleston-review-93_03"
+      ]
+    },
+    {
+      "id": "charleston-review-93_08-mirror",
+      "sha256": "8d2829cd41a945348d01c0443101192bc477cc17060e3ff3fcc767ffd15ec3da",
+      "name": "交叉弹步 · 左",
+      "energy": 0.72,
+      "reviewer": "Codex: technical checks and rendered-frame visual review, 2026-11-02",
+      "reviewNotes": "2026-11-02: Codex automated 60 Hz full-loop review and 120 Hz transition measurements on GTX 1050 Ti; 88/88 candidate transition tests passed, only the 20 explicitly retained directed connections were visually inspected on female and male characters (40 six-frame boards). No obvious flips, floor penetration or limb intersections in inspected frames. CMU subject 93 Charleston source step patterns; practice adaptation with cycle editing, symmetric smoothing, stabilized ankle, authored arm counter-swing and eight-count retiming. Four source cuts plus four mirrored variants. Technical and Codex visual review; not certification by a dance teacher, not New Jazz. Evidence: TestResults/CharlestonReview and Docs/CHARLESTON_REVIEW.md.",
+      "safeNext": [
+        "charleston-review-93_08-mirror",
+        "charleston-review-93_04"
+      ]
+    }
+  ]
+}

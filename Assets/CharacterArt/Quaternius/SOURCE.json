@@ -1,0 +1,64 @@
+{
+  "author": "Quaternius",
+  "source": "https://quaternius.com/packs/universalbasecharacters.html",
+  "download": "https://quaternius.itch.io/universal-base-characters",
+  "license": "CC0-1.0",
+  "retrieved": "2026-11-02",
+  "files": [
+    {
+      "member": "Universal Base Characters[Standard]/Base Characters/Unity/Superhero_Female_FullBody.fbx",
+      "file": "Superhero_Female_FullBody.fbx",
+      "sha256": "0727e7b236eeea4115531e07aeb2bb7690c1a58155f743bbf54282944fb97ea9"
+    },
+    {
+      "member": "Universal Base Characters[Standard]/Base Characters/Unity/Superhero_Male_FullBody.fbx",
+      "file": "Superhero_Male_FullBody.fbx",
+      "sha256": "79344418d754a59730b79d1874752e9592143db34abe8adf138fa9a92a4768e9"
+    },
+    {
+      "member": "Universal Base Characters[Standard]/Hairstyles/Origin at 0/FBX (Unity)/Eyebrows_Female.fbx",
+      "file": "Eyebrows_Female.fbx",
+      "sha256": "fccb1043cfa5fd3c00c228496702a2b2d6fe8848364b5292dd1f1d52045c35da"
+    },
+    {
+      "member": "Universal Base Characters[Standard]/Hairstyles/Origin at 0/FBX (Unity)/Eyebrows_Regular.fbx",
+      "file": "Eyebrows_Regular.fbx",
+      "sha256": "52da1303f33042b361e937e0a7a5baba09d4fcf05d92b42a07f17c1e4a29fc52"
+    },
+    {
+      "member": "Universal Base Characters[Standard]/Hairstyles/Origin at 0/FBX (Unity)/Hair_Buns.fbx",
+      "file": "Hair_Buns.fbx",
+      "sha256": "e0dc086cfc9c20eff1449461146c070b061fa8126056e7a79f900214bfe598ae"
+    },
+    {
+      "member": "Universal Base Characters[Standard]/Hairstyles/Origin at 0/FBX (Unity)/Hair_SimpleParted.fbx",
+      "file": "Hair_SimpleParted.fbx",
+      "sha256": "7612975d40a7520f5a3ca4df19685a88da37ecd3e5c7d10b198a2265baf98047"
+    },
+    {
+      "member": "Universal Base Characters[Standard]/Base Characters/Textures/T_Eye_Brown.png",
+      "file": "T_Eye_Brown.png",
+      "sha256": "d08e3356a83211bc6ca21fe3a8e39f4b5c1a3b8f85457fc2c0fb57be09935025"
+    },
+    {
+      "member": "Universal Base Characters[Standard]/Base Characters/Textures/T_Hair_1_BaseColor.png",
+      "file": "T_Hair_1_BaseColor.png",
+      "sha256": "bc7aa863bd22ab0a995cd838cceb4d3a5186ee54ee2fb0108fad85d20c057e6e"
+    },
+    {
+      "member": "Universal Base Characters[Standard]/Base Characters/Textures/T_Hair_2_BaseColor.png",
+      "file": "T_Hair_2_BaseColor.png",
+      "sha256": "f9f4f2fb3eeeefb0b6f0fdef38b0770fd6607640c1c680b8139dd76697e9f9b3"
+    },
+    {
+      "member": "Universal Base Characters[Standard]/Base Characters/Textures/T_Superhero_Female_Light_BaseColor.png",
+      "file": "T_Superhero_Female_Light_BaseColor.png",
+      "sha256": "743f811857db0b950f3ad09a0733dfa4888801ead332313ca25becea14c54f8d"
+    },
+    {
+      "member": "Universal Base Characters[Standard]/Base Characters/Textures/T_Superhero_Male_Ligh.png",
+      "file": "T_Superhero_Male_Ligh.png",
+      "sha256": "419f96dbb8811511e2d515bcdabc085ff2f219ec7b8b4e91050a84cba6888fe9"
+    }
+  ]
+}

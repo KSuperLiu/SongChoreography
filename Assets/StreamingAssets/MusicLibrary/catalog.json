@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "tracks": [
+    {
+      "id": "funkorama",
+      "title": "Funkorama",
+      "artist": "Kevin MacLeod",
+      "genre": "Funk · 律动",
+      "publishedBpm": 101,
+      "isrc": "USUAN1100474",
+      "sourceUrl": "https://incompetech.com/music/royalty-free/index.html?Search=Search&isrc=USUAN1100474",
+      "downloadUrl": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Funkorama.mp3",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "excerptStart": 15,
+      "excerptDuration": 40,
+      "sha256": "6be229815d85a0b99382b944d31098b882702c04ac7ad899e44ab7f8ba89b5ad"
+    },
+    {
+      "id": "electrodoodle",
+      "title": "Electrodoodle",
+      "artist": "Kevin MacLeod",
+      "genre": "电子 · 弹跳",
+      "publishedBpm": 120,
+      "isrc": "USUAN1200079",
+      "sourceUrl": "https://incompetech.com/music/royalty-free/index.html?Search=Search&isrc=USUAN1200079",
+      "downloadUrl": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Electrodoodle.mp3",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "excerptStart": 15,
+      "excerptDuration": 40,
+      "sha256": "75227ad153780ee0c57ae529caa7f8a891877a46596ff8800a16c90b34b6d18c"
+    },
+    {
+      "id": "cipher",
+      "title": "Cipher",
+      "artist": "Kevin MacLeod",
+      "genre": "电子 / R&B · 明快",
+      "publishedBpm": 150,
+      "isrc": "USUAN1100844",
+      "sourceUrl": "https://incompetech.com/music/royalty-free/index.html?Search=Search&isrc=USUAN1100844",
+      "downloadUrl": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Cipher2.mp3",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "excerptStart": 15,
+      "excerptDuration": 40,
+      "sha256": "d3d0614535a61d748e2fd8d5117fc4d781022a7624794802a2462d8af3fdd522"
+    }
+  ]
+}
