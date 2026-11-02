@@ -63,6 +63,8 @@ namespace SongChoreography
                 var asset=Resources.Load<TextAsset>("MotionCatalog");
                 if(!asset)throw new InvalidOperationException("动作库尚未生成，请执行 Tools / Song Choreography / Prepare Prototype。");
                 catalog=JsonUtility.FromJson<MotionCatalog>(asset.text);Choreographer.Eligible(catalog,"diagnostic");
+                var personal=Resources.Load<TextAsset>("PersonalMotionCatalog");
+                if(personal)catalog=PersonalMotionPolicy.Merge(catalog,JsonUtility.FromJson<MotionCatalog>(personal.text));
                 SetupStage();
                 characterObject=DancerCharacters.Create(selectedCharacter);
                 diagnosticAnimator=characterObject.GetComponentInChildren<Animator>();
@@ -383,7 +385,7 @@ namespace SongChoreography
             EnsureStyles();float scale=Math.Min(Screen.width/W,Screen.height/H);GUI.matrix=Matrix4x4.TRS(new Vector3((Screen.width-W*scale)/2,(Screen.height-H*scale)/2,0),Quaternion.identity,new Vector3(scale,scale,1));
             Box(new Rect(0,0,W,H),new Color(.035f,.05f,.075f));
             if(reviewFrames!=null){DrawReviewBoard();GUI.matrix=Matrix4x4.identity;return;}
-            Text(24,17,620,44,"CHOREO  /  编舞练习室",title);Text(26,62,900,25,"本地音乐  ·  节拍编排  ·  3D 跟学",muted);
+            Text(24,17,620,44,"CHOREO  /  编舞练习室",title);Text(26,62,1030,25,catalog!=null&&catalog.personalUseOnly?"个人学习版 · 含本地受限动作 · 请勿上传或分发此应用":"本地音乐  ·  节拍编排  ·  3D 跟学",muted);
             Text(1110,30,172,30,dirty?"● 有未保存的修改":"本地音乐工作区",muted);
             GUI.enabled=!Busy&&musicLibrary.tracks.Count>0;
             if(Button(1292,24,145,34,"一键演示",true))Guard(()=>UseBuiltin(0));GUI.enabled=true;
@@ -479,7 +481,7 @@ namespace SongChoreography
             {
                 Text(1283,225,273,40,"先选择一首音乐",heading);
                 Text(1283,277,273,95,"点击左侧内置曲目的“使用”，可以立即体验。\n\n也可以导入自己的音乐，完成分析后编辑动作组合。",small);
-                Text(1283,602,273,110,PreferredStyle==DanceStyles.Diagnostic?"动作素材尚未就绪。":"已提供 Charleston 八拍练习版。首次跟学建议使用 0.5× 或 0.75×。",muted);
+                Text(1283,602,273,110,PreferredStyle==DanceStyles.Diagnostic?"动作素材尚未就绪。":"已提供 "+DanceStyles.Name(PreferredStyle)+" 八拍练习版。首次跟学建议使用 0.5× 或 0.75×。",muted);
                 return;
             }
             GUI.enabled=Ready&&!Busy;
@@ -496,7 +498,7 @@ namespace SongChoreography
             if(Button(1283,213,273,34,PreferredStyle==DanceStyles.Diagnostic?"生成演示组合":"生成 "+DanceStyles.Name(PreferredStyle)+" 组合"))Guard(()=>Generate(PreferredStyle,false));
             if(Button(1283,258,273,34,"换一版 · 保留锁定片段"))Guard(()=>Generate(project.mode,true));
             int eligible=catalog==null?0:Choreographer.Eligible(catalog,"new-jazz").Count;
-            if(eligible>=8){if(Button(1283,302,273,28,"生成 New Jazz",true))Guard(()=>Generate("new-jazz",false));}
+            if(eligible>=8)Text(1283,302,273,24,"New Jazz 八拍练习 · 建议从慢速开始",muted);
             else Text(1283,302,273,24,project.mode==DanceStyles.Charleston?"八拍练习版 · 建议从慢速开始":"New Jazz 尚未开放 · 缺少已审核动作",muted);
             GUI.enabled=Ready&&!Busy;
             Text(1283,333,273,22,"片段  /  点击定位，勾选锁定",muted);
@@ -584,7 +586,7 @@ namespace SongChoreography
                     if(Button(605,411,166,30,"角色来源与授权"))Application.OpenURL("https://quaternius.com/packs/universalbasecharacters.html");
                     Text(26,457,550,28,"动作：CMU Graphics Lab Motion Capture · subject 93",small);
                     if(Button(605,454,166,30,"动作来源与说明"))Application.OpenURL("https://mocap.cs.cmu.edu/");
-                    Text(26,498,744,55,"Charleston 练习改编：四段动捕与四个左右变体，已作循环、平滑、慢速重定时与上肢调整。New Jazz 素材仍待补齐。",muted);
+                    Text(26,498,744,55,catalog.personalUseOnly?catalog.sourceNotice:"Charleston 练习改编：四段动捕与四个左右变体，已作循环、平滑、慢速重定时与上肢调整。New Jazz 需另外准备个人学习素材。",muted);
                     Text(26,570,744,45,"原作者未参与或背书本应用。全部来源、许可及修改记录随完整发布包提供。",muted);
                 }
                 else

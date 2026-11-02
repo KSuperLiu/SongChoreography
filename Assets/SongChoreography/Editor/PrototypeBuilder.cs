@@ -45,7 +45,7 @@ public static class PrototypeBuilder
         }
         EditorBuildSettings.scenes=new[]{new EditorBuildSettingsScene(Scene,true)};
         PlayerSettings.companyName="SongChoreography";PlayerSettings.productName="Choreo Practice Studio";
-        PlayerSettings.bundleVersion="0.4.1";
+        PlayerSettings.bundleVersion="0.5.0";
         PlayerSettings.defaultScreenWidth=1600;PlayerSettings.defaultScreenHeight=900;
         PlayerSettings.fullScreenMode=FullScreenMode.Windowed;PlayerSettings.resizableWindow=true;PlayerSettings.runInBackground=true;
         PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone,ScriptingImplementation.Mono2x);
@@ -100,24 +100,43 @@ public static class PrototypeBuilder
     }
     [MenuItem("Tools/Song Choreography/Build Windows Prototype")]
     public static void Build()
+    { BuildInternal(false); }
+    [MenuItem("Tools/Song Choreography/Build Personal Learning Windows")]
+    public static void BuildPersonal()
+    { BuildInternal(true); }
+    static void BuildInternal(bool personal)
     {
         Prepare();
+        if(personal)SongChoreography.Editor.PersonalMotionBuilder.Prepare();
+        bool privateFiles=File.Exists("Assets/Resources/PersonalMotionCatalog.json")||Directory.GetFiles("Assets/Resources/Motions","personal-*").Length>0||Directory.Exists("Assets/StreamingAssets/PersonalMotionCredits");
+        if(privateFiles&&!personal)throw new InvalidOperationException("含个人动作，公开构建已阻止。使用 Scripts/build.ps1 -Isolated 生成排除个人素材的公开版本。");
+        if(!personal)PersonalMotionPolicy.AssertPublic(JsonUtility.FromJson<MotionCatalog>(File.ReadAllText("Assets/Resources/MotionCatalog.json")));
         ValidateAssets();
         ValidateMusicLibrary();
         Directory.CreateDirectory("Builds/Windows");
         var report=BuildPipeline.BuildPlayer(new BuildPlayerOptions{scenes=new[]{Scene},locationPathName="Builds/Windows/ChoreoStudio.exe",target=BuildTarget.StandaloneWindows64,options=BuildOptions.None});
         if(report.summary.result!=BuildResult.Succeeded)throw new Exception("Build failed: "+report.summary.result);
+        File.WriteAllText("Builds/Windows/DISTRIBUTION.json","{\"schemaVersion\":1,\"personalUseOnly\":"+(personal?"true":"false")+",\"containsRestrictedMotions\":"+(privateFiles?"true":"false")+"}");
         Debug.Log("PROTOTYPE BUILD SUCCEEDED: "+report.summary.totalSize+" bytes");
     }
     [MenuItem("Tools/Song Choreography/Validate Motion Assets")]
     public static void ValidateAssets()
     {
         var catalog=JsonUtility.FromJson<MotionCatalog>(File.ReadAllText("Assets/Resources/MotionCatalog.json"));
+        if(File.Exists("Assets/Resources/PersonalMotionCatalog.json"))catalog=PersonalMotionPolicy.Merge(catalog,JsonUtility.FromJson<MotionCatalog>(File.ReadAllText("Assets/Resources/PersonalMotionCatalog.json")));
         Choreographer.Eligible(catalog,"diagnostic");
         foreach(var m in catalog.motions)
         {
             var clip=Resources.Load<AnimationClip>(m.resource);
-            if(!clip||!clip.isHumanMotion||clip.length<=0)throw new Exception("Missing or non-Humanoid motion: "+m.id);
+            if(!clip||(!clip.isHumanMotion&&!(m.personalUseOnly&&m.localRigMotion))||clip.length<=0)throw new Exception("Missing or incompatible motion: "+m.id);
+            if(m.localRigMotion)
+            {
+                foreach(string sex in new[]{"female","male"})
+                {
+                    var character=AssetDatabase.LoadAssetAtPath<GameObject>(SongChoreography.Editor.CharacterAssetBuilder.Art+"Superhero_"+(sex=="female"?"Female":"Male")+"_FullBody.fbx");
+                    foreach(var binding in AnimationUtility.GetCurveBindings(clip))if(binding.type!=typeof(Transform)||!character.transform.Find(binding.path))throw new Exception("Personal motion hierarchy mismatch: "+sex+" / "+binding.path);
+                }
+            }
             foreach(var next in m.safeNext)if(!catalog.motions.Any(x=>x.id==next))throw new Exception("Unknown safeNext: "+next);
         }
         foreach(string id in new[]{"female","male"})

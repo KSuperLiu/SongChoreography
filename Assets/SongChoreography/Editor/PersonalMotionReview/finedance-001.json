@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "sourceSha256": "0eb42e5df55c3f8075c760fd079855a51e1ec0a45e7850b5776a8a0d0e75bda7",
+  "motions": [
+    {
+      "id": "personal-finedance-001-0",
+      "sha256": "82f45002f643e001dbf502cbc2f670f6d42c8d6d8f2a00802d14a2f820ef8c62",
+      "name": "流行爵士 · 八拍 01",
+      "reviewer": "Codex technical and visual review, 2026-11-02",
+      "reviewNotes": "Original author label: Street / Jazz. Selected as New Jazz / pop-jazz personal practice adaptation, not a dance-teacher certification. Reviewed all 16 full-phrase boards and 40 selected transition boards on the supplied female/male rigs; source ~115 BPM, 52-joint quaternion tracks. Both rigs passed movement, rotation, switch-continuity and full-mesh floor checks (+8 mm clearance). Only the listed connections are approved. Motion data and visual evidence remain local and restricted.",
+      "safeNext": [
+        "personal-finedance-001-1",
+        "personal-finedance-001-4",
+        "personal-finedance-001-5"
+      ]
+    },
+    {
+      "id": "personal-finedance-001-1",
+      "sha256": "a7b1be7da6b87b8fddeab52db65811ca97a05cb0c0f1f52bab5c284bf5dee1d2",
+      "name": "流行爵士 · 八拍 02",
+      "reviewer": "Codex technical and visual review, 2026-11-02",
+      "reviewNotes": "Original author label: Street / Jazz. Selected as New Jazz / pop-jazz personal practice adaptation, not a dance-teacher certification. Reviewed all 16 full-phrase boards and 40 selected transition boards on the supplied female/male rigs; source ~115 BPM, 52-joint quaternion tracks. Both rigs passed movement, rotation, switch-continuity and full-mesh floor checks (+8 mm clearance). Only the listed connections are approved. Motion data and visual evidence remain local and restricted.",
+      "safeNext": [
+        "personal-finedance-001-0",
+        "personal-finedance-001-2",
+        "personal-finedance-001-6"
+      ]
+    },
+    {
+      "id": "personal-finedance-001-2",
+      "sha256": "e3ec1175a4cfe77fb60901d578867c5703d49186da21fe63ef3de86aa37fd763",
+      "name": "流行爵士 · 八拍 03",
+      "reviewer": "Codex technical and visual review, 2026-11-02",
+      "reviewNotes": "Original author label: Street / Jazz. Selected as New Jazz / pop-jazz personal practice adaptation, not a dance-teacher certification. Reviewed all 16 full-phrase boards and 40 selected transition boards on the supplied female/male rigs; source ~115 BPM, 52-joint quaternion tracks. Both rigs passed movement, rotation, switch-continuity and full-mesh floor checks (+8 mm clearance). Only the listed connections are approved. Motion data and visual evidence remain local and restricted.",
+      "safeNext": [
+        "personal-finedance-001-0",
+        "personal-finedance-001-3",
+        "personal-finedance-001-7"
+      ]
+    },
+    {
+      "id": "personal-finedance-001-3",
+      "sha256": "662973744583332092e20ea1b6c6f9e32650593856ae8cdb89964c9eeb88fe06",
+      "name": "流行爵士 · 八拍 04",
+      "reviewer": "Codex technical and visual review, 2026-11-02",
+      "reviewNotes": "Original author label: Street / Jazz. Selected as New Jazz / pop-jazz personal practice adaptation, not a dance-teacher certification. Reviewed all 16 full-phrase boards and 40 selected transition boards on the supplied female/male rigs; source ~115 BPM, 52-joint quaternion tracks. Both rigs passed movement, rotation, switch-continuity and full-mesh floor checks (+8 mm clearance). Only the listed connections are approved. Motion data and visual evidence remain local and restricted.",
+      "safeNext": [
+        "personal-finedance-001-0",
+        "personal-finedance-001-4"
+      ]
+    },
+    {
+      "id": "personal-finedance-001-4",
+      "sha256": "53557116ead1423a6a01b0c4280eb2f96193223bbbd7dadc612b4775de5f3ada",
+      "name": "流行爵士 · 八拍 05",
+      "reviewer": "Codex technical and visual review, 2026-11-02",
+      "reviewNotes": "Original author label: Street / Jazz. Selected as New Jazz / pop-jazz personal practice adaptation, not a dance-teacher certification. Reviewed all 16 full-phrase boards and 40 selected transition boards on the supplied female/male rigs; source ~115 BPM, 52-joint quaternion tracks. Both rigs passed movement, rotation, switch-continuity and full-mesh floor checks (+8 mm clearance). Only the listed connections are approved. Motion data and visual evidence remain local and restricted.",
+      "safeNext": [
+        "personal-finedance-001-1",
+        "personal-finedance-001-5"
+      ]
+    },
+    {
+      "id": "personal-finedance-001-5",
+      "sha256": "84a5c457c8577b2e22dd01131b741ae1922ab30b1242dd08b9902bfab4096539",
+      "name": "流行爵士 · 八拍 06",
+      "reviewer": "Codex technical and visual review, 2026-11-02",
+      "reviewNotes": "Original author label: Street / Jazz. Selected as New Jazz / pop-jazz personal practice adaptation, not a dance-teacher certification. Reviewed all 16 full-phrase boards and 40 selected transition boards on the supplied female/male rigs; source ~115 BPM, 52-joint quaternion tracks. Both rigs passed movement, rotation, switch-continuity and full-mesh floor checks (+8 mm clearance). Only the listed connections are approved. Motion data and visual evidence remain local and restricted.",
+      "safeNext": [
+        "personal-finedance-001-2",
+        "personal-finedance-001-6"
+      ]
+    },
+    {
+      "id": "personal-finedance-001-6",
+      "sha256": "ee6b785ba08520e2873fc71e53739fbff2a6c5edcd004459998d256cdff21ce9",
+      "name": "流行爵士 · 八拍 07",
+      "reviewer": "Codex technical and visual review, 2026-11-02",
+      "reviewNotes": "Original author label: Street / Jazz. Selected as New Jazz / pop-jazz personal practice adaptation, not a dance-teacher certification. Reviewed all 16 full-phrase boards and 40 selected transition boards on the supplied female/male rigs; source ~115 BPM, 52-joint quaternion tracks. Both rigs passed movement, rotation, switch-continuity and full-mesh floor checks (+8 mm clearance). Only the listed connections are approved. Motion data and visual evidence remain local and restricted.",
+      "safeNext": [
+        "personal-finedance-001-0",
+        "personal-finedance-001-4",
+        "personal-finedance-001-7"
+      ]
+    },
+    {
+      "id": "personal-finedance-001-7",
+      "sha256": "a03cd0425a93485995ca38d8bcb328e807cb74ed329b89b2c99201a3fc66b20c",
+      "name": "流行爵士 · 八拍 08",
+      "reviewer": "Codex technical and visual review, 2026-11-02",
+      "reviewNotes": "Original author label: Street / Jazz. Selected as New Jazz / pop-jazz personal practice adaptation, not a dance-teacher certification. Reviewed all 16 full-phrase boards and 40 selected transition boards on the supplied female/male rigs; source ~115 BPM, 52-joint quaternion tracks. Both rigs passed movement, rotation, switch-continuity and full-mesh floor checks (+8 mm clearance). Only the listed connections are approved. Motion data and visual evidence remain local and restricted.",
+      "safeNext": [
+        "personal-finedance-001-0",
+        "personal-finedance-001-2"
+      ]
+    }
+  ]
+}

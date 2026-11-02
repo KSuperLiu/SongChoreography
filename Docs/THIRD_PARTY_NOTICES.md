@@ -31,6 +31,12 @@ The database was created with funding from NSF EIA-0196217.
 
 四段来源裁剪 93_03、93_04、93_05、93_08，加四个左右变体。修改包括重定向、裁剪、朝向、原地循环、对称平滑、八拍重定时、脚踝和手臂调整。准确舞种为 Charleston，不是 New Jazz。复查范围和校验值见 `CHARLESTON_REVIEW.md` 与 `ChoreoStudio_Data/StreamingAssets/MotionCredits`。
 
+## 个人学习动作（仅本机准备，不随公开源码或下载分发）
+
+**Ronghui Li 等 — FineDance，ICCV 2023。** 原作者仓库：[FineDance](https://github.com/li-ronghui/FineDance)；许可：[LICENSE](https://github.com/li-ronghui/FineDance/blob/main/LICENSE)。允许非商业科研、教育和艺术用途，禁止未经书面许可向第三方提供数据或软件。应用代码 MIT 不覆盖该数据。
+
+个人学习工具选取 `001` 的 8 个八拍；保留原始 `Street / Jazz` 标签，作为 New Jazz／流行爵士练习改编。修改包括零姿态校准、52 关节重定向、朝向、轻度时间滤波、裁剪、水平漂移修正和接地。没有附带原歌曲、SMPL 模型或网格。源数据、转换姿态、动画、复查画面与个人版应用均保留在本机。公开仓库只包含原创获取／转换／验证代码，以及本项目编写的摘要与复查批准记录。详见 [个人学习说明](PERSONAL_LEARNING.md)。
+
 ## 分析环境
 
 **CPython 3.13.17 Windows x64** 来自 python.org，采用 Python Software Foundation License。解释器 `LICENSE.txt` 和依赖包许可保留于 `Runtime/Python`；版本与来源见 `RUNTIME.json`，锁定依赖见 `requirements-windows.lock.txt`。

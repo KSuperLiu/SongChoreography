@@ -76,10 +76,30 @@ namespace SongChoreography
                 var eyes=skins.First(r=>r.name.Equals("Eyes",StringComparison.OrdinalIgnoreCase));
                 var hair=characterObject.GetComponentsInChildren<Renderer>().First(r=>r.name.IndexOf("Hair",StringComparison.OrdinalIgnoreCase)>=0);
                 Verify(sex+" hair follows head",Vector3.Distance(hair.bounds.center,head.position)<.45f,"distance="+Vector3.Distance(hair.bounds.center,head.position));
+                // A tilted world-axis bounding box includes empty corners and
+                // raised hands can be higher than the skull. Measure actual
+                // head-weighted vertices along the head's authored upright axis.
+                var neutral=DancerCharacters.Create(sex);
+                var neutralHead=neutral.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.Head);
+                Vector3 skullAxis=head.TransformDirection(neutralHead.InverseTransformDirection(Vector3.up)).normalized;
+                Destroy(neutral);
                 var posedBody=new Mesh();body.BakeMesh(posedBody);
-                float skullTop=posedBody.vertices.Max(v=>body.transform.TransformPoint(v).y);
-                float hairAboveSkull=hair.bounds.max.y-skullTop;Destroy(posedBody);
-                Verify(sex+" hair fits skull height",hairAboveSkull>.005f&&hairAboveSkull<.10f,"above skull="+hairAboveSkull);
+                var headBones=body.bones.Select(b=>b==head||b.IsChildOf(head)).ToArray();
+                var bodyVertices=posedBody.vertices;
+                float skullTop=Enumerable.Range(0,weights.Length).Where(i=>
+                {
+                    var w=weights[i];return (headBones[w.boneIndex0]?w.weight0:0)+(headBones[w.boneIndex1]?w.weight1:0)+(headBones[w.boneIndex2]?w.weight2:0)+(headBones[w.boneIndex3]?w.weight3:0)>.8f;
+                }).Max(i=>Vector3.Dot(body.transform.TransformPoint(bodyVertices[i])-head.position,skullAxis));
+                var hairVertices=new List<Vector3>();
+                foreach(var renderer in head.GetComponentsInChildren<Renderer>().Where(r=>r.name.IndexOf("Hair",StringComparison.OrdinalIgnoreCase)>=0))
+                {
+                    if(renderer is SkinnedMeshRenderer skinned)
+                    {var mesh=new Mesh();skinned.BakeMesh(mesh);hairVertices.AddRange(mesh.vertices.Select(v=>renderer.transform.TransformPoint(v)));Destroy(mesh);}
+                    else
+                    {var filter=renderer.GetComponent<MeshFilter>();if(filter&&filter.sharedMesh)hairVertices.AddRange(filter.sharedMesh.vertices.Select(v=>renderer.transform.TransformPoint(v)));}
+                }
+                float hairAboveSkull=hairVertices.Max(v=>Vector3.Dot(v-head.position,skullAxis))-skullTop;Destroy(posedBody);
+                Verify(sex+" hair fits skull height",hairAboveSkull>.005f&&hairAboveSkull<.10f,"actual mesh above skull="+hairAboveSkull);
                 playback.Seek(10);yield return null;
                 var upperArm=diagnosticAnimator.GetBoneTransform(HumanBodyBones.LeftUpperArm);Quaternion pose=upperArm.rotation;
                 playback.Seek(11.2);yield return null;

@@ -30,6 +30,13 @@ namespace SongChoreography.Editor
             Action<float> number=value=>text.Append('|').Append(value.ToString("R",CultureInfo.InvariantCulture));
             number(motion.transitionBeats);number(clip.length);
             foreach(var value in motion.supportHeights)number(value);
+            if(!string.IsNullOrEmpty(motion.sourceNext))text.Append("|source-next|").Append(motion.sourceNext);
+            if(motion.localRigMotion)
+            {
+                var rig=Resources.Load<LocalRigMotionAsset>(motion.resource+"-rig");
+                if(!rig)throw new InvalidDataException("Missing local rig pose data: "+motion.id);
+                text.Append("|local-rig|").Append(JsonUtility.ToJson(rig));
+            }
             foreach(var binding in AnimationUtility.GetCurveBindings(clip).OrderBy(b=>b.propertyName,StringComparer.Ordinal))
             {
                 text.Append('|').Append(binding.path).Append('|').Append(binding.propertyName);

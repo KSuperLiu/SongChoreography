@@ -80,6 +80,8 @@ namespace SongChoreography.Editor
                 renderer.sharedMaterial=renderer==body?skin:renderer.name.ToLowerInvariant().Contains("eye")&&!renderer.name.ToLowerInvariant().Contains("brow")?eyes:hair1;
                 renderer.updateWhenOffscreen=true;
             }
+            var hairImporter=(ModelImporter)AssetImporter.GetAtPath(Art+hairstyle+".fbx");
+            if(hairImporter&&!hairImporter.isReadable){hairImporter.isReadable=true;hairImporter.SaveAndReimport();}
             var hairModel=AssetDatabase.LoadAssetAtPath<GameObject>(Art+hairstyle+".fbx");
             if(!hairModel)throw new Exception("Missing hairstyle.");
             var hairObject=UnityEngine.Object.Instantiate(hairModel);hairObject.name=hairstyle;

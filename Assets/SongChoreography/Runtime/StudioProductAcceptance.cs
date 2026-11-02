@@ -65,7 +65,8 @@ namespace SongChoreography
             yield return null;UseBuiltin(0);while(loading)yield return null;
             if(!Ready)throw new InvalidOperationException("Builtin demo failed: "+error);
             playback.Pause();productReport.style=project.mode;
-            ProductCheck("Real accurately labelled dance library",project.mode==DanceStyles.Charleston&&Choreographer.Eligible(catalog,project.mode).Count>=8);
+            ProductCheck("Real accurately labelled dance library",project.mode==PreferredStyle&&project.mode!=DanceStyles.Diagnostic&&Choreographer.Eligible(catalog,project.mode).Count>=8);
+            if(catalog.personalUseOnly)ProductCheck("Personal motions remain marked restricted",project.mode==DanceStyles.NewJazz&&Choreographer.Eligible(catalog,project.mode).All(m=>m.personalUseOnly&&m.localRigMotion));
             Choreographer.ValidateProject(project,catalog);
             productReport.segments=project.segments.Count;productReport.uniqueMotions=project.segments.Select(s=>s.motionId).Distinct().Count();
             ProductCheck("Full 40 second varied arrangement",Math.Abs(project.segments.Last().endSeconds-40)<.01&&productReport.uniqueMotions>=4,"unique="+productReport.uniqueMotions);
@@ -144,6 +145,9 @@ namespace SongChoreography
             project.segments=new List<DanceSegment>{new DanceSegment{motionId=phrase[0].motionId,startSeconds=0,endSeconds=4,beatCount=8}};
             playback.Seek(1.5);float phaseGap=bones.Select((b,i)=>Vector3.Distance(b.position,start[i])).Max();
             ProductCheck("Leading phrase starts at the matching actual animation pose",phaseGap<.001f,"max position gap="+phaseGap+" metres");
+            playback.Seek(4-.00001);var finalPose=bones.Select(b=>b.position).ToArray();playback.Seek(4);
+            float endpointGap=bones.Select((b,i)=>Vector3.Distance(b.position,finalPose[i])).Max();
+            ProductCheck("Completed phrase holds its final pose",endpointGap<.003f,"stop gap="+endpointGap+" metres");
             project.segments=phrase;playback.Seek(2.5-.00001);var before=bones.Select(b=>b.position).ToArray();playback.Seek(2.5);
             float cutGap=bones.Select((b,i)=>Vector3.Distance(b.position,before[i])).Max();
             ProductCheck("Partial phrase joins at the reviewed cycle boundary",cutGap<.003f,"cut gap="+cutGap+" metres");

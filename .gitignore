@@ -41,3 +41,10 @@ Assets/Resources/Motions/*.anim.meta
 *.p12
 *.key
 
+# Locally licensed learning motions must never be committed or redistributed.
+/PersonalAssets/
+Assets/Resources/PersonalMotionCatalog.json*
+Assets/StreamingAssets/PersonalMotionCredits/
+Assets/StreamingAssets/PersonalMotionCredits.meta
+Assets/Resources/Motions/personal-*
+

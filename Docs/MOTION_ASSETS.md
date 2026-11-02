@@ -4,14 +4,15 @@
 
 - 完整蒙皮角色 2 个：Quaternius Universal Base Characters 免费 Standard 包的男性／女性模型，已配置有效 Unity Humanoid Avatar，制作训练服材质与发型；详情见 [角色来源与镜头](CHARACTERS_AND_CAMERA.md)。运行时已不再使用旧 `DiagnosticAvatar` 几何体人形。
 - 原创诊断动作 8 个：由 `PrototypeBuilder` 在实际角色上烘焙 Animator muscle 曲线，用于测试重定向、节拍采样、混合与编辑。
-- **真实 New Jazz 动作：0 个。** 当前禁用 New Jazz 生成。可展示的正式库为准确标注的 Charleston 练习改编：四段 CMU 动捕裁剪及四个左右变体，共八个八拍片段，正式使用 20 条经过技术与 Codex 画面复查的有向连接。详见 [动作复查](CHARLESTON_REVIEW.md)，不代表舞蹈教师认证。
+- **个人学习版：8 个真人八拍，20 条经过复查的连接。** 来自 FineDance `001`，原作者标签为 `Street / Jazz`；经动作画面复查选作 New Jazz／流行爵士练习改编，不能声称作者标签就是 New Jazz。52 关节四元数轨道适配两个内置角色。许可仅供本机非商业学习，动作、转换数据、复查图片及含动作的应用不公开分发。见[个人版准备](PERSONAL_LEARNING.md)和[验证记录](NEW_JAZZ_050_VERIFICATION.md)。
+- **公共版 New Jazz：0 个。** 可分发演示库仍为准确标注的 Charleston：四段 CMU 动捕裁剪及四个左右变体，共八个八拍片段，20 条有向连接。详见 [动作复查](CHARLESTON_REVIEW.md)。两套库的技术与 Codex 画面复查均不代表舞蹈教师认证。
 - 角色源素材按作者 Standard 包内的 CC0-1.0 许可使用。原创诊断动画和合成节拍音轨按 CC0-1.0 提供；内置三首真实音乐使用独立的 CC BY 4.0 授权，其他代码不因此自动改变许可。
 
 ## 候选来源核实（2026-11-02）
 
 Adobe 的 [Mixamo FAQ](https://helpx.adobe.com/creative-cloud/faq/mixamo-faq.html) 说明可用 Adobe ID 免费使用，角色和动画可用于项目，同时注明中国地区账户等限制。当前没有登录 Mixamo 或下载其素材，也没有通过实际动作观看确认 New Jazz 风格。未采用第三方镜像素材包或将传统爵士直接当作 New Jazz。
 
-搜索结果未提供已核实且满足本项目需要的免费 New Jazz 素材。此结论仅代表本次没有取得可用素材，不代表不存在。真实素材下载、来源与许可记录及动作审核仍待完成。
+补充检索后，FineDance 提供了可用于非商业教育的真人 Street/Jazz 动捕，已用于本机个人学习适配。其许可禁止未经授权向第三方提供；尚未取得可随公共应用免费分发的 New Jazz 库。AIST、Ready Player Me、Reallusion 等候选的限制见[个人版来源核对](PERSONAL_LEARNING.md)。
 
 ## 开发阶段导入
 

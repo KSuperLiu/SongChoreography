@@ -50,6 +50,9 @@ namespace SongChoreography
         public float energy = .5f;
         public float transitionBeats=.25f;
         public bool approved;
+        public bool personalUseOnly;
+        public bool localRigMotion;
+        public string sourceNext = "";
         public bool footIK;
         public bool groundToFloor;
         public int supportFps=30;
@@ -60,6 +63,8 @@ namespace SongChoreography
     [Serializable] public class MotionCatalog
     {
         public int schemaVersion = 1;
+        public bool personalUseOnly;
+        public string sourceNotice = "";
         public List<MotionDefinition> motions = new List<MotionDefinition>();
     }
     [Serializable] public class DanceSegment

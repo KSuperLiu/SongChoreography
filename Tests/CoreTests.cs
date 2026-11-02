@@ -70,6 +70,20 @@ static class Tests
         p=Project();p.grid.manual=false;p.analysis.beats=Enumerable.Range(0,80).Select(i=>i*.5+(i%8==1?.04:0)).ToList();p.analysis.energy=Enumerable.Repeat(.5f,80).ToList();
         p.segments=Choreographer.Generate(p,c);Check(p.segments.Take(9).All(s=>s.beatCount==8),"uneven detected intervals cannot truncate complete eight-count phrases");
         Check(p.segments.Last().endSeconds==40,"phrase-aligned generation still covers the complete excerpt");
+        var shared=Catalog();var local=new MotionCatalog{personalUseOnly=true,sourceNotice="Local non-commercial education only"};
+        local.motions.Add(new MotionDefinition{id="personal-fixture",personalUseOnly=true,source="Original test fixture",license="Local test only",safeNext=new List<string>{"personal-fixture"}});
+        var combined=PersonalMotionPolicy.Merge(shared,local);
+        Check(combined.motions.Count==shared.motions.Count+1&&combined.personalUseOnly&&shared.motions.Count==8,"personal library merge preserves the shared catalog");
+        Throws(()=>PersonalMotionPolicy.AssertPublic(combined),"personal motions cannot enter a public build");
+        PersonalMotionPolicy.AssertPublic(shared);Check(true,"shared catalog remains redistributable");
+        local.personalUseOnly=false;Throws(()=>PersonalMotionPolicy.Merge(shared,local),"personal library requires explicit usage restriction");local.personalUseOnly=true;
+        local.motions[0].safeNext.Add("m0");Throws(()=>PersonalMotionPolicy.Merge(shared,local),"personal library cannot link across catalog boundaries");local.motions[0].safeNext.Remove("m0");
+        local.motions[0].source="";Throws(()=>PersonalMotionPolicy.Merge(shared,local),"personal motion requires provenance");local.motions[0].source="fixture";
+        local.motions[0].sourceNext="personal-unreviewed";local.motions[0].approved=true;
+        Throws(()=>PersonalMotionPolicy.Merge(shared,local),"source-contiguous shortcut requires a reviewed connection");
+        local.motions[0].sourceNext="personal-fixture";
+        Check(PersonalMotionPolicy.Merge(shared,local).motions.Last().sourceNext=="personal-fixture","reviewed source-contiguous connection accepted");
+        shared.motions[0].id="personal-fixture";Throws(()=>PersonalMotionPolicy.Merge(shared,local),"personal motion cannot shadow an existing ID");
         Console.WriteLine($"{passed} core checks passed.");
     }
 }

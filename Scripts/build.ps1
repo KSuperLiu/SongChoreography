@@ -1,32 +1,40 @@
 param(
     [string]$UnityPath = 'I:\Program Files\Unity 2022.3.62f3\Editor\Unity.exe',
     [switch]$Isolated,
+    [switch]$PersonalLearning,
     [string]$OutputDirectory = 'Builds\Windows'
 )
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path -Parent $PSScriptRoot
+if ($PersonalLearning -and -not $PSBoundParameters.ContainsKey('OutputDirectory')) { $OutputDirectory = 'Builds\PersonalWindows' }
 if (-not (Test-Path -LiteralPath $UnityPath)) { throw "找不到 Unity：$UnityPath" }
 New-Item -ItemType Directory -Path (Join-Path $projectRoot 'TestResults') -Force | Out-Null
 $buildRoot = $projectRoot
 $buildLog = Join-Path $projectRoot 'TestResults\unity-build.log'
 if ($Isolated) {
-    $buildRoot = [IO.Path]::GetFullPath((Join-Path $projectRoot '.build-cache\UnityProject'))
+    $snapshotName = if ($PersonalLearning) { '.build-cache\PersonalUnityProject' } else { '.build-cache\UnityProject' }
+    $buildRoot = [IO.Path]::GetFullPath((Join-Path $projectRoot $snapshotName))
     $cacheBoundary = [IO.Path]::GetFullPath((Join-Path $projectRoot '.build-cache')) + [IO.Path]::DirectorySeparatorChar
     if (-not $buildRoot.StartsWith($cacheBoundary,[StringComparison]::OrdinalIgnoreCase)) { throw '隔离构建目录越界。' }
     New-Item -ItemType Directory -Path $buildRoot -Force | Out-Null
     # Only mirror explicitly named inputs into our disposable build snapshot.
     # Every purge target is verified under .build-cache before robocopy runs.
-    foreach ($name in @('Assets','Packages','ProjectSettings','Analyzer','Samples\Demo','Samples\MotionSources\CMU93')) {
+    $inputs = @('Assets','Packages','ProjectSettings','Analyzer','Samples\Demo','Samples\MotionSources\CMU93')
+    if ($PersonalLearning) { $inputs += 'PersonalAssets' }
+    foreach ($name in $inputs) {
         $inputPath = Join-Path $projectRoot $name
         if (-not (Test-Path -LiteralPath $inputPath)) { continue }
         $snapshotPath = [IO.Path]::GetFullPath((Join-Path $buildRoot $name))
         if (-not $snapshotPath.StartsWith($buildRoot + [IO.Path]::DirectorySeparatorChar,[StringComparison]::OrdinalIgnoreCase)) { throw '隔离快照路径越界。' }
-        & robocopy.exe $inputPath $snapshotPath /MIR /COPY:DAT /DCOPY:DAT /NFL /NDL /NJH /NJS /NP | Out-Null
+        $exclusions = @()
+        if (-not $PersonalLearning -and $name -eq 'Assets') { $exclusions = @('/XF','PersonalMotionCatalog.json*','PersonalMotionCredits.meta','personal-*','/XD',(Join-Path $inputPath 'StreamingAssets\PersonalMotionCredits')) }
+        & robocopy.exe $inputPath $snapshotPath /MIR /COPY:DAT /DCOPY:DAT /NFL /NDL /NJH /NJS /NP @exclusions | Out-Null
         if ($LASTEXITCODE -gt 7) { throw "复制隔离输入失败：$name" }
     }
     $buildLog = Join-Path $projectRoot 'TestResults\unity-build-isolated.log'
 }
-$buildArgs = '-batchmode -nographics -quit -projectPath "' + $buildRoot + '" -executeMethod PrototypeBuilder.Build -logFile "' + $buildLog + '"'
+$method = if ($PersonalLearning) { 'PrototypeBuilder.BuildPersonal' } else { 'PrototypeBuilder.Build' }
+$buildArgs = '-batchmode -nographics -quit -projectPath "' + $buildRoot + '" -executeMethod ' + $method + ' -logFile "' + $buildLog + '"'
 $buildProcess = Start-Process -FilePath $UnityPath -ArgumentList $buildArgs -WindowStyle Hidden -PassThru
 $buildProcess.WaitForExit()
 if ($buildProcess.ExitCode -ne 0) { throw "Unity 构建失败，请检查 $buildLog" }

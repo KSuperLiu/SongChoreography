@@ -21,6 +21,7 @@ namespace SongChoreography
         }
         [Serializable]class TransitionReport
         {
+            public string version=Application.version;
             public int schemaVersion=1,expectedCases;
             public bool allPassed,visualReviewRequired=true;
             public string error="";
@@ -63,10 +64,16 @@ namespace SongChoreography
             if(!Ready)throw new InvalidOperationException("Transition review music failed: "+error);
             playback.Pause();inspectorTab=2;ResetCamera();
             var edges=JsonUtility.FromJson<PhaseEdges>(File.ReadAllText(Path.Combine(Application.streamingAssetsPath,"MotionCredits","phase-review.json"))).connections.Where(e=>e.candidate).ToList();
+            if(catalog.personalUseOnly)
+            {
+                var candidates=catalog.motions.Where(m=>m.personalUseOnly).ToArray();
+                bool approvedOnly=candidates.All(m=>m.approved)&&!Environment.GetCommandLineArgs().Contains("-review-all-candidates");
+                edges=candidates.SelectMany(a=>candidates.Where(b=>a.id!=b.id&&(!approvedOnly||a.safeNext.Contains(b.id))).Select(b=>new PhaseEdge{from=a.id,to=b.id,candidate=true})).ToList();
+            }
             transitionReport.expectedCases=edges.Count*2;
             var sequence=project.segments;string oldTitle=project.title,oldCharacter=selectedCharacter;
             var oldLinks=catalog.motions.ToDictionary(m=>m.id,m=>new List<string>(m.safeNext));
-            foreach(var motion in catalog.motions.Where(m=>m.style=="charleston-review"))motion.safeNext=edges.Where(e=>e.from==motion.id).Select(e=>e.to).ToList();
+            foreach(var motion in catalog.motions.Where(m=>m.style=="charleston-review"||m.personalUseOnly))motion.safeNext=edges.Where(e=>e.from==motion.id).Select(e=>e.to).ToList();
             var mesh=new Mesh();
             try
             {
