@@ -1,6 +1,8 @@
-# CHOREO / 编舞练习室 0.5.0
+# CHOREO / 编舞练习室 0.5.1
 
 Windows 本地歌曲编舞与跟学应用，采用 **Unity 2022.3.62f3、C#、便携 CPython 3.13.17、librosa 0.11**。
+
+**0.5.1 修复动作反关节问题。** 旧个人版的坐标手性转换和关节轴适配有误，男女角色也不能共用同一组局部旋转。现分别校准并烘焙两套轨道，约束手腕、手指、肘膝及全身关节，增加 120 Hz 插值与混合阶段的弯曲方向检查。旧版批准记录已作废，详见 [修复与验证](Docs/ANATOMY_051_VERIFICATION.md)。
 
 点击“一键演示”即可观看内置 40 秒音乐与真实动捕改编的 **Charleston 八拍练习组合**。包括两个完整蒙皮角色、七种镜头、镜像、三档保留音高慢放、节拍校正、区间循环、替换、锁定和项目恢复。导入 WAV／MP3 无需另装 Python。
 
@@ -10,9 +12,11 @@ Windows 本地歌曲编舞与跟学应用，采用 **Unity 2022.3.62f3、C#、�
 
 从 [公共 Windows 版 0.4.1](https://github.com/KSuperLiu/SongChoreography/releases/tag/v0.4.1) 下载 ZIP，完整解压后双击 `ChoreoStudio.exe`。公共下载展示 Charleston；个人版需按上述说明在本机准备。公共版无需安装 Unity 或 Python。复制公共版时请复制整个目录，保留 `Runtime`、`ChoreoStudio_Data`、`MonoBleedingEdge` 和 DLL。
 
+该公共下载是历史版本，未包含 0.5.1 的关节修复；本次更新交付源码，使用修复版请按下述步骤构建。
+
 ![编舞练习室实际运行画面](Docs/Preview.png)
 
-[快速使用](Docs/QUICK_START.md) · [个人版说明](Docs/PERSONAL_LEARNING.md) · [0.5.0 验证](Docs/NEW_JAZZ_050_VERIFICATION.md) · [公共版验证](Docs/VERIFICATION.md) · [第三方署名](Docs/THIRD_PARTY_NOTICES.md)
+[快速使用](Docs/QUICK_START.md) · [个人版说明](Docs/PERSONAL_LEARNING.md) · [0.5.1 关节修复验证](Docs/ANATOMY_051_VERIFICATION.md) · [公共版验证](Docs/VERIFICATION.md) · [第三方署名](Docs/THIRD_PARTY_NOTICES.md)
 
 项目位于 `%USERPROFILE%\AppData\LocalLow\SongChoreography\Choreo Practice Studio\Projects`，包含普通与慢速音频、节拍、编舞及镜头设置。退出自动保存有效项目，下次启动暂停恢复。移动时复制整个项目目录，再打开 `project.danceproj`。
 
@@ -55,7 +59,7 @@ dotnet run --project Tests/CoreTests.csproj -p:UseSharedCompilation=false
 
 首拍对应计数会设置首段的真实动画相位与长度，再从下一次计数 1 按八拍分组。完整拍组不受自动检测相邻间隔的小幅波动截短；旧项目按已保存序列恢复，重新生成后使用新规则。
 
-公共动作以 DSP 音频时钟采样 Humanoid Playables；个人动捕通过同一时钟驱动两个已验证角色的精确四元数轨道，保留复杂手腕／脚踝姿态。慢速读取离线保留音高音频。动作按已复查的边界混合，并根据实际蒙皮修正接地。未来动作生成可沿用相同的编舞播放接口。
+公共动作以 DSP 音频时钟采样 Humanoid Playables；个人动捕通过同一时钟驱动角色专用的四元数轨道。轨道经过中性骨架校准、关节约束和滤波，手部为适合当前模型的简化改编。慢速读取离线保留音高音频。动作按已复查的边界混合，并根据实际蒙皮修正接地。未来动作生成可沿用相同的编舞播放接口。
 
 ## 开源许可
 

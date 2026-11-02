@@ -31,6 +31,7 @@ namespace SongChoreography
         readonly List<Vector3> posedVertices=new List<Vector3>();
         int[] soleVertices;
         Animator targetAnimator;
+        string targetCharacter;
         Transform[] localRig;
         Vector3[] outgoingPositions;
         Quaternion[] outgoingRotations;
@@ -42,9 +43,9 @@ namespace SongChoreography
         public double SongAnchor=>anchorSong;
         public double AudioErrorMilliseconds=> source && playing && AudioSettings.dspTime>anchorDsp && source.isPlaying ? Math.Abs(position-source.timeSamples/(double)source.clip.frequency*rate)*1000 : 0;
         public bool Ready=>project!=null && audioClips.Count==3;
-        public void Initialize(Animator animator,MotionCatalog motionCatalog)
+        public void Initialize(Animator animator,MotionCatalog motionCatalog,string characterId="female")
         {
-            catalog=motionCatalog;
+            catalog=motionCatalog;targetCharacter=characterId;
             if(!animator.avatar || !animator.avatar.isValid || !animator.avatar.isHuman) throw new InvalidOperationException("角色 Humanoid Avatar 配置无效。");
             source=gameObject.AddComponent<AudioSource>();source.playOnAwake=false;source.spatialBlend=0;
             graph=PlayableGraph.Create("Music-clocked Dance");graph.SetTimeUpdateMode(DirectorUpdateMode.Manual);
@@ -56,20 +57,23 @@ namespace SongChoreography
                 var clip=Resources.Load<AnimationClip>(m.resource);if(clip)clips[m.id]=clip;
                 if(m.localRigMotion)
                 {
-                    var data=Resources.Load<LocalRigMotionAsset>(m.resource+"-rig");
-                    if(!data||data.schemaVersion!=1||data.paths==null||data.paths.Length!=52||data.frameCount<2||data.rotations.Length!=data.frameCount*208||data.hips.Length!=data.frameCount)throw new InvalidOperationException("个人关节数据缺失或无效："+m.id);
-                    localClips[m.id]=data;
+                    foreach(string sex in new[]{"female","male"})
+                    {
+                        var data=Resources.Load<LocalRigMotionAsset>(m.resource+"-rig"+(sex=="male"?"-male":""));
+                        if(!data||data.schemaVersion!=2||data.characterId!=sex||data.paths==null||data.paths.Length!=52||data.frameCount<2||data.rotations.Length!=data.frameCount*208||data.hips.Length!=data.frameCount)throw new InvalidOperationException("个人关节数据缺失或角色不匹配："+m.id+" / "+sex);
+                        localClips[m.id+"/"+sex]=data;
+                    }
                 }
             }
             var idle=catalog.motions.Find(m=>m.style=="diagnostic"&&clips.ContainsKey(m.id));
             if(idle!=null){Channel(0,idle.id,0,1);graph.Evaluate(0);}
         }
         public bool HasMotion(string id)=>clips.ContainsKey(id);
-        public void Retarget(Animator animator)
+        public void Retarget(Animator animator,string characterId="female")
         {
             if(!animator.avatar||!animator.avatar.isValid||!animator.avatar.isHuman)throw new InvalidOperationException("角色骨架不能播放人形动作。");
             if(visualRoot)visualRoot.localPosition=rootOrigin;
-            output.SetTarget(animator);BindGrounding(animator);
+            targetCharacter=characterId;output.SetTarget(animator);BindGrounding(animator);
             if(project!=null)EvaluatePose();else graph.Evaluate(0);
         }
         void BindGrounding(Animator animator)
@@ -80,7 +84,7 @@ namespace SongChoreography
             outgoingPositions=new Vector3[localRig.Length];outgoingRotations=new Quaternion[localRig.Length];
             visualRoot=animator.transform.parent?animator.transform.parent:animator.transform;rootOrigin=visualRoot.localPosition;
             skin=animator.GetComponentsInChildren<SkinnedMeshRenderer>().OrderByDescending(r=>r.sharedMesh.vertexCount).First();
-            if(posedSkin)Destroy(posedSkin);posedSkin=new Mesh();posedSkin.MarkDynamic();
+            if(posedSkin)ReleaseOwned(posedSkin);posedSkin=new Mesh();posedSkin.MarkDynamic();
             var feet=new[]{HumanBodyBones.LeftFoot,HumanBodyBones.RightFoot}.Select(b=>animator.GetBoneTransform(b)).ToArray();
             // Resolve hierarchy membership once per bone, not eight native
             // Transform comparisons for every one of ~7,300 mesh vertices.
@@ -109,7 +113,7 @@ namespace SongChoreography
         }
         public void SetProject(DanceProject data,AudioClip normal,AudioClip slow075,AudioClip slow050)
         {
-            Pause();foreach(var old in audioClips.Values) if(old) Destroy(old);audioClips.Clear();
+            Pause();foreach(var old in audioClips.Values) if(old) ReleaseOwned(old);audioClips.Clear();
             project=data;audioClips[1]=normal;audioClips[.75f]=slow075;audioClips[.5f]=slow050;
             rate=project.speed;position=project.position;source.clip=audioClips[rate];EvaluatePose();
         }
@@ -259,7 +263,7 @@ namespace SongChoreography
         void ApplyLocalRig(string id,double time)
         {
             for(int i=0;i<localRig.Length;i++){localRig[i].localPosition=localBindPositions[i];localRig[i].localRotation=localBindRotations[i];localRig[i].localScale=localBindScales[i];}
-            var data=localClips[id];
+            var data=localClips[id+"/"+targetCharacter];
             if(!localBindings.TryGetValue(id,out var bones))
             {
                 bones=data.paths.Select(path=>targetAnimator.transform.Find(path)).ToArray();
@@ -277,6 +281,8 @@ namespace SongChoreography
             bones[0].localPosition=Vector3.Lerp(data.hips[a],data.hips[b],mix);
         }
         void OnDestroy()
-            { Pause();if(graph.IsValid())graph.Destroy();if(posedSkin)Destroy(posedSkin);foreach(var clip in audioClips.Values)if(clip)Destroy(clip); }
+            { Pause();if(graph.IsValid())graph.Destroy();if(posedSkin)ReleaseOwned(posedSkin);foreach(var clip in audioClips.Values)if(clip)ReleaseOwned(clip); }
+        static void ReleaseOwned(UnityEngine.Object value)
+        {if(Application.isPlaying)Destroy(value);else DestroyImmediate(value);}
     }
 }

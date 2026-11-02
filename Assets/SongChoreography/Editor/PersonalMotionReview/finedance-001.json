@@ -1,13 +1,13 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "sourceSha256": "0eb42e5df55c3f8075c760fd079855a51e1ec0a45e7850b5776a8a0d0e75bda7",
   "motions": [
     {
       "id": "personal-finedance-001-0",
-      "sha256": "82f45002f643e001dbf502cbc2f670f6d42c8d6d8f2a00802d14a2f820ef8c62",
+      "sha256": "5d7ced7a0865258d286b20e2b64069a0f3e3a20e1d7e5e17ceec37bd0ab99ec1",
       "name": "流行爵士 · 八拍 01",
-      "reviewer": "Codex technical and visual review, 2026-11-02",
-      "reviewNotes": "Original author label: Street / Jazz. Selected as New Jazz / pop-jazz personal practice adaptation, not a dance-teacher certification. Reviewed all 16 full-phrase boards and 40 selected transition boards on the supplied female/male rigs; source ~115 BPM, 52-joint quaternion tracks. Both rigs passed movement, rotation, switch-continuity and full-mesh floor checks (+8 mm clearance). Only the listed connections are approved. Motion data and visual evidence remain local and restricted.",
+      "reviewer": "Codex technical and rendered-frame review, 2026-11-02 / 0.5.1",
+      "reviewNotes": "0.5.1 anatomy correction: reflected SMPL-X coordinates, neutral-skeleton anatomical axes, separate female/male tracks and bounded/smoothed joint poses. 120 Hz complete-clip signed elbow/knee/finger bends and all 95 Humanoid ranges passed on both characters; actual DancePlayback selected 20 connections passed on both rigs after 0.6-beat blends. Visually inspected 16 eight-panel isolated hand boards, 16 worst-range body frames and all 40 selected six-frame connection boards. Original author label Street / Jazz; New Jazz / pop-jazz personal practice adaptation with simplified hands, not dance-teacher certification. Restricted poses, renders and personal application remain local.",
       "safeNext": [
         "personal-finedance-001-1",
         "personal-finedance-001-4",
@@ -16,10 +16,10 @@
     },
     {
       "id": "personal-finedance-001-1",
-      "sha256": "a7b1be7da6b87b8fddeab52db65811ca97a05cb0c0f1f52bab5c284bf5dee1d2",
+      "sha256": "7e0b577f3de4ba2302394347e3c535b3b9bdb907f45f10e3b1765638c2982ad7",
       "name": "流行爵士 · 八拍 02",
-      "reviewer": "Codex technical and visual review, 2026-11-02",
-      "reviewNotes": "Original author label: Street / Jazz. Selected as New Jazz / pop-jazz personal practice adaptation, not a dance-teacher certification. Reviewed all 16 full-phrase boards and 40 selected transition boards on the supplied female/male rigs; source ~115 BPM, 52-joint quaternion tracks. Both rigs passed movement, rotation, switch-continuity and full-mesh floor checks (+8 mm clearance). Only the listed connections are approved. Motion data and visual evidence remain local and restricted.",
+      "reviewer": "Codex technical and rendered-frame review, 2026-11-02 / 0.5.1",
+      "reviewNotes": "0.5.1 anatomy correction: reflected SMPL-X coordinates, neutral-skeleton anatomical axes, separate female/male tracks and bounded/smoothed joint poses. 120 Hz complete-clip signed elbow/knee/finger bends and all 95 Humanoid ranges passed on both characters; actual DancePlayback selected 20 connections passed on both rigs after 0.6-beat blends. Visually inspected 16 eight-panel isolated hand boards, 16 worst-range body frames and all 40 selected six-frame connection boards. Original author label Street / Jazz; New Jazz / pop-jazz personal practice adaptation with simplified hands, not dance-teacher certification. Restricted poses, renders and personal application remain local.",
       "safeNext": [
         "personal-finedance-001-0",
         "personal-finedance-001-2",
@@ -28,10 +28,10 @@
     },
     {
       "id": "personal-finedance-001-2",
-      "sha256": "e3ec1175a4cfe77fb60901d578867c5703d49186da21fe63ef3de86aa37fd763",
+      "sha256": "3830ae531da110b60f2f2c2bc2f988584fffc5d459d8bd511cb0864290b3e1f3",
       "name": "流行爵士 · 八拍 03",
-      "reviewer": "Codex technical and visual review, 2026-11-02",
-      "reviewNotes": "Original author label: Street / Jazz. Selected as New Jazz / pop-jazz personal practice adaptation, not a dance-teacher certification. Reviewed all 16 full-phrase boards and 40 selected transition boards on the supplied female/male rigs; source ~115 BPM, 52-joint quaternion tracks. Both rigs passed movement, rotation, switch-continuity and full-mesh floor checks (+8 mm clearance). Only the listed connections are approved. Motion data and visual evidence remain local and restricted.",
+      "reviewer": "Codex technical and rendered-frame review, 2026-11-02 / 0.5.1",
+      "reviewNotes": "0.5.1 anatomy correction: reflected SMPL-X coordinates, neutral-skeleton anatomical axes, separate female/male tracks and bounded/smoothed joint poses. 120 Hz complete-clip signed elbow/knee/finger bends and all 95 Humanoid ranges passed on both characters; actual DancePlayback selected 20 connections passed on both rigs after 0.6-beat blends. Visually inspected 16 eight-panel isolated hand boards, 16 worst-range body frames and all 40 selected six-frame connection boards. Original author label Street / Jazz; New Jazz / pop-jazz personal practice adaptation with simplified hands, not dance-teacher certification. Restricted poses, renders and personal application remain local.",
       "safeNext": [
         "personal-finedance-001-0",
         "personal-finedance-001-3",
@@ -40,10 +40,10 @@
     },
     {
       "id": "personal-finedance-001-3",
-      "sha256": "662973744583332092e20ea1b6c6f9e32650593856ae8cdb89964c9eeb88fe06",
+      "sha256": "317a35a9d30fcdb43e4da09387a224f08e1381fbb3eda7f28aa2954f0c9f1240",
       "name": "流行爵士 · 八拍 04",
-      "reviewer": "Codex technical and visual review, 2026-11-02",
-      "reviewNotes": "Original author label: Street / Jazz. Selected as New Jazz / pop-jazz personal practice adaptation, not a dance-teacher certification. Reviewed all 16 full-phrase boards and 40 selected transition boards on the supplied female/male rigs; source ~115 BPM, 52-joint quaternion tracks. Both rigs passed movement, rotation, switch-continuity and full-mesh floor checks (+8 mm clearance). Only the listed connections are approved. Motion data and visual evidence remain local and restricted.",
+      "reviewer": "Codex technical and rendered-frame review, 2026-11-02 / 0.5.1",
+      "reviewNotes": "0.5.1 anatomy correction: reflected SMPL-X coordinates, neutral-skeleton anatomical axes, separate female/male tracks and bounded/smoothed joint poses. 120 Hz complete-clip signed elbow/knee/finger bends and all 95 Humanoid ranges passed on both characters; actual DancePlayback selected 20 connections passed on both rigs after 0.6-beat blends. Visually inspected 16 eight-panel isolated hand boards, 16 worst-range body frames and all 40 selected six-frame connection boards. Original author label Street / Jazz; New Jazz / pop-jazz personal practice adaptation with simplified hands, not dance-teacher certification. Restricted poses, renders and personal application remain local.",
       "safeNext": [
         "personal-finedance-001-0",
         "personal-finedance-001-4"
@@ -51,10 +51,10 @@
     },
     {
       "id": "personal-finedance-001-4",
-      "sha256": "53557116ead1423a6a01b0c4280eb2f96193223bbbd7dadc612b4775de5f3ada",
+      "sha256": "5dba42ece77622ce9d2c0e0ef029172fe0c3aef5cada45b79a6638ff271064af",
       "name": "流行爵士 · 八拍 05",
-      "reviewer": "Codex technical and visual review, 2026-11-02",
-      "reviewNotes": "Original author label: Street / Jazz. Selected as New Jazz / pop-jazz personal practice adaptation, not a dance-teacher certification. Reviewed all 16 full-phrase boards and 40 selected transition boards on the supplied female/male rigs; source ~115 BPM, 52-joint quaternion tracks. Both rigs passed movement, rotation, switch-continuity and full-mesh floor checks (+8 mm clearance). Only the listed connections are approved. Motion data and visual evidence remain local and restricted.",
+      "reviewer": "Codex technical and rendered-frame review, 2026-11-02 / 0.5.1",
+      "reviewNotes": "0.5.1 anatomy correction: reflected SMPL-X coordinates, neutral-skeleton anatomical axes, separate female/male tracks and bounded/smoothed joint poses. 120 Hz complete-clip signed elbow/knee/finger bends and all 95 Humanoid ranges passed on both characters; actual DancePlayback selected 20 connections passed on both rigs after 0.6-beat blends. Visually inspected 16 eight-panel isolated hand boards, 16 worst-range body frames and all 40 selected six-frame connection boards. Original author label Street / Jazz; New Jazz / pop-jazz personal practice adaptation with simplified hands, not dance-teacher certification. Restricted poses, renders and personal application remain local.",
       "safeNext": [
         "personal-finedance-001-1",
         "personal-finedance-001-5"
@@ -62,10 +62,10 @@
     },
     {
       "id": "personal-finedance-001-5",
-      "sha256": "84a5c457c8577b2e22dd01131b741ae1922ab30b1242dd08b9902bfab4096539",
+      "sha256": "fae03883e80f53c5d8d9700738d2a9a2d463616649d27b3f92038c1ef20b3d83",
       "name": "流行爵士 · 八拍 06",
-      "reviewer": "Codex technical and visual review, 2026-11-02",
-      "reviewNotes": "Original author label: Street / Jazz. Selected as New Jazz / pop-jazz personal practice adaptation, not a dance-teacher certification. Reviewed all 16 full-phrase boards and 40 selected transition boards on the supplied female/male rigs; source ~115 BPM, 52-joint quaternion tracks. Both rigs passed movement, rotation, switch-continuity and full-mesh floor checks (+8 mm clearance). Only the listed connections are approved. Motion data and visual evidence remain local and restricted.",
+      "reviewer": "Codex technical and rendered-frame review, 2026-11-02 / 0.5.1",
+      "reviewNotes": "0.5.1 anatomy correction: reflected SMPL-X coordinates, neutral-skeleton anatomical axes, separate female/male tracks and bounded/smoothed joint poses. 120 Hz complete-clip signed elbow/knee/finger bends and all 95 Humanoid ranges passed on both characters; actual DancePlayback selected 20 connections passed on both rigs after 0.6-beat blends. Visually inspected 16 eight-panel isolated hand boards, 16 worst-range body frames and all 40 selected six-frame connection boards. Original author label Street / Jazz; New Jazz / pop-jazz personal practice adaptation with simplified hands, not dance-teacher certification. Restricted poses, renders and personal application remain local.",
       "safeNext": [
         "personal-finedance-001-2",
         "personal-finedance-001-6"
@@ -73,10 +73,10 @@
     },
     {
       "id": "personal-finedance-001-6",
-      "sha256": "ee6b785ba08520e2873fc71e53739fbff2a6c5edcd004459998d256cdff21ce9",
+      "sha256": "1f1f4e3cce91e0cb713515bf8c574dfb77762465933b1037cdd6edd2b4693f05",
       "name": "流行爵士 · 八拍 07",
-      "reviewer": "Codex technical and visual review, 2026-11-02",
-      "reviewNotes": "Original author label: Street / Jazz. Selected as New Jazz / pop-jazz personal practice adaptation, not a dance-teacher certification. Reviewed all 16 full-phrase boards and 40 selected transition boards on the supplied female/male rigs; source ~115 BPM, 52-joint quaternion tracks. Both rigs passed movement, rotation, switch-continuity and full-mesh floor checks (+8 mm clearance). Only the listed connections are approved. Motion data and visual evidence remain local and restricted.",
+      "reviewer": "Codex technical and rendered-frame review, 2026-11-02 / 0.5.1",
+      "reviewNotes": "0.5.1 anatomy correction: reflected SMPL-X coordinates, neutral-skeleton anatomical axes, separate female/male tracks and bounded/smoothed joint poses. 120 Hz complete-clip signed elbow/knee/finger bends and all 95 Humanoid ranges passed on both characters; actual DancePlayback selected 20 connections passed on both rigs after 0.6-beat blends. Visually inspected 16 eight-panel isolated hand boards, 16 worst-range body frames and all 40 selected six-frame connection boards. Original author label Street / Jazz; New Jazz / pop-jazz personal practice adaptation with simplified hands, not dance-teacher certification. Restricted poses, renders and personal application remain local.",
       "safeNext": [
         "personal-finedance-001-0",
         "personal-finedance-001-4",
@@ -85,10 +85,10 @@
     },
     {
       "id": "personal-finedance-001-7",
-      "sha256": "a03cd0425a93485995ca38d8bcb328e807cb74ed329b89b2c99201a3fc66b20c",
+      "sha256": "9e24f4151981b1ff0be5f237ac6301c0a7aefea5fbe418c97fb3d024f2a85b2d",
       "name": "流行爵士 · 八拍 08",
-      "reviewer": "Codex technical and visual review, 2026-11-02",
-      "reviewNotes": "Original author label: Street / Jazz. Selected as New Jazz / pop-jazz personal practice adaptation, not a dance-teacher certification. Reviewed all 16 full-phrase boards and 40 selected transition boards on the supplied female/male rigs; source ~115 BPM, 52-joint quaternion tracks. Both rigs passed movement, rotation, switch-continuity and full-mesh floor checks (+8 mm clearance). Only the listed connections are approved. Motion data and visual evidence remain local and restricted.",
+      "reviewer": "Codex technical and rendered-frame review, 2026-11-02 / 0.5.1",
+      "reviewNotes": "0.5.1 anatomy correction: reflected SMPL-X coordinates, neutral-skeleton anatomical axes, separate female/male tracks and bounded/smoothed joint poses. 120 Hz complete-clip signed elbow/knee/finger bends and all 95 Humanoid ranges passed on both characters; actual DancePlayback selected 20 connections passed on both rigs after 0.6-beat blends. Visually inspected 16 eight-panel isolated hand boards, 16 worst-range body frames and all 40 selected six-frame connection boards. Original author label Street / Jazz; New Jazz / pop-jazz personal practice adaptation with simplified hands, not dance-teacher certification. Restricted poses, renders and personal application remain local.",
       "safeNext": [
         "personal-finedance-001-0",
         "personal-finedance-001-2"

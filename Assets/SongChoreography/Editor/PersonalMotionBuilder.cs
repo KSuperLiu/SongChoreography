@@ -8,7 +8,7 @@ using UnityEngine;
 namespace SongChoreography.Editor
 {
     // Personal data is read only from an ignored local directory. This importer
-    // uses pose rotations directly; it neither needs nor distributes SMPL meshes.
+    // calibrates and constrains pose rotations for each rig; no SMPL meshes.
     public static class PersonalMotionBuilder
     {
         [Serializable]class Pose {public float[] root,rotations;}
@@ -17,9 +17,9 @@ namespace SongChoreography.Editor
         {
             public int schemaVersion,fps;public bool personalUseOnly;
             public string sourceId,source,license,sourceSha256;public Label sourceLabel;
-            public float sourceBpm,startSeconds;public float[] rootDrift;public Pose[] frames;
+            public float sourceBpm,startSeconds;public float[] rootDrift,neutralJoints;public Pose[] frames;
         }
-        [Serializable]class Review {public int schemaVersion=1;public string sourceSha256;public Entry[] motions;}
+        [Serializable]class Review {public int schemaVersion=2;public string sourceSha256;public Entry[] motions;}
         [Serializable]class Entry {public string id,sha256,name,reviewer,reviewNotes;public string[] safeNext;}
         static readonly int[] Parents={-1,0,0,0,1,2,3,4,5,6,7,8,9,9,9,12,13,14,16,17,18,19,20,22,23,20,25,26,20,28,29,20,31,32,20,34,35,21,37,38,21,40,41,21,43,44,21,46,47,21,49,50};
         static HumanBodyBones[] Bones()
@@ -29,8 +29,10 @@ namespace SongChoreography.Editor
             return names.Select(n=>(HumanBodyBones)Enum.Parse(typeof(HumanBodyBones),n)).ToArray();
         }
         static Quaternion Local(Pose pose,int bone)
-        {int i=bone*4;return new Quaternion(pose.rotations[i],pose.rotations[i+1],pose.rotations[i+2],pose.rotations[i+3]).normalized;}
-        static Vector3 Root(Pose pose)=>new Vector3(pose.root[0],pose.root[1],pose.root[2]);
+        {int i=bone*4;return SourceSkeletonCalibration.ConvertRotation(new Quaternion(pose.rotations[i],pose.rotations[i+1],pose.rotations[i+2],pose.rotations[i+3])).normalized;}
+        // SMPL-X is right-handed. Reflect BOTH positions and rotations before
+        // applying a heading; a yaw alone cannot change handedness.
+        static Vector3 Root(Pose pose)=>SourceSkeletonCalibration.ConvertPosition(new Vector3(pose.root[0],pose.root[1],pose.root[2]));
 
         [MenuItem("Tools/Song Choreography/Prepare Personal Learning Motions")]
         public static void Prepare()
@@ -41,6 +43,7 @@ namespace SongChoreography.Editor
             if(input.schemaVersion!=1||!input.personalUseOnly||input.fps!=30||input.frames==null||input.frames.Length<240||input.sourceSha256==null||input.sourceSha256.Length!=64)
                 throw new InvalidDataException("个人动作数据版本、来源或使用限制无效。");
             if(input.sourceLabel==null||!string.Equals(input.sourceLabel.style2,"jazz",StringComparison.OrdinalIgnoreCase))throw new InvalidDataException("源标签不是 Jazz；不能自动改名为 New Jazz。");
+            if(input.neutralJoints==null||input.neutralJoints.Length!=156)throw new InvalidDataException("缺少原作者中性骨架。请重新运行获取及转换工具；不能再用仅 T 姿态的旧重定向。");
             const string sourceLicense="PersonalAssets/FineDance/LICENSE.txt";
             if(!File.Exists(sourceLicense))throw new InvalidDataException("请将原作者 LICENSE 保存到 PersonalAssets/FineDance/LICENSE.txt，再准备个人动作。");
             var catalog=new MotionCatalog{personalUseOnly=true,sourceNotice="FineDance 真人 Street/Jazz 动捕 · 仅本机非商业个人学习；动作及包含动作的应用不得公开分发。"};
@@ -52,23 +55,26 @@ namespace SongChoreography.Editor
             {
                 string id="personal-finedance-"+input.sourceId+"-"+index;
                 float start=input.startSeconds+index*8*period,duration=8*period;
-                Bake(input,start,duration,id);
+                Bake(input,start,duration,id,"female");Bake(input,start,duration,id,"male");
                 catalog.motions.Add(new MotionDefinition{id=id,name="待复查 · 街爵士八拍 "+(index+1),resource="Motions/"+id,
                     style="new-jazz-review",beats=8,difficulty=1,energy=.35f+index*.05f,personalUseOnly=true,
-                    approved=false,localRigMotion=true,sourceNext=index<7?"personal-finedance-"+input.sourceId+"-"+(index+1):"",groundToFloor=true,supportFps=30,supportHeights=new List<float>{.008f,.008f},transitionBeats=.5f,
+                    approved=false,localRigMotion=true,sourceNext=index<7?"personal-finedance-"+input.sourceId+"-"+(index+1):"",groundToFloor=true,supportFps=30,supportHeights=new List<float>{.008f,.008f},transitionBeats=.6f,
                     source=input.source+" / "+input.sourceId+" / original label: "+input.sourceLabel.style1+" / "+input.sourceLabel.style2+" / "+start.ToString("R",System.Globalization.CultureInfo.InvariantCulture)+"s",
                     license=input.license});
             }
             AssetDatabase.SaveAssets();AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
             File.WriteAllText("Assets/Resources/PersonalMotionCatalog.json",JsonUtility.ToJson(catalog,true));
+            foreach(var motion in catalog.motions)AnatomyAssetGate.Validate(motion);
             var hashes=catalog.motions.Select(m=>new Entry{id=m.id,sha256=MocapReviewGate.Digest(m)}).ToArray();
             File.WriteAllText("PersonalAssets/FineDance/clip-hashes.json",JsonUtility.ToJson(new Review{sourceSha256=input.sourceSha256,motions=hashes},true));
             string approval="PersonalAssets/FineDance/reviewed.json";
             if(!File.Exists(approval))approval="Assets/SongChoreography/Editor/PersonalMotionReview/finedance-"+input.sourceId+".json";
-            if(File.Exists(approval))
+            if(File.Exists(approval)&&JsonUtility.FromJson<Review>(File.ReadAllText(approval)).schemaVersion<2)
+                Debug.LogWarning("旧批准未包含关节轴与范围复查，已失效；保持个人动作未批准。");
+            else if(File.Exists(approval))
             {
                 var review=JsonUtility.FromJson<Review>(File.ReadAllText(approval));
-                if(review.schemaVersion!=1||review.sourceSha256!=input.sourceSha256||review.motions==null||review.motions.Length!=8||review.motions.Select(m=>m.id).Distinct().Count()!=8)throw new InvalidDataException("个人动作批准记录与源数据不符。");
+                if(review.schemaVersion!=2||review.sourceSha256!=input.sourceSha256||review.motions==null||review.motions.Length!=8||review.motions.Select(m=>m.id).Distinct().Count()!=8)throw new InvalidDataException("个人动作批准记录与源数据不符。");
                 foreach(var item in review.motions)
                 {
                     var motion=catalog.motions.Single(m=>m.id==item.id);
@@ -84,22 +90,14 @@ namespace SongChoreography.Editor
             AssetDatabase.SaveAssets();AssetDatabase.Refresh();Debug.Log("PERSONAL MOTIONS PREPARED; approved="+catalog.motions.Count(m=>m.approved));
         }
 
-        static void Bake(Input input,float start,float duration,string id)
+        static void Bake(Input input,float start,float duration,string id,string sex)
         {
-            var source=AssetDatabase.LoadAssetAtPath<GameObject>(CharacterAssetBuilder.Art+"Superhero_Female_FullBody.fbx");
+            var source=AssetDatabase.LoadAssetAtPath<GameObject>(CharacterAssetBuilder.Art+"Superhero_"+(sex=="male"?"Male":"Female")+"_FullBody.fbx");
             var rig=UnityEngine.Object.Instantiate(source);var animator=rig.GetComponent<Animator>();animator.enabled=false;
             var bones=Bones().Select(b=>animator.GetBoneTransform(b)).ToArray();
-            Vector3 left=(bones[1].position-bones[2].position).normalized;
-            // SMPL's zero pose is a T pose. The supplied character is authored in
-            // an A pose; directly multiplying its bind rotations folds the arms.
-            foreach(int arm in new[]{16,17})
-            {
-                Vector3 direction=arm==16?left:-left;int elbow=arm+2,hand=arm+4;
-                bones[arm].rotation=Quaternion.FromToRotation(bones[elbow].position-bones[arm].position,direction)*bones[arm].rotation;
-                bones[elbow].rotation=Quaternion.FromToRotation(bones[hand].position-bones[elbow].position,direction)*bones[elbow].rotation;
-            }
+            var neutral=Enumerable.Range(0,52).Select(i=>new Vector3(input.neutralJoints[i*3],input.neutralJoints[i*3+1],-input.neutralJoints[i*3+2])).ToArray();
+            var rest=SourceSkeletonCalibration.Solve(animator,bones,neutral);
             var all=rig.GetComponentsInChildren<Transform>();var restPositions=all.Select(t=>t.localPosition).ToArray();var restRotations=all.Select(t=>t.localRotation).ToArray();
-            var rest=bones.Select(t=>t?t.rotation:Quaternion.identity).ToArray();
             Quaternion heading=Quaternion.Euler(0,180,0);
             var hips=bones[0];Vector3 initialHips=hips.position;Vector3 origin=Root(input.frames[Mathf.RoundToInt(input.startSeconds*input.fps)]);
             int count=Mathf.CeilToInt(duration*30);
@@ -119,7 +117,7 @@ namespace SongChoreography.Editor
                         world[joint]=Parents[joint]<0?q:world[Parents[joint]]*q;
                         if(bones[joint])bones[joint].rotation=heading*world[joint]*rest[joint];
                     }
-                    Vector3 drift=input.rootDrift!=null&&input.rootDrift.Length==3?new Vector3(input.rootDrift[0],0,input.rootDrift[2]):Vector3.zero;
+                    Vector3 drift=input.rootDrift!=null&&input.rootDrift.Length==3?new Vector3(input.rootDrift[0],0,-input.rootDrift[2]):Vector3.zero;
                     float progress=(start+Mathf.Min(duration,frame/30f)-input.startSeconds)/(64*60/input.sourceBpm);
                     hips.position=initialHips+heading*(Vector3.Lerp(Root(input.frames[a]),Root(input.frames[b]),mix)-origin-drift*progress);
                     if(previousWorld!=null)for(int j=0;j<22;j++)if(bones[j]&&Quaternion.Angle(previousWorld[j],bones[j].rotation)>rawStep){rawStep=Quaternion.Angle(previousWorld[j],bones[j].rotation);rawJoint=j;}
@@ -134,6 +132,7 @@ namespace SongChoreography.Editor
                 }
             }
             Debug.Log("PERSONAL CAPTURE STEP "+id+": "+rawStep+" degrees, joint="+rawJoint);
+            AnatomicalPoseCleanup.Apply(animator,bones,localSamples,count);
             // These are source-contiguous phrases, not artificially looped gestures.
             var clip=new AnimationClip{name=id,frameRate=30};
             Func<float[],AnimationCurve> curve=values=>new AnimationCurve(values.Select((v,i)=>
@@ -146,12 +145,12 @@ namespace SongChoreography.Editor
             clip.EnsureQuaternionContinuity();var settings=AnimationUtility.GetAnimationClipSettings(clip);settings.loopTime=false;settings.loopBlend=false;
             settings.keepOriginalOrientation=settings.keepOriginalPositionY=settings.keepOriginalPositionXZ=true;
             settings.loopBlendOrientation=settings.loopBlendPositionY=settings.loopBlendPositionXZ=true;AnimationUtility.SetAnimationClipSettings(clip,settings);
-            string path="Assets/Resources/Motions/"+id+".anim";var existing=AssetDatabase.LoadAssetAtPath<AnimationClip>(path);
+            string path="Assets/Resources/Motions/"+id+(sex=="male"?"-male":"")+".anim";var existing=AssetDatabase.LoadAssetAtPath<AnimationClip>(path);
             if(existing){EditorUtility.CopySerialized(clip,existing);UnityEngine.Object.DestroyImmediate(clip);}else AssetDatabase.CreateAsset(clip,path);
-            string rigPath="Assets/Resources/Motions/"+id+"-rig.asset";
+            string rigPath="Assets/Resources/Motions/"+id+"-rig"+(sex=="male"?"-male":"")+".asset";
             var rigData=AssetDatabase.LoadAssetAtPath<LocalRigMotionAsset>(rigPath);bool fresh=!rigData;
             if(fresh)rigData=ScriptableObject.CreateInstance<LocalRigMotionAsset>();
-            rigData.paths=bones.Select(t=>AnimationUtility.CalculateTransformPath(t,rig.transform)).ToArray();
+            rigData.schemaVersion=2;rigData.characterId=sex;rigData.paths=bones.Select(t=>AnimationUtility.CalculateTransformPath(t,rig.transform)).ToArray();
             rigData.frameCount=count+1;rigData.duration=duration;rigData.rotations=new float[(count+1)*208];rigData.hips=new Vector3[count+1];
             for(int f=0;f<=count;f++)
             {

@@ -19,6 +19,8 @@ namespace SongChoreography
             public float worstFrameTime;
             public float lowestMesh=100;
             public bool passed;
+            public float maxNormalizedJoint;
+            public string worstJoint;
             public float sourceDuration,practiceDuration,musicBpm;
             public bool approved=false;
         }
@@ -51,10 +53,11 @@ namespace SongChoreography
                 var mesh=new Mesh();var review=new MotionReview{id=motion.id,sourceDuration=clip.length,practiceDuration=(float)practiceDuration,musicBpm=(float)project.grid.bpm};
                 int total=Mathf.CeilToInt((float)practiceDuration*60);
                 Vector3[] startPositions=null,previousPositions=null;Quaternion[] startRotations=null,previousRotations=null;
-                var watched=new[]{HumanBodyBones.Hips,HumanBodyBones.Head,HumanBodyBones.LeftUpperLeg,HumanBodyBones.LeftLowerLeg,HumanBodyBones.LeftFoot,HumanBodyBones.LeftToes,HumanBodyBones.RightUpperLeg,HumanBodyBones.RightLowerLeg,HumanBodyBones.RightFoot,HumanBodyBones.RightToes,HumanBodyBones.LeftUpperArm,HumanBodyBones.LeftLowerArm,HumanBodyBones.LeftHand,HumanBodyBones.RightUpperArm,HumanBodyBones.RightLowerArm,HumanBodyBones.RightHand}.Select(b=>diagnosticAnimator.GetBoneTransform(b)).ToArray();
+                var watched=Enum.GetValues(typeof(HumanBodyBones)).Cast<HumanBodyBones>().Where(b=>b!=HumanBodyBones.LastBone).Select(b=>diagnosticAnimator.GetBoneTransform(b)).Where(b=>b).ToArray();
+                var probe=new JointRangeProbe(diagnosticAnimator);
                 for(int frame=0;frame<=total;frame++)
                 {
-                    playback.Seek(Math.Min(practiceDuration-.0001,frame/60.0));body.BakeMesh(mesh);var vertices=mesh.vertices;
+                    playback.Seek(Math.Min(practiceDuration-.0001,frame/60.0));probe.Sample();body.BakeMesh(mesh);var vertices=mesh.vertices;
                     review.lowestMesh=Math.Min(review.lowestMesh,vertices.Min(v=>body.transform.TransformPoint(v).y));
                     float left=footVertices[0].Min(i=>body.transform.TransformPoint(vertices[i]).y),right=footVertices[1].Min(i=>body.transform.TransformPoint(vertices[i]).y);
                     review.lowestSole=Math.Min(review.lowestSole,Math.Min(left,right));review.highestSupportSole=Math.Max(review.highestSupportSole,Math.Min(left,right));review.samples++;
@@ -80,7 +83,8 @@ namespace SongChoreography
                     previousPositions=watched.Select(b=>b.position).ToArray();previousRotations=watched.Select(b=>b.rotation).ToArray();
                     if(frame==total){review.loopPositionGap=watched.Select((b,i)=>Vector3.Distance(b.position,startPositions[i])).Max();review.loopRotationGap=watched.Select((b,i)=>Quaternion.Angle(b.rotation,startRotations[i])).Max();}
                 }
-                review.passed=review.lowestMesh>=-.005f&&review.maxFramePositionGap>.001f&&review.maxFramePositionGap<.15f&&review.maxFrameRotationGap>.1f&&review.maxFrameRotationGap<45;
+                review.maxNormalizedJoint=probe.Maximum;review.worstJoint=probe.WorstMuscle;
+                review.passed=probe.Passed&&review.lowestMesh>=-.005f&&review.maxFramePositionGap>.001f&&review.maxFramePositionGap<.15f&&review.maxFrameRotationGap>.1f&&review.maxFrameRotationGap<45;probe.Dispose();
                 Destroy(mesh);reviews.clips.Add(review);
                 playback.Seek(review.worstFrameTime);yield return null;yield return new WaitForEndOfFrame();
                 ScreenCapture.CaptureScreenshot(Path.Combine(folder,motion.id+"-worst-gap.png"));yield return null;

@@ -96,6 +96,15 @@ namespace SongChoreography.Editor
                     }
                     if(branches==null)branches=HumanoidCurveContinuity.Reference(item.clip);
                     HumanoidCurveContinuity.AlignBranches(item.clip,branches);
+                    foreach(var binding in AnimationUtility.GetCurveBindings(item.clip).Where(b=>IsArm(b.propertyName)))
+                    {
+                        var original=AnimationUtility.GetEditorCurve(item.clip,binding);
+                        var bounded=new AnimationCurve(original.keys.Select(k=>new Keyframe(k.time,Mathf.Clamp(k.value,-.97f,.97f))).ToArray());
+                        for(int k=0;k<bounded.length;k++){AnimationUtility.SetKeyLeftTangentMode(bounded,k,AnimationUtility.TangentMode.ClampedAuto);AnimationUtility.SetKeyRightTangentMode(bounded,k,AnimationUtility.TangentMode.ClampedAuto);}
+                        AnimationUtility.SetEditorCurve(item.clip,binding,bounded);
+                    }
+                    foreach(var binding in AnimationUtility.GetCurveBindings(item.clip).Where(b=>AnatomicalPoseCleanup.IsFinger(b.propertyName)))
+                        AnimationUtility.SetEditorCurve(item.clip,binding,AnimationCurve.Constant(0,item.clip.length,binding.propertyName.Contains("Spread")?0:.35f));
                     var old=item.motion.supportHeights;var shifted=new List<float>();
                     for(int frame=0;frame<=item.poses.Count;frame++)shifted.Add(old[(frame+item.chosen.frame)%item.poses.Count]);
                     item.motion.supportHeights=shifted;

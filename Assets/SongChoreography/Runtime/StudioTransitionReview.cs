@@ -17,6 +17,9 @@ namespace SongChoreography
             public string from,to,character,screenshot;
             public int samples;
             public float lowestMesh=100,maxFramePosition,maxFrameAngle,cutPositionGap;
+            public float maxNormalizedJoint;
+            public string worstJoint="";
+            public bool jointRangesPassed=true;
             public bool passed;
         }
         [Serializable]class TransitionReport
@@ -64,16 +67,22 @@ namespace SongChoreography
             if(!Ready)throw new InvalidOperationException("Transition review music failed: "+error);
             playback.Pause();inspectorTab=2;ResetCamera();
             var edges=JsonUtility.FromJson<PhaseEdges>(File.ReadAllText(Path.Combine(Application.streamingAssetsPath,"MotionCredits","phase-review.json"))).connections.Where(e=>e.candidate).ToList();
-            if(catalog.personalUseOnly)
+            bool personalReview=catalog.personalUseOnly&&!Environment.GetCommandLineArgs().Contains("-review-charleston");
+            if(personalReview)
             {
                 var candidates=catalog.motions.Where(m=>m.personalUseOnly).ToArray();
                 bool approvedOnly=candidates.All(m=>m.approved)&&!Environment.GetCommandLineArgs().Contains("-review-all-candidates");
                 edges=candidates.SelectMany(a=>candidates.Where(b=>a.id!=b.id&&(!approvedOnly||a.safeNext.Contains(b.id))).Select(b=>new PhaseEdge{from=a.id,to=b.id,candidate=true})).ToList();
             }
+            else
+            {
+                var approved=catalog.motions.Where(m=>m.approved&&m.style==DanceStyles.Charleston).ToArray();
+                if(approved.Length>=8&&!Environment.GetCommandLineArgs().Contains("-review-all-candidates"))edges=approved.SelectMany(a=>a.safeNext.Select(id=>new PhaseEdge{from=a.id,to=id,candidate=true})).ToList();
+            }
             transitionReport.expectedCases=edges.Count*2;
             var sequence=project.segments;string oldTitle=project.title,oldCharacter=selectedCharacter;
             var oldLinks=catalog.motions.ToDictionary(m=>m.id,m=>new List<string>(m.safeNext));
-            foreach(var motion in catalog.motions.Where(m=>m.style=="charleston-review"||m.personalUseOnly))motion.safeNext=edges.Where(e=>e.from==motion.id).Select(e=>e.to).ToList();
+            foreach(var motion in catalog.motions.Where(m=>personalReview?m.personalUseOnly:(m.style=="charleston-review"||m.style==DanceStyles.Charleston)))motion.safeNext=edges.Where(e=>e.from==motion.id).Select(e=>e.to).ToList();
             var mesh=new Mesh();
             try
             {
@@ -81,7 +90,7 @@ namespace SongChoreography
                 {
                     SwitchCharacter(sex);yield return null;ResetCamera();
                     var body=characterObject.GetComponentsInChildren<SkinnedMeshRenderer>().OrderByDescending(r=>r.sharedMesh.vertexCount).First();
-                    var watched=new[]{HumanBodyBones.Hips,HumanBodyBones.Head,HumanBodyBones.LeftUpperLeg,HumanBodyBones.LeftLowerLeg,HumanBodyBones.LeftFoot,HumanBodyBones.LeftToes,HumanBodyBones.RightUpperLeg,HumanBodyBones.RightLowerLeg,HumanBodyBones.RightFoot,HumanBodyBones.RightToes,HumanBodyBones.LeftUpperArm,HumanBodyBones.LeftLowerArm,HumanBodyBones.LeftHand,HumanBodyBones.RightUpperArm,HumanBodyBones.RightLowerArm,HumanBodyBones.RightHand}.Select(b=>diagnosticAnimator.GetBoneTransform(b)).ToArray();
+                    var watched=Enum.GetValues(typeof(HumanBodyBones)).Cast<HumanBodyBones>().Where(b=>b!=HumanBodyBones.LastBone).Select(b=>diagnosticAnimator.GetBoneTransform(b)).Where(b=>b).ToArray();
                     foreach(var edge in edges)
                     {
                         double period=60/project.grid.bpm,cut=period*8;
@@ -90,17 +99,21 @@ namespace SongChoreography
                         playback.Seek(cut-.00001);var beforeCut=watched.Select(t=>t.position).ToArray();playback.Seek(cut);
                         result.cutPositionGap=watched.Select((t,i)=>Vector3.Distance(t.position,beforeCut[i])).Max();
                         Vector3[] previous=null;Quaternion[] rotations=null;
-                        for(double time=cut-.15;time<=cut+.65;time+=1.0/120)
+                        using(var probe=new JointRangeProbe(diagnosticAnimator))
                         {
-                            playback.Seek(time);body.BakeMesh(mesh);result.lowestMesh=Math.Min(result.lowestMesh,mesh.vertices.Min(v=>body.transform.TransformPoint(v).y));result.samples++;
-                            if(previous!=null)
+                            for(double time=cut-.15;time<=cut+.65;time+=1.0/120)
                             {
-                                result.maxFramePosition=Math.Max(result.maxFramePosition,watched.Select((t,i)=>Vector3.Distance(t.position,previous[i])).Max());
-                                result.maxFrameAngle=Math.Max(result.maxFrameAngle,watched.Select((t,i)=>Quaternion.Angle(t.rotation,rotations[i])).Max());
+                                playback.Seek(time);probe.Sample();body.BakeMesh(mesh);result.lowestMesh=Math.Min(result.lowestMesh,mesh.vertices.Min(v=>body.transform.TransformPoint(v).y));result.samples++;
+                                if(previous!=null)
+                                {
+                                    result.maxFramePosition=Math.Max(result.maxFramePosition,watched.Select((t,i)=>Vector3.Distance(t.position,previous[i])).Max());
+                                    result.maxFrameAngle=Math.Max(result.maxFrameAngle,watched.Select((t,i)=>Quaternion.Angle(t.rotation,rotations[i])).Max());
+                                }
+                                previous=watched.Select(t=>t.position).ToArray();rotations=watched.Select(t=>t.rotation).ToArray();
                             }
-                            previous=watched.Select(t=>t.position).ToArray();rotations=watched.Select(t=>t.rotation).ToArray();
+                            result.jointRangesPassed=probe.Passed;result.maxNormalizedJoint=probe.Maximum;result.worstJoint=probe.WorstMuscle;
                         }
-                        result.passed=result.lowestMesh>=-.005f&&result.cutPositionGap<.003f&&result.maxFramePosition<.05f&&result.maxFrameAngle<12;
+                        result.passed=result.jointRangesPassed&&result.lowestMesh>=-.005f&&result.cutPositionGap<.003f&&result.maxFramePosition<.05f&&result.maxFrameAngle<12;
                         transitionReport.cases.Add(result);
                         ClearReviewBoard();reviewFrames=new List<Texture2D>();reviewBoardTitle=sex+" · "+edge.from+" → "+edge.to;
                         reviewBoardSubtitle=(result.passed?"技术检查通过":"需修正")+$"  |  切换位移 {result.cutPositionGap*1000:0.00} mm  |  每帧最大旋转 {result.maxFrameAngle:0.0}°  |  仍需视觉复查";

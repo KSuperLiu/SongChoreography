@@ -22,7 +22,7 @@ namespace SongChoreography.Editor
             public float energy=.5f;
             public List<string> safeNext=new List<string>();
         }
-        [Serializable]public class Review {public int schemaVersion=1;public List<Entry> motions=new List<Entry>();}
+        [Serializable]public class Review {public int schemaVersion=2;public List<Entry> motions=new List<Entry>();}
         public static string Digest(MotionDefinition motion)
         {
             var clip=Resources.Load<AnimationClip>(motion.resource);var text=new StringBuilder();
@@ -33,9 +33,12 @@ namespace SongChoreography.Editor
             if(!string.IsNullOrEmpty(motion.sourceNext))text.Append("|source-next|").Append(motion.sourceNext);
             if(motion.localRigMotion)
             {
-                var rig=Resources.Load<LocalRigMotionAsset>(motion.resource+"-rig");
-                if(!rig)throw new InvalidDataException("Missing local rig pose data: "+motion.id);
-                text.Append("|local-rig|").Append(JsonUtility.ToJson(rig));
+                foreach(string sex in new[]{"female","male"})
+                {
+                    var rig=Resources.Load<LocalRigMotionAsset>(motion.resource+"-rig"+(sex=="male"?"-male":""));
+                    if(!rig||rig.schemaVersion!=2||rig.characterId!=sex)throw new InvalidDataException("Missing character-specific pose data: "+motion.id+" / "+sex);
+                    text.Append("|local-rig-").Append(sex).Append('|').Append(JsonUtility.ToJson(rig));
+                }
             }
             foreach(var binding in AnimationUtility.GetCurveBindings(clip).OrderBy(b=>b.propertyName,StringComparer.Ordinal))
             {
@@ -48,13 +51,15 @@ namespace SongChoreography.Editor
         public static void Apply(MotionCatalog catalog)
         {
             var candidates=catalog.motions.Where(m=>m.style=="charleston-review").ToArray();
+            foreach(var motion in candidates)AnatomyAssetGate.Validate(motion);
             var measured=new Review{motions=candidates.Select(m=>new Entry{id=m.id,sha256=Digest(m)}).ToList()};
             Directory.CreateDirectory("Builds/Windows/MotionPhase");
             File.WriteAllText("Builds/Windows/MotionPhase/clip-hashes.json",JsonUtility.ToJson(measured,true));
             const string reviewPath="Assets/SongChoreography/Editor/MocapData/reviewed-charleston.json";
             if(!File.Exists(reviewPath))return;
             var review=JsonUtility.FromJson<Review>(File.ReadAllText(reviewPath));
-            if(review.schemaVersion!=1||review.motions.Count!=8||review.motions.Select(m=>m.id).Distinct().Count()!=8)throw new InvalidDataException("Charleston review manifest must contain eight unique reviewed clips.");
+            if(review.schemaVersion<2){Debug.LogWarning("Legacy Charleston approval lacks anatomy review; kept unapproved.");return;}
+            if(review.schemaVersion!=2||review.motions.Count!=8||review.motions.Select(m=>m.id).Distinct().Count()!=8)throw new InvalidDataException("Charleston review manifest must contain eight unique reviewed clips.");
             foreach(var entry in review.motions)
             {
                 var motion=candidates.SingleOrDefault(m=>m.id==entry.id);

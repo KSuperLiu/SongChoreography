@@ -16,10 +16,18 @@ namespace SongChoreography
             public int width,height,frames,renderedFrames,segments,uniqueMotions,loopSamples;
             public float p95FrameMs,p99FrameMs,meanFrameMs,testSeconds;
             public double maxAudioClockErrorMs;
+            public float maxNormalizedJoint;
+            public bool jointRangesPassed=true;
+            public bool backgroundQa;
+            public int explicitStageRenders;
+            public float minimumBendDegrees=180;
+            public string jointFailure="";
             public bool allPassed;
             public List<AcceptanceCase> checks=new List<AcceptanceCase>();
         }
         ProductReport productReport;
+        JointRangeProbe productJointProbe;
+        int productProbeAnimator;
         readonly List<float> productFrameTimes=new List<float>();
         void ProductCheck(string name,bool pass,string detail="")
         {
@@ -29,9 +37,11 @@ namespace SongChoreography
         IEnumerator ProductAcceptance()
         {
             QualitySettings.vSyncCount=0;Application.targetFrameRate=60;
-            Screen.SetResolution(1920,1080,FullScreenMode.FullScreenWindow);
+            bool background=Environment.GetCommandLineArgs().Contains("-background-qa");
+            if(background)AudioListener.volume=0;
+            Screen.SetResolution(1920,1080,background?FullScreenMode.Windowed:FullScreenMode.FullScreenWindow);
             for(int frame=0;frame<5;frame++)yield return null;
-            productReport=new ProductReport{graphicsDevice=SystemInfo.graphicsDeviceName,width=Screen.width,height=Screen.height};
+            productReport=new ProductReport{graphicsDevice=SystemInfo.graphicsDeviceName,width=Screen.width,height=Screen.height,backgroundQa=background};
             float began=Time.realtimeSinceStartup;int firstRendered=renderedFrames;
             var iterator=ProductScenarios();
             while(true)
@@ -42,6 +52,7 @@ namespace SongChoreography
                 if(!more)break;yield return current;
             }
             (iterator as IDisposable)?.Dispose();
+            productJointProbe?.Dispose();productJointProbe=null;
             productReport.frames=productFrameTimes.Count;productReport.renderedFrames=renderedFrames-firstRendered;
             productReport.testSeconds=Time.realtimeSinceStartup-began;
             if(productFrameTimes.Count>0)
@@ -52,12 +63,21 @@ namespace SongChoreography
             productReport.width=Screen.width;productReport.height=Screen.height;
             if(!Environment.GetCommandLineArgs().Contains("-state-acceptance"))ProductCheck("1080p actual dance performance",Screen.width==1920&&Screen.height==1080&&productReport.frames>1000&&productReport.p95FrameMs<=33.34f&&productReport.meanFrameMs<=33.34f,$"{Screen.width}x{Screen.height}, mean={productReport.meanFrameMs:0.00} ms, p95={productReport.p95FrameMs:0.00} ms, frames={productReport.frames}, GPU={productReport.graphicsDevice}");
             ProductCheck("Software audio clock within 50 ms",productReport.maxAudioClockErrorMs<=50,"maximum="+productReport.maxAudioClockErrorMs+" ms; excludes speaker/device latency");
+            if(productFrameTimes.Count>0)ProductCheck("All played joints remain within configured ranges",productReport.jointRangesPassed,"maximum normalized="+productReport.maxNormalizedJoint);
+            if(background&&productFrameTimes.Count>0)ProductCheck("Background QA actually renders the 3D stage",productReport.explicitStageRenders>1000,"rendered="+productReport.explicitStageRenders+"; stage target="+preview.width+"x"+preview.height);
             productReport.allPassed=productReport.checks.All(c=>c.passed);
             string folder=Path.Combine(AppDirectory,"ProductAcceptance");Directory.CreateDirectory(folder);
+            if(background)
+            {
+                stageCamera.Render();var previous=RenderTexture.active;RenderTexture.active=preview;
+                var stage=new Texture2D(preview.width,preview.height,TextureFormat.RGB24,false);
+                stage.ReadPixels(new Rect(0,0,preview.width,preview.height),0,0);stage.Apply();RenderTexture.active=previous;
+                File.WriteAllBytes(Path.Combine(folder,"stage-final.png"),stage.EncodeToPNG());Destroy(stage);
+            }
             File.WriteAllText(Path.Combine(folder,"results.json"),JsonUtility.ToJson(productReport,true));
-            yield return new WaitForEndOfFrame();ScreenCapture.CaptureScreenshot(Path.Combine(folder,"final.png"));
+            if(!background){yield return new WaitForEndOfFrame();ScreenCapture.CaptureScreenshot(Path.Combine(folder,"final.png"));}
             yield return new WaitForSecondsRealtime(.5f);
-            Screen.SetResolution(1600,900,FullScreenMode.Windowed);yield return null;
+            if(!background){Screen.SetResolution(1600,900,FullScreenMode.Windowed);yield return null;}
             Application.Quit(productReport.allPassed?0:3);
         }
         IEnumerator ProductScenarios()
@@ -131,6 +151,11 @@ namespace SongChoreography
         }
         void ProductFrame()
         {
+            if(productJointProbe==null||productProbeAnimator!=diagnosticAnimator.GetInstanceID())
+            {productJointProbe?.Dispose();productJointProbe=new JointRangeProbe(diagnosticAnimator);productProbeAnimator=diagnosticAnimator.GetInstanceID();}
+            if(!productJointProbe.Sample()){productReport.jointRangesPassed=false;productReport.jointFailure=productJointProbe.FailureReason;}
+            productReport.maxNormalizedJoint=Math.Max(productReport.maxNormalizedJoint,productJointProbe.Maximum);productReport.minimumBendDegrees=Math.Min(productReport.minimumBendDegrees,productJointProbe.MinimumBendDegrees);
+            if(productReport.backgroundQa){stageCamera.Render();productReport.explicitStageRenders++;}
             productFrameTimes.Add(Time.unscaledDeltaTime*1000);
             productReport.maxAudioClockErrorMs=Math.Max(productReport.maxAudioClockErrorMs,playback.AudioErrorMilliseconds);
         }

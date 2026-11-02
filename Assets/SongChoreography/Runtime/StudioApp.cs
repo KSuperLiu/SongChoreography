@@ -68,7 +68,7 @@ namespace SongChoreography
                 SetupStage();
                 characterObject=DancerCharacters.Create(selectedCharacter);
                 diagnosticAnimator=characterObject.GetComponentInChildren<Animator>();
-                playback=gameObject.AddComponent<DancePlayback>();playback.Initialize(diagnosticAnimator,catalog);
+                playback=gameObject.AddComponent<DancePlayback>();playback.Initialize(diagnosticAnimator,catalog,selectedCharacter);
                 cameraRig=gameObject.AddComponent<PracticeCamera>();cameraRig.Initialize(stageCamera,characterObject.transform);UpdateCamera();
                 foreach(var m in catalog.motions)if(!playback.HasMotion(m.id))throw new InvalidOperationException("动作资源缺失："+m.resource);
                 audition=gameObject.AddComponent<AudioSource>();audition.playOnAwake=false;audition.spatialBlend=0;
@@ -81,8 +81,9 @@ namespace SongChoreography
                 else if(Environment.GetCommandLineArgs().Contains("-smoke")||Environment.GetCommandLineArgs().Contains("-import-smoke")||Environment.GetCommandLineArgs().Contains("-portable-smoke")||Environment.GetCommandLineArgs().Contains("-library-smoke")||Environment.GetCommandLineArgs().Contains("-acceptance"))StartCoroutine(Smoke());
                 else
                 {
-                    string last=PlayerPrefs.GetString("LastProject","");
-                    if(File.Exists(last))Guard(()=>OpenProject(last));
+                    if(Environment.GetCommandLineArgs().Contains("-demo-paused"))Guard(()=>UseBuiltin(0,false));
+                    else if(Environment.GetCommandLineArgs().Contains("-demo"))Guard(()=>UseBuiltin(0));
+                    else {string last=PlayerPrefs.GetString("LastProject","");if(File.Exists(last))Guard(()=>OpenProject(last));}
                 }
             }
             catch(Exception ex){Fail(ex);}
@@ -132,7 +133,7 @@ namespace SongChoreography
             var switchClock=System.Diagnostics.Stopwatch.StartNew();
             var replacement=DancerCharacters.Create(id);var animator=replacement.GetComponentInChildren<Animator>();
             double createMs=switchClock.Elapsed.TotalMilliseconds;
-            try{playback.Retarget(animator);}catch{Destroy(replacement);throw;}
+            try{playback.Retarget(animator,id);}catch{Destroy(replacement);throw;}
             double retargetMs=switchClock.Elapsed.TotalMilliseconds-createMs;
             var previous=characterObject;characterObject=replacement;diagnosticAnimator=animator;selectedCharacter=id;
             cameraRig.SetTarget(replacement.transform);UpdateCamera();Destroy(previous);
@@ -223,7 +224,7 @@ namespace SongChoreography
                 audition.clip=clip;audition.Play();message="正在试听 "+track.title+" · "+track.artist;
             }
         }
-        void UseBuiltin(int index)
+        void UseBuiltin(int index,bool autoPlay=true)
         {
             if(Busy)return;
             if(Ready)Save();
@@ -232,7 +233,7 @@ namespace SongChoreography
             string destination=Path.Combine(Workspace,track.id+"-"+Guid.NewGuid().ToString("N").Substring(0,6));Directory.CreateDirectory(destination);
             foreach(var f in Directory.GetFiles(source))if(!f.EndsWith(".meta",StringComparison.OrdinalIgnoreCase))File.Copy(f,Path.Combine(destination,Path.GetFileName(f)));
             sourcePath=Path.Combine(source,"normal.wav");startText="0";durationText=track.excerptDuration.ToString(CultureInfo.InvariantCulture);
-            autoPlayOnLoad=true;LoadAnalysis(destination);
+            autoPlayOnLoad=autoPlay;LoadAnalysis(destination);
         }
         void LoadAnalysis(string folder)
         {
@@ -385,7 +386,7 @@ namespace SongChoreography
             EnsureStyles();float scale=Math.Min(Screen.width/W,Screen.height/H);GUI.matrix=Matrix4x4.TRS(new Vector3((Screen.width-W*scale)/2,(Screen.height-H*scale)/2,0),Quaternion.identity,new Vector3(scale,scale,1));
             Box(new Rect(0,0,W,H),new Color(.035f,.05f,.075f));
             if(reviewFrames!=null){DrawReviewBoard();GUI.matrix=Matrix4x4.identity;return;}
-            Text(24,17,620,44,"CHOREO  /  编舞练习室",title);Text(26,62,1030,25,catalog!=null&&catalog.personalUseOnly?"个人学习版 · 含本地受限动作 · 请勿上传或分发此应用":"本地音乐  ·  节拍编排  ·  3D 跟学",muted);
+            Text(24,17,620,44,"CHOREO  /  编舞练习室",title);Text(26,62,1030,25,catalog!=null&&catalog.personalUseOnly?"个人学习版 "+Application.version+" · 含本地受限动作 · 请勿上传或分发此应用":"本地音乐  ·  节拍编排  ·  3D 跟学  ·  "+Application.version,muted);
             Text(1110,30,172,30,dirty?"● 有未保存的修改":"本地音乐工作区",muted);
             GUI.enabled=!Busy&&musicLibrary.tracks.Count>0;
             if(Button(1292,24,145,34,"一键演示",true))Guard(()=>UseBuiltin(0));GUI.enabled=true;

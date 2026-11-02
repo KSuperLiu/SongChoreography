@@ -35,18 +35,22 @@ class PersonalMotionTests(unittest.TestCase):
             data=np.zeros((1024,315),dtype=np.float32)
             data[:,3:]=np.tile([1,0,0,0,1,0],52)
             np.save(base/'fixture.npy',data)
+            np.save(base/'neutral.npy',np.arange(165,dtype=np.float32).reshape(55,3)/100)
             (base/'label.json').write_text(json.dumps(dict(name='Original synthetic fixture',style1='Street',style2='Jazz')))
             saved_root=converter.ROOT
             try:
                 converter.ROOT=base
                 with self.assertRaises(ValueError): converter.convert(base/'fixture.npy',base/'label.json',120,0,False)
-                path=converter.convert(base/'fixture.npy',base/'label.json',120,0,True)
+                with self.assertRaises(ValueError): converter.convert(base/'fixture.npy',base/'label.json',120,0,True)
+                path=converter.convert(base/'fixture.npy',base/'label.json',120,0,True,base/'neutral.npy')
                 result=json.loads(path.read_text(encoding='utf-8'))
                 self.assertTrue(result['personalUseOnly'])
                 self.assertNotIn('approved',result)
                 self.assertEqual(result['sourceLabel']['style2'],'Jazz')
                 self.assertEqual(len(result['sourceSha256']),64)
                 self.assertEqual(len(result['frames']),1024)
+                self.assertEqual(len(result['neutralJoints']),156)
+                self.assertEqual(len(result['neutralSkeletonSha256']),64)
                 with self.assertRaises(ValueError): converter.convert(base/'fixture.npy',base/'label.json',120,20,True)
                 (base/'label.json').write_text(json.dumps(dict(style2='Ballet')))
                 with self.assertRaises(ValueError): converter.convert(base/'fixture.npy',base/'label.json',120,0,True)
@@ -58,6 +62,14 @@ class PersonalMotionTests(unittest.TestCase):
             path=Path(folder)/'object.npy'
             np.save(path,np.array([dict(test=True)],dtype=object))
             with self.assertRaises(ValueError): converter.convert(path,path,120,0,True)
+
+    def test_invalid_neutral_skeleton_is_rejected(self):
+        with tempfile.TemporaryDirectory(dir=ROOT/'TestResults') as folder:
+            base=Path(folder);data=np.zeros((1024,315),dtype=np.float32);data[:,3:]=np.tile([1,0,0,0,1,0],52)
+            np.save(base/'motion.npy',data);(base/'label.json').write_text(json.dumps(dict(style2='Jazz')))
+            for neutral in (np.zeros((54,3)),np.full((55,3),np.nan),np.array([dict(test=True)],dtype=object)):
+                np.save(base/'neutral.npy',neutral)
+                with self.assertRaises(ValueError):converter.convert(base/'motion.npy',base/'label.json',120,0,True,base/'neutral.npy')
 
 
 if __name__=='__main__':unittest.main()

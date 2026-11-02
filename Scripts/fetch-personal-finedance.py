@@ -22,6 +22,8 @@ PREFIX_SHA='ca598abcf6458656cf58378854513e82f3c45c432d821c155595eb7bc5346b23'
 POSE_SHA='0eb42e5df55c3f8075c760fd079855a51e1ec0a45e7850b5776a8a0d0e75bda7'
 LABEL_SHA='ce62039a15092106aeae198bc59dd9466035e556a75dc58cf8949bc21bdb69ed'
 LICENSE_SHA='24956792f21e4dfe7c630a7995c60fca9729b7feed51cc972ae0b873a299e310'
+SKELETON='https://raw.githubusercontent.com/li-ronghui/FineDance/'+REVISION+'/smplx_neu_J_1.npy'
+SKELETON_SHA='aa80c6e1b28e9d43470f250a2d168bacf2cb0cc5e8688ff2e48e71f4db13ba6c'
 
 
 def checked(payload,expected,name):
@@ -53,12 +55,14 @@ def fetch(output,extractor,personal_use):
     label=checked(prefix[91:165],LABEL_SHA,'Source label 001')
     request=urllib.request.Request(LICENSE,headers={'User-Agent':'ChoreoPersonalLearning/0.5'})
     with urllib.request.urlopen(request,timeout=30) as response:license_text=checked(response.read(50000),LICENSE_SHA,'Source license')
+    with urllib.request.urlopen(SKELETON,timeout=30) as response:skeleton=checked(response.read(50000),SKELETON_SHA,'Neutral source skeleton')
     destination=output/'source';destination.mkdir(parents=True,exist_ok=True)
     (destination/'001.npy').write_bytes(pose)
     (destination/'001.json').write_bytes(label)
+    (destination/'smplx_neu_J_1.npy').write_bytes(skeleton)
     (output/'LICENSE.txt').write_bytes(license_text)
     record=dict(schemaVersion=1,personalUseOnly=True,source='https://github.com/li-ronghui/FineDance',
-        sourceRevision=REVISION,archive=SOURCE,sourceLabel=json.loads(label),motionSha256=POSE_SHA,
+        sourceRevision=REVISION,archive=SOURCE,sourceLabel=json.loads(label),motionSha256=POSE_SHA,neutralSkeletonSha256=SKELETON_SHA,
         retrievedUtc=datetime.datetime.now(datetime.timezone.utc).isoformat(),redistributionAllowed=False)
     (output/'SOURCE.json').write_text(json.dumps(record,ensure_ascii=False,indent=2),encoding='utf-8')
     print(json.dumps(dict(prepared=True,personalUseOnly=True,sourceLabel=record['sourceLabel'],motionSha256=POSE_SHA,output=str(output)),ensure_ascii=False))

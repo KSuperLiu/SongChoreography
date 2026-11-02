@@ -45,7 +45,7 @@ public static class PrototypeBuilder
         }
         EditorBuildSettings.scenes=new[]{new EditorBuildSettingsScene(Scene,true)};
         PlayerSettings.companyName="SongChoreography";PlayerSettings.productName="Choreo Practice Studio";
-        PlayerSettings.bundleVersion="0.5.0";
+        PlayerSettings.bundleVersion="0.5.1";
         PlayerSettings.defaultScreenWidth=1600;PlayerSettings.defaultScreenHeight=900;
         PlayerSettings.fullScreenMode=FullScreenMode.Windowed;PlayerSettings.resizableWindow=true;PlayerSettings.runInBackground=true;
         PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone,ScriptingImplementation.Mono2x);

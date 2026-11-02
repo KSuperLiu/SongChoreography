@@ -6,7 +6,7 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path -Parent $PSScriptRoot
-if ($PersonalLearning -and -not $PSBoundParameters.ContainsKey('OutputDirectory')) { $OutputDirectory = 'Builds\PersonalWindows' }
+if ($PersonalLearning -and -not $PSBoundParameters.ContainsKey('OutputDirectory')) { $OutputDirectory = 'Builds\PersonalWindows-0.5.1' }
 if (-not (Test-Path -LiteralPath $UnityPath)) { throw "找不到 Unity：$UnityPath" }
 New-Item -ItemType Directory -Path (Join-Path $projectRoot 'TestResults') -Force | Out-Null
 $buildRoot = $projectRoot

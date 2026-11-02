@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "version": "0.5.1",
+  "date": "2026-11-02",
+  "unity": "2022.3.62f3",
+  "gpu": "NVIDIA GeForce GTX 1050 Ti",
+  "scope": "Original aggregate test statistics only; no source poses, skeleton arrays, animation or restricted renders.",
+  "clips": {
+    "sampleHz": 120,
+    "totalCases": 32,
+    "personal": {
+      "cases": 16,
+      "passed": 16,
+      "samples": 8080,
+      "maximumNormalized": 0.9792132377624512,
+      "minimumSignedBendDegrees": 1.219648838043213
+    },
+    "charleston": {
+      "cases": 16,
+      "passed": 16,
+      "samples": 4880,
+      "maximumNormalized": 0.9700029492378235,
+      "minimumSignedBendDegrees": 13.775175094604492
+    }
+  },
+  "connections": {
+    "sampleHz": 120,
+    "allCandidates": 152,
+    "allCandidatesPassed": 118,
+    "personalSelected": {
+      "cases": 40,
+      "passed": 40,
+      "maximumNormalized": 0.9929158687591553,
+      "minimumSignedBendDegrees": 1.313582181930542,
+      "maximum120HzPositionDeltaMetres": 0.043680183589458466,
+      "maximum120HzAngleDegrees": 8.185032844543457,
+      "maximumCutPositionGapMetres": 0.00013405691424850374,
+      "lowestMeshMetres": 0.007999882102012634
+    },
+    "charlestonSelected": {
+      "cases": 40,
+      "passed": 40,
+      "maximumNormalized": 0.9700016975402832,
+      "minimumSignedBendDegrees": 21.09765625,
+      "maximum120HzPositionDeltaMetres": 0.040550243109464645,
+      "maximum120HzAngleDegrees": 3.260057210922241,
+      "maximumCutPositionGapMetres": 0.0004192835185676813,
+      "lowestMeshMetres": 0.011157671920955181
+    }
+  },
+  "negativeRegressions": {
+    "reflectionPreservesPhysicalRotation": true,
+    "deliberateReverseWristRejected": true,
+    "wrongCharacterTrackRejected": true,
+    "old050TrackRejected": true
+  },
+  "approvalRegressions": {
+    "legacyPersonalRejected": true,
+    "changedPersonalRejected": true,
+    "legacyPublicRejected": true,
+    "changedPublicRejected": true,
+    "restoredApprovalsPassed": true
+  },
+  "visualReview": {
+    "isolatedHandBoards": 16,
+    "panelsPerHandBoard": 8,
+    "worstRangeBodyFrames": 32,
+    "selectedSixFrameConnectionBoards": 80,
+    "scope": "Codex rendered-frame inspection; not full video viewing or dance-teacher certification."
+  },
+  "coreChecksPassed": 43,
+  "pythonTestsPassed": 9,
+  "personalBuild": {
+    "runtimeAssemblySha256": "550727373cd48852c5ab4798c4e9acf47c1ece3dcdea7b94c38d403b1f392f36",
+    "product": {
+      "checks": 28,
+      "passed": true,
+      "renderScope": "background explicit production-stage rendering; muted; 1920x1080 app, 1240x694 stage target",
+      "explicitStageRenders": 6251,
+      "meanFrameMs": 16.672664642333984,
+      "p95FrameMs": 16.667301177978516,
+      "seconds": 107.10884857177734,
+      "maxSoftwareAudioClockErrorMs": 42.68480725623513,
+      "maximumNormalizedJoint": 0.9928932785987854,
+      "minimumSignedBendDegrees": 1.219488501548767
+    },
+    "cameras": {
+      "checks": 57,
+      "passed": true
+    },
+    "portable": {
+      "passed": true,
+      "movedToChineseSpaceDirectory": true,
+      "systemPythonRemoved": true,
+      "runtimeAssemblyMatched": true
+    }
+  },
+  "publicBuild": {
+    "runtimeAssemblySha256": "23b44d8d63b750ef534a42e6efe2175cba685c3b592c68c6ab72f229463f7a46",
+    "product": {
+      "checks": 27,
+      "passed": true,
+      "renderScope": "background explicit production-stage rendering; muted; 1920x1080 app, 1240x694 stage target",
+      "explicitStageRenders": 6248,
+      "meanFrameMs": 16.669679641723633,
+      "p95FrameMs": 16.667301177978516,
+      "seconds": 106.98682403564453,
+      "maxSoftwareAudioClockErrorMs": 42.65759637187638,
+      "maximumNormalizedJoint": 0.9700021743774414,
+      "minimumSignedBendDegrees": 13.763710975646973
+    },
+    "cameras": {
+      "checks": 57,
+      "passed": true
+    },
+    "portable": {
+      "passed": true,
+      "movedToChineseSpaceDirectory": true,
+      "systemPythonRemoved": true,
+      "runtimeAssemblyMatched": true
+    }
+  },
+  "publicInputRestrictedFiles": 0,
+  "personalPublicPackagingRejected": true
+}
