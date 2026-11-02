@@ -47,6 +47,7 @@ namespace SongChoreography
         bool TestMode=>Environment.GetCommandLineArgs().Any(a=>a=="-smoke"||a=="-import-smoke"||a=="-portable-smoke"||a=="-library-smoke"||a=="-acceptance"||a=="-mocap-preview"||a=="-transition-review"||a=="-product-acceptance"||a=="-state-acceptance");
         string PreferredStyle=>Choreographer.Eligible(catalog,DanceStyles.NewJazz).Count>=8?DanceStyles.NewJazz:Choreographer.Eligible(catalog,DanceStyles.Charleston).Count>=8?DanceStyles.Charleston:DanceStyles.Diagnostic;
         string Workspace=>Path.Combine(Application.persistentDataPath,"Projects");
+        string ProjectPickerDirectory=>ProjectLocations.BrowseDirectory(projectFolder,PlayerPrefs.GetString("LastProject",""),Workspace);
         string AppDirectory=>Path.GetDirectoryName(Application.dataPath);
         string AnalyzerPython=>AnalyzerRuntime.Resolve(AppDirectory,pythonPath,Environment.GetEnvironmentVariable("SONG_CHOREO_PYTHON"));
         bool BundledAnalyzer=>string.Equals(AnalyzerPython,AnalyzerRuntime.BundledPath(AppDirectory),StringComparison.OrdinalIgnoreCase);
@@ -305,7 +306,7 @@ namespace SongChoreography
             File.WriteAllText(temp,JsonUtility.ToJson(project,true));
             if(File.Exists(path))File.Replace(temp,path,null);else File.Move(temp,path);
             if(!TestMode)PlayerPrefs.SetString("LastProject",path);
-            dirty=false;message="编舞已保存到本地，可通过“打开项目”继续练习。";
+            dirty=false;message="已保存："+Path.GetFullPath(path)+"  （点击“打开目录”查看）";
         }
         void OpenDemo()
         {
@@ -330,9 +331,18 @@ namespace SongChoreography
             if(!Ready)return;
             if(!int.TryParse(seedText,out var seed))throw new ArgumentException("种子应为整数。");
             if(project.mode!=mode && project.segments.Any(s=>s.locked))throw new InvalidOperationException("切换舞种前请先解除所有锁定。");
-            var oldMode=project.mode;var oldSeed=project.seed;project.mode=mode;project.seed=changeSeed?unchecked(seed+1):seed;
-            try{project.segments=Choreographer.Generate(project,catalog);}catch{project.mode=oldMode;project.seed=oldSeed;throw;}
-            seedText=project.seed.ToString();selected=0;dirty=true;message=mode=="diagnostic"?"技术演示序列已生成（非 New Jazz）。":DanceStyles.Name(mode)+" 编舞已生成。";
+            var oldMode=project.mode;var oldSeed=project.seed;var previous=project.segments;project.mode=mode;project.seed=seed;
+            try
+            {
+                if(changeSeed){project.segments=Choreographer.GenerateAnother(project,catalog,out int chosenSeed);project.seed=chosenSeed;}
+                else project.segments=Choreographer.Generate(project,catalog);
+            }
+            catch{project.mode=oldMode;project.seed=oldSeed;throw;}
+            int changed=project.segments.Where((s,i)=>i>=previous.Count||s.motionId!=previous[i].motionId).Count();
+            seedText=project.seed.ToString();selected=0;
+            for(int i=0;i<project.segments.Count;i++)if(i>=previous.Count||project.segments[i].motionId!=previous[i].motionId){selected=i;break;}
+            if(!playback.IsPlaying)playback.Seek(project.segments[selected].startSeconds);
+            dirty=true;message=$"已重新编排：{project.segments.Count} 段中 {changed} 段改变，使用 {project.segments.Select(s=>s.motionId).Distinct().Count()}/{Choreographer.Eligible(catalog,mode).Count} 个库存片段；锁定片段保持。";
         }
         void ApplyLoop()
         {
@@ -403,7 +413,7 @@ namespace SongChoreography
         {
             Text(36,124,240,28,"01  选择音乐",heading);
             GUI.enabled=!Busy;
-            if(Button(36,165,240,38,"导入我的音乐…"))Guard(()=>{var p=NativeFiles.Open(false);if(p!=null){sourcePath=p;selectedSourceName=Path.GetFileNameWithoutExtension(p);chosenTrack=-1;}});
+            if(Button(36,165,240,38,"导入我的音乐…"))Guard(()=>{var p=NativeFiles.Open(false);if(p!=null){sourcePath=p;selectedSourceName=Path.GetFileNameWithoutExtension(p);chosenTrack=-1;message="已选择《"+selectedSourceName+"》。设置片段后，点击左侧“分析并打开”。";}});
             Text(36,216,240,35,string.IsNullOrEmpty(sourcePath)?"支持 WAV / MP3，音频保存在本机。":selectedSourceName,muted);
             Box(new Rect(36,261,240,1),new Color(.15f,.20f,.25f));Text(36,277,240,25,"免费测试曲目",heading);
             for(int i=0;i<musicLibrary.tracks.Count;i++)
@@ -431,9 +441,9 @@ namespace SongChoreography
                 Text(36,673,170,35,job.Progress.message,muted);Box(new Rect(36,709,240,3),new Color(.12f,.2f,.24f));Box(new Rect(36,709,240*job.Progress.progress,3),teal);
                 if(Button(213,674,63,27,"取消"))Guard(()=>{job.Cancel();job.Dispose();job=null;message="分析已取消，当前项目保持不变。";});
             }
-            else Text(36,676,240,31,"内置曲目已离线分析，点击“使用”即可播放。",muted);
+            else Text(36,676,240,31,chosenTrack>=0?"内置曲目已离线分析，点击“使用”即可播放。":Ready&&project.title==selectedSourceName?"当前歌曲已载入，点击底部“播放”开始练习。":"设置片段后点“分析并打开”，完成后点底部“播放”。",muted);
             GUI.enabled=!Busy;
-            if(Button(36,725,115,28,"打开项目"))Guard(()=>OpenProject(NativeFiles.Open(true)));
+            if(Button(36,725,115,28,"打开项目"))Guard(()=>OpenProject(NativeFiles.Open(true,ProjectPickerDirectory)));
             if(Button(160,725,115,28,"资源署名"))showCredits=true;
             GUI.enabled=true;
         }
@@ -468,7 +478,8 @@ namespace SongChoreography
             if(Button(851,721,70,32,"复位"))ResetCamera();
             GUI.enabled=Ready;
             if(Button(929,721,112,32,Ready&&project.mirror?"镜像：开":"镜像：关")){project.mirror=!project.mirror;dirty=true;}
-            if(Button(1100,721,145,32,"保存项目",true))Guard(Save);
+            if(Button(1048,721,90,32,"保存项目",true))Guard(Save);
+            if(Button(1146,721,99,32,"打开目录"))Guard(()=>Application.OpenURL(new Uri(projectFolder).AbsoluteUri));
             GUI.enabled=true;
         }
         void DrawInspector()
@@ -496,11 +507,10 @@ namespace SongChoreography
                 Text(1283,510,273,150,"自动检测不能保证乐句和八拍起点正确，请试听后校正。\n\n计数设为 4 时，首段从动作第 4 拍开始，跳完 4～8 后进入下一组八拍。\n\n更改前请解除受影响的锁定。",muted);
                 GUI.enabled=true;return;
             }
-            if(Button(1283,213,273,34,PreferredStyle==DanceStyles.Diagnostic?"生成演示组合":"生成 "+DanceStyles.Name(PreferredStyle)+" 组合"))Guard(()=>Generate(PreferredStyle,false));
-            if(Button(1283,258,273,34,"换一版 · 保留锁定片段"))Guard(()=>Generate(project.mode,true));
-            int eligible=catalog==null?0:Choreographer.Eligible(catalog,"new-jazz").Count;
-            if(eligible>=8)Text(1283,302,273,24,"New Jazz 八拍练习 · 建议从慢速开始",muted);
-            else Text(1283,302,273,24,project.mode==DanceStyles.Charleston?"八拍练习版 · 建议从慢速开始":"New Jazz 尚未开放 · 缺少已审核动作",muted);
+            if(Button(1283,213,273,34,"重新排列现有动作"))Guard(()=>Generate(PreferredStyle,true));
+            if(Button(1283,258,273,34,"从头演示当前组合"))Guard(()=>{playback.Seek(project.segments[0].startSeconds);playback.Play();});
+            int eligible=catalog==null?0:Choreographer.Eligible(catalog,Ready?project.mode:PreferredStyle).Count;
+            Text(1283,302,273,24,$"库存 {eligible} 段 · 当前使用 {(Ready?project.segments.Select(s=>s.motionId).Distinct().Count():0)} 种",muted);
             GUI.enabled=Ready&&!Busy;
             Text(1283,333,273,22,"片段  /  点击定位，勾选锁定",muted);
             int count=Ready?project.segments.Count:0;

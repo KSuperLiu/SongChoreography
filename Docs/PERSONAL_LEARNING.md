@@ -4,7 +4,7 @@
 
 ## 使用已准备的个人版
 
-双击 `Builds/PersonalWindows-0.5.1/ChoreoStudio.exe`，点击“一键演示”，或点击内置曲目的“使用”，即可观看 New Jazz 八拍练习组合。初学建议选择 0.5×／0.75×，使用背面或镜像跟学；舞台下方提供正面、背面、左右侧、上身、脚步和自由镜头，右侧“镜头”页可调整视角与构图。鼠标拖动旋转、右键平移、滚轮缩放、双击复位。
+双击 `Builds/PersonalWindows-0.5.2/ChoreoStudio.exe`，点击“一键演示”，或点击内置曲目的“使用”，即可观看 New Jazz 八拍练习组合。初学建议选择 0.5×／0.75×，使用背面或镜像跟学；舞台下方提供正面、背面、左右侧、上身、脚步和自由镜头，右侧“镜头”页可调整视角与构图。鼠标拖动旋转、右键平移、滚轮缩放、双击复位。
 
 也可从仓库运行 `.\Scripts\run.ps1 -PersonalLearning -Demo`，直接载入暂停的练习组合。如果启动时恢复了旧 Charleston 项目，点击“一键演示”即可载入个人 New Jazz 组合；原项目仍保存在本机。
 
@@ -39,7 +39,7 @@
 .\Scripts\build.ps1 -Isolated -PersonalLearning
 ```
 
-输出在 `Builds/PersonalWindows-0.5.1`，包含便携分析引擎。源码中的技术复查清单只保存本项目编写的摘要、名称与连接批准记录，不含动作数组或复查画面。精确匹配已复查数据和烘焙结果时可继承该记录；其他候选最初均未批准，不能出现在普通 New Jazz 生成入口，需完成逐动作及连接复查，并保存本地 `reviewed.json`。更换数据、裁剪或重定向后旧批准会失效，失败的重新烘焙也会清除旧批准状态。
+输出在 `Builds/PersonalWindows-0.5.2`，包含便携分析引擎。源码中的技术复查清单只保存本项目编写的摘要、名称与连接批准记录，不含动作数组或复查画面。精确匹配已复查数据和烘焙结果时可继承该记录；其他候选最初均未批准，不能出现在普通 New Jazz 生成入口，需完成逐动作及连接复查，并保存本地 `reviewed.json`。更换数据、裁剪或重定向后旧批准会失效，失败的重新烘焙也会清除旧批准状态。
 
 动作数据不会在应用运行时导入。当前角色专用关节轨道只针对已验证的两个内置角色，两者虽共用骨骼名称，但局部轴不同，必须分别烘焙，不能交叉应用。更换角色须重新适配和验收。公共 Charleston 动作继续使用 Humanoid Playables。个人轨道使用同一 DSP 歌曲时钟，通过四元数插值和实际脚底接地播放；原本连续的片段保留源运动，其他连接只使用复查通过的过渡。
 
@@ -49,7 +49,7 @@
 dotnet run --project Tests/CoreTests.csproj -p:UseSharedCompilation=false
 .\Runtime\Python\python.exe -I -m unittest discover -s Tests -p 'test_*.py' -v
 .\Runtime\Python\python.exe -I Scripts\verify-distribution.py --git-index
-.\Runtime\Python\python.exe -I Scripts\verify-distribution.py --build Builds\PersonalWindows-0.5.1 --personal
+.\Runtime\Python\python.exe -I Scripts\verify-distribution.py --build Builds\PersonalWindows-0.5.2 --personal
 
 # 此构建会排除个人数据，单独生成公共版本。
 .\Scripts\build.ps1 -Isolated -OutputDirectory Builds\PublicWindows

@@ -94,6 +94,29 @@ namespace SongChoreography
             for(int i=n-1;i>=0;i--) { slots[i].motionId=motions[last].id;last=parent[i,last]; }
             return slots;
         }
+        public static List<DanceSegment> GenerateAnother(DanceProject project,MotionCatalog catalog,out int chosenSeed)
+        {
+            int originalSeed=project.seed;chosenSeed=originalSeed;
+            if(project.segments.Count>0&&project.segments.All(s=>s.locked))throw new InvalidOperationException("所有片段均已锁定，请先解锁需要更换的片段。");
+            List<DanceSegment> best=null;int bestChanged=0,bestUnique=-1;
+            try
+            {
+                // A new seed can still find the same optimum. Compare actual
+                // sequences and select the most changed of 32 deterministic
+                // candidates, always using the existing reviewed graph.
+                for(int attempt=1;attempt<=32;attempt++)
+                {
+                    project.seed=unchecked(originalSeed+attempt);var candidate=Generate(project,catalog);
+                    int changed=candidate.Where((s,i)=>!s.locked&&(i>=project.segments.Count||s.motionId!=project.segments[i].motionId)).Count();
+                    int unique=candidate.Select(s=>s.motionId).Distinct().Count();
+                    if(changed>bestChanged||(changed==bestChanged&&changed>0&&unique>bestUnique))
+                    {best=candidate;bestChanged=changed;bestUnique=unique;chosenSeed=project.seed;}
+                }
+            }
+            finally{project.seed=originalSeed;}
+            if(best==null)throw new InvalidOperationException("在当前锁定和已审核连接下，暂未找到不同组合。请解锁更多片段或调整音乐片段。");
+            return best;
+        }
         static double Noise(int seed,int index,string id)
         {
             unchecked { uint h=(uint)seed ^ ((uint)index*16777619u);foreach(char c in id) h=(h^c)*16777619u;return (h%10000)/10000.0; }

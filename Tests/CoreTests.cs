@@ -84,6 +84,40 @@ static class Tests
         local.motions[0].sourceNext="personal-fixture";
         Check(PersonalMotionPolicy.Merge(shared,local).motions.Last().sourceNext=="personal-fixture","reviewed source-contiguous connection accepted");
         shared.motions[0].id="personal-fixture";Throws(()=>PersonalMotionPolicy.Merge(shared,local),"personal motion cannot shadow an existing ID");
+        p=Project();c=Catalog();p.segments=Choreographer.Generate(p,c);var initial=p.segments.Select(s=>s.motionId).ToArray();int savedSeed=p.seed;
+        var another=Choreographer.GenerateAnother(p,c,out int usedSeed);
+        Check(!initial.SequenceEqual(another.Select(s=>s.motionId))&&p.seed==savedSeed,"another arrangement changes actual motion IDs without mutating input seed");
+        p.seed=usedSeed;Check(another.Select(s=>s.motionId).SequenceEqual(Choreographer.Generate(p,c).Select(s=>s.motionId)),"chosen variation seed reproduces the exact new arrangement");
+        p.segments[2].locked=true;string lockId=p.segments[2].motionId;
+        another=Choreographer.GenerateAnother(p,c,out usedSeed);Check(another[2].locked&&another[2].motionId==lockId&&another.Select(s=>(s.startSeconds,s.endSeconds,s.beatCount)).SequenceEqual(p.segments.Select(s=>(s.startSeconds,s.endSeconds,s.beatCount))),"another arrangement preserves locks and every time slot");
+        p.segments.ForEach(s=>s.locked=true);savedSeed=p.seed;var savedIds=p.segments.Select(s=>s.motionId).ToArray();
+        Throws(()=>Choreographer.GenerateAnother(p,c,out _),"all-locked regeneration reports why it cannot change");
+        Check(p.seed==savedSeed&&savedIds.SequenceEqual(p.segments.Select(s=>s.motionId)),"failed variation preserves the complete original sequence and seed");
+        p=Project();c=Catalog();for(int i=0;i<8;i++)c.motions[i].safeNext=new List<string>{"m"+((i+1)%8)};
+        p.segments=Choreographer.Generate(p,c);p.segments[0].locked=true;
+        Throws(()=>Choreographer.GenerateAnother(p,c,out _),"a single feasible reviewed path cannot falsely report a new arrangement");
+        foreach(string catalogPath in new[]{"Assets/Resources/MotionCatalog.json","Assets/Resources/PersonalMotionCatalog.json"})
+        {
+            if(!File.Exists(catalogPath))continue;
+            c=JsonSerializer.Deserialize<MotionCatalog>(File.ReadAllText(catalogPath),options);p=Project();p.mode=c.personalUseOnly?DanceStyles.NewJazz:DanceStyles.Charleston;p.segments=Choreographer.Generate(p,c);
+            int minimumChanges=int.MaxValue;var seen=new HashSet<string>();
+            for(int version=0;version<8;version++)
+            {
+                var before=p.segments.Select(s=>s.motionId).ToArray();another=Choreographer.GenerateAnother(p,c,out usedSeed);p.seed=usedSeed;p.segments=another;Choreographer.ValidateProject(p,c);
+                minimumChanges=Math.Min(minimumChanges,another.Where((s,i)=>s.motionId!=before[i]).Count());seen.Add(string.Join(",",another.Select(s=>s.motionId)));
+            }
+            Check(minimumChanges>0&&seen.Count>=4,"actual "+p.mode+" library changes on every click and offers multiple reviewed arrangements");
+            Console.WriteLine("VARIETY "+p.mode+" minimum changed slots="+minimumChanges+", distinct arrangements="+seen.Count);
+        }
+        string browserRoot=Path.Combine(Path.GetTempPath(),"choreo-browser-"+Guid.NewGuid().ToString("N")),currentFolder=Path.Combine(browserRoot,"current"),lastFolder=Path.Combine(browserRoot,"last"),workspace=Path.Combine(browserRoot,"workspace");
+        Directory.CreateDirectory(currentFolder);Directory.CreateDirectory(lastFolder);Directory.CreateDirectory(workspace);string lastFile=Path.Combine(lastFolder,"project.danceproj");File.WriteAllText(lastFile,"{}");
+        try
+        {
+            Check(ProjectLocations.BrowseDirectory(currentFolder,lastFile,workspace)==currentFolder,"project browser prioritizes the active saved project directory");
+            Check(ProjectLocations.BrowseDirectory(null,lastFile,workspace)==lastFolder,"project browser restores the last saved directory on restart");
+            Check(ProjectLocations.BrowseDirectory(null,Path.Combine(lastFolder,"missing"),workspace)==workspace,"project browser falls back to the project workspace for missing last files");
+        }
+        finally{File.Delete(lastFile);Directory.Delete(currentFolder);Directory.Delete(lastFolder);Directory.Delete(workspace);Directory.Delete(browserRoot);}
         Console.WriteLine($"{passed} core checks passed.");
     }
 }

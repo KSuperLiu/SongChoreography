@@ -1,4 +1,4 @@
-param([string]$CandidateDirectory='Builds\PublicWindows051',[string]$Version='0.5.1',[string]$PortableResultPath='TestResults\portable-public-051-result.json',[string]$PortableEnvironmentPath='TestResults\portable-public-051-environment.json')
+param([string]$CandidateDirectory='Builds\PublicWindows052',[string]$Version='0.5.2',[string]$PortableResultPath='TestResults\portable-public-052-result.json',[string]$PortableEnvironmentPath='TestResults\portable-public-052-environment.json')
 $ErrorActionPreference='Stop'
 $projectRoot=Split-Path -Parent $PSScriptRoot
 $source=(Resolve-Path -LiteralPath $CandidateDirectory).Path
@@ -30,7 +30,7 @@ foreach($name in @('ChoreoStudio.exe','ChoreoStudio_Data','UnityPlayer.dll','Uni
     Copy-Item -LiteralPath (Join-Path $source $name) -Destination $destination -Recurse -Force
 }
 $docs=Join-Path $destination '说明与验收';New-Item -ItemType Directory -Path $docs -Force | Out-Null
-foreach($name in @('QUICK_START.md','THIRD_PARTY_NOTICES.md','MUSIC_CREDITS.md','CHARACTERS_AND_CAMERA.md','WINDOWS_051_RELEASE.md','ANATOMY_051_VERIFICATION.md','ANATOMY_051_RESULTS.json')) { Copy-Item -LiteralPath (Join-Path $projectRoot ('Docs\'+$name)) -Destination $docs }
+foreach($name in @('QUICK_START.md','THIRD_PARTY_NOTICES.md','MUSIC_CREDITS.md','CHARACTERS_AND_CAMERA.md','WINDOWS_052_RELEASE.md','REARRANGEMENT_052_RESULTS.json','ANATOMY_051_VERIFICATION.md','ANATOMY_051_RESULTS.json')) { Copy-Item -LiteralPath (Join-Path $projectRoot ('Docs\'+$name)) -Destination $docs }
 Copy-Item -LiteralPath (Join-Path $projectRoot 'Docs\QUICK_START.md') -Destination (Join-Path $destination '开始使用.md')
 Copy-Item -LiteralPath (Join-Path $projectRoot 'Analyzer\requirements-windows.lock.txt') -Destination (Join-Path $destination 'Runtime\Python\requirements-windows.lock.txt') -Force
 Copy-Item -LiteralPath (Join-Path $source 'ProductAcceptance') -Destination $docs -Recurse
@@ -42,10 +42,10 @@ $guide=@'
 <!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>CHOREO __VERSION__ · 开始使用</title>
 <style>body{background:#0c131e;color:#e1edf2;font:17px/1.8 system-ui;margin:40px auto;max-width:1100px;padding:0 24px}h1{font-size:36px}h2{margin-top:32px;color:#42ddc2}a{color:#42ddc2}img{width:100%;border:1px solid #263746;border-radius:12px}li{margin:8px 0}.note{color:#9eafbe}</style>
 <h1>CHOREO / 编舞练习室 __VERSION__</h1><p>双击同目录的 <b>ChoreoStudio.exe</b>，点击右上角<b>一键演示</b>。完整目录可离线运行，无需安装 Python。</p>
-<img src="说明与验收/Acceptance/female_front.png" alt="0.5.1 公共版实际运行画面">
+<img src="说明与验收/Acceptance/female_front.png" alt="__VERSION__ 公共版实际运行画面">
 <h2>开始练习</h2><ol><li>选择内置免费音乐，或导入自己的 WAV／MP3，截取 30～60 秒。</li><li>首次跟学建议 0.5×／0.75×；使用背面或镜像，切换脚步特写。</li><li>点击片段定位、替换或锁定；“换一版”保留锁定片段。</li><li>保存后可再次打开。移动项目请复制整个项目文件夹。</li></ol>
 <p><a href="开始使用.md">完整使用说明</a> · <a href="说明与验收/THIRD_PARTY_NOTICES.md">资源署名</a></p>
-<h2>验收证据</h2><p><a href="说明与验收/Acceptance/report.html">两角色、七镜头与15张实机图</a> · <a href="说明与验收/CharlestonReview/report.html">20条连接、40张播放器采样渲染板</a> · <a href="说明与验收/ProductAcceptance/results.json">完整展示与后台显式渲染测量</a> · <a href="说明与验收/WINDOWS_051_RELEASE.md">本版说明</a></p>
+<h2>验收证据</h2><p><a href="说明与验收/Acceptance/report.html">两角色、七镜头与15张实机图</a> · <a href="说明与验收/CharlestonReview/report.html">20条连接、40张播放器采样渲染板</a> · <a href="说明与验收/ProductAcceptance/results.json">完整展示与后台显式渲染测量</a> · <a href="说明与验收/WINDOWS_052_RELEASE.md">本版说明</a></p>
 <p class="note">公共版舞种为 Charleston 练习改编（四段动捕裁剪与四个左右变体）。New Jazz 个人学习动作受来源许可限制，不随公共版分发。采用本地规则编排；没有生成式动作模型。技术和 Codex 画面复查不代表舞蹈教师认证；软件时钟差不包含扬声器硬件延迟。实际点击与自动验收的范围见随包验证记录。</p>
 </html>
 '@

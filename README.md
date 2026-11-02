@@ -1,6 +1,8 @@
-# CHOREO / 编舞练习室 0.5.1
+# CHOREO / 编舞练习室 0.5.2
 
 Windows 本地歌曲编舞与跟学应用，采用 **Unity 2022.3.62f3、C#、便携 CPython 3.13.17、librosa 0.11**。
+
+**0.5.2 修复重新编排及项目查找体验。** 主按钮改为“重新排列现有动作”，每次比较实际动作顺序并显示变化数量；保存后显示完整路径，旁边可直接“打开目录”，“打开项目”默认定位当前或上次保存目录。当前个人爵士库存仍为 8 段，不是生成全新舞步。详见 [本版说明](Docs/WINDOWS_052_RELEASE.md)。
 
 **0.5.1 修复动作反关节问题。** 旧个人版的坐标手性转换和关节轴适配有误，男女角色也不能共用同一组局部旋转。现分别校准并烘焙两套轨道，约束手腕、手指、肘膝及全身关节，增加 120 Hz 插值与混合阶段的弯曲方向检查。旧版批准记录已作废，详见 [修复与验证](Docs/ANATOMY_051_VERIFICATION.md)。
 
@@ -10,7 +12,7 @@ Windows 本地歌曲编舞与跟学应用，采用 **Unity 2022.3.62f3、C#、�
 
 ## 运行
 
-从 [公共 Windows 版 0.5.1](https://github.com/KSuperLiu/SongChoreography/releases/tag/v0.5.1) 下载 ZIP，完整解压后双击 `ChoreoStudio.exe`。公共下载展示 Charleston，包含本次关节修复；个人版需按上述说明在本机准备。公共版无需安装 Unity 或 Python。复制公共版时请复制整个目录，保留 `Runtime`、`ChoreoStudio_Data`、`MonoBleedingEdge` 和 DLL。详见 [发行包说明](Docs/WINDOWS_051_RELEASE.md)。
+从 [公共 Windows 版 0.5.2](https://github.com/KSuperLiu/SongChoreography/releases/tag/v0.5.2) 下载 ZIP，完整解压后双击 `ChoreoStudio.exe`。公共下载展示 Charleston，包含关节和重排修复；个人版需按上述说明在本机准备。公共版无需安装 Unity 或 Python。复制公共版时请复制整个目录，保留 `Runtime`、`ChoreoStudio_Data`、`MonoBleedingEdge` 和 DLL。详见 [发行包说明](Docs/WINDOWS_052_RELEASE.md)。
 
 ![编舞练习室实际运行画面](Docs/Preview.png)
 

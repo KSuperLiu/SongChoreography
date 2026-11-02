@@ -93,6 +93,8 @@ namespace SongChoreography
             var stable=project.segments.Select(s=>s.motionId).ToArray();
             ProductCheck("Seed reproduces actual library arrangement",stable.SequenceEqual(Choreographer.Generate(project,catalog).Select(s=>s.motionId)));
             yield return PhraseAcceptance();
+            var beforeRegeneration=project.segments.Select(s=>s.motionId).ToArray();Generate(project.mode,true);
+            ProductCheck("Regenerate changes actual unlocked motion sequence",!beforeRegeneration.SequenceEqual(project.segments.Select(s=>s.motionId)),message);
             project.segments[2].locked=true;string locked=project.segments[2].motionId;Generate(project.mode,true);
             ProductCheck("Real dance regeneration keeps lock",project.segments[2].locked&&project.segments[2].motionId==locked);
             project.segments[2].locked=false;
@@ -134,6 +136,8 @@ namespace SongChoreography
             }
             project.loop=false;project.loopStart=0;project.loopEnd=40;playback.SetRate(.75f);playback.Seek(12.75);project.mirror=true;ChangeView(1);
             project.segments[1].locked=true;Save();string expected=JsonUtility.ToJson(project);string path=Path.Combine(projectFolder,"project.danceproj");
+            ProductCheck("Save feedback exposes the actual saved file",File.Exists(path)&&message.Contains(Path.GetFullPath(path)),message);
+            ProductCheck("Open project starts in the active saved directory",ProjectPickerDirectory==Path.GetFullPath(projectFolder),ProjectPickerDirectory);
             OpenProject(path);while(loading)yield return null;
             string actual=JsonUtility.ToJson(project);
             if(actual!=expected)
