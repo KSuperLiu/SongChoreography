@@ -10,9 +10,7 @@ Windows 本地歌曲编舞与跟学应用，采用 **Unity 2022.3.62f3、C#、�
 
 ## 运行
 
-从 [公共 Windows 版 0.4.1](https://github.com/KSuperLiu/SongChoreography/releases/tag/v0.4.1) 下载 ZIP，完整解压后双击 `ChoreoStudio.exe`。公共下载展示 Charleston；个人版需按上述说明在本机准备。公共版无需安装 Unity 或 Python。复制公共版时请复制整个目录，保留 `Runtime`、`ChoreoStudio_Data`、`MonoBleedingEdge` 和 DLL。
-
-该公共下载是历史版本，未包含 0.5.1 的关节修复；本次更新交付源码，使用修复版请按下述步骤构建。
+从 [公共 Windows 版 0.5.1](https://github.com/KSuperLiu/SongChoreography/releases/tag/v0.5.1) 下载 ZIP，完整解压后双击 `ChoreoStudio.exe`。公共下载展示 Charleston，包含本次关节修复；个人版需按上述说明在本机准备。公共版无需安装 Unity 或 Python。复制公共版时请复制整个目录，保留 `Runtime`、`ChoreoStudio_Data`、`MonoBleedingEdge` 和 DLL。详见 [发行包说明](Docs/WINDOWS_051_RELEASE.md)。
 
 ![编舞练习室实际运行画面](Docs/Preview.png)
 

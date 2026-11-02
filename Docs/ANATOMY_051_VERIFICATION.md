@@ -39,7 +39,7 @@ SMPL-X 到 Unity 的坐标转换现在同时反射位置和旋转，修正坐标
 
 ## 运行与边界
 
-本机个人版为 `Builds/PersonalWindows-0.5.1/ChoreoStudio.exe`，可用 `Scripts/run.ps1 -PersonalLearning -Demo` 载入暂停的组合，点击播放观看。默认启动继续恢复上次项目。GitHub 更新源代码与复查摘要，不上传受限动作或个人程序；公开下载的 0.4.1 是历史版本，未包含本次修复。
+本机个人版为 `Builds/PersonalWindows-0.5.1/ChoreoStudio.exe`，可用 `Scripts/run.ps1 -PersonalLearning -Demo` 载入暂停的组合，点击播放观看。默认启动继续恢复上次项目。GitHub 提供源代码与不含私人动作的 [0.5.1 公共 Windows 包](https://github.com/KSuperLiu/SongChoreography/releases/tag/v0.5.1)，不上传受限动作或个人程序。
 
 完整应用通过命令行验收场景进行男女各 40 秒播放，测试三档速度、循环、定位、暂停恢复、锁定、替换和保存重开。后台模式静音，显式渲染生产舞台到同尺寸纹理，并保存实际舞台图；统计属于后台显式渲染测试，不冒充前台鼠标点击验收。软件时钟误差不包含扬声器延迟。
 
