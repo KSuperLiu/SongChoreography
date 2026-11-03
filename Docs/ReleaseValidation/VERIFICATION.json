@@ -1,0 +1,27 @@
+{
+  "date": "2026-11-03",
+  "version": "0.6.0",
+  "checks": {
+    "coreAssertions": 22,
+    "generationTests": 11,
+    "audioTests": 4,
+    "unityWindowsBuild": "passed",
+    "visibleStartup": "passed",
+    "startupScreenshot": "Docs/Preview.png",
+    "legacyFallback": false,
+    "legacyArchiveIntegrity": "passed",
+    "preexistingPackageEditsPreserved": {
+      "Packages/manifest.json": true,
+      "Packages/packages-lock.json": true
+    }
+  },
+  "liveProviderRequests": 0,
+  "generatedCharacters": 0,
+  "generatedMotions": 0,
+  "limitations": [
+    "No real Tripo/fal artifacts yet; provider generation and retarget quality still require validation.",
+    "Generation orchestration tested with mocked provider responses, not live paid calls.",
+    "Runtime imports no FBX; import/review/build happen in Unity."
+  ],
+  "publicationNote": "Metrics summary. Full per-frame motion traces remain local and are not part of the public source distribution."
+}

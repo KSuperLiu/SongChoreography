@@ -1,7 +1,0 @@
-Funkorama — Kevin MacLeod (incompetech.com)
-Licensed under Creative Commons: By Attribution 4.0 License
-https://creativecommons.org/licenses/by/4.0/
-Source: https://incompetech.com/music/royalty-free/index.html?Search=Search&isrc=USUAN1100474
-Changes: excerpt 15–55 seconds, PCM WAV conversion; 0.75x and 0.5x pitch-preserving time-stretch versions.
-Original SHA-256: 6be229815d85a0b99382b944d31098b882702c04ac7ad899e44ab7f8ba89b5ad
-Retrieved: 2026-11-02

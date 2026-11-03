@@ -1,0 +1,24 @@
+{
+  "id": "mixkit-738",
+  "providerId": "738",
+  "title": "Hip Hop 02",
+  "artist": "Lily J",
+  "genre": "Hip Hop / R&B",
+  "sourceUrl": "https://mixkit.co/free-stock-music/hip-hop/",
+  "downloadUrl": "https://assets.mixkit.co/music/738/738.mp3",
+  "expectedDurationSeconds": 115,
+  "file": "mixkit-738/track.mp3",
+  "durationSeconds": 115.11600907029478,
+  "sampleRate": 44100,
+  "channels": 2,
+  "bytes": 4600684,
+  "sha256": "4b7bc45aedd38bf43e67d550177aeaafa367ec32a3a6498f8ffd9ec5132e268e",
+  "licenseName": "Mixkit Stock Music Free License",
+  "licenseUrl": "https://mixkit.co/license/modal/musicFree/",
+  "downloadedAt": "2026-11-03T06:22:50.627504+00:00",
+  "verification": {
+    "fullDecode": true,
+    "rms": 0.1815131981087907,
+    "peak": 1.026198148727417
+  }
+}

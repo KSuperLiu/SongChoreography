@@ -1,14 +1,8 @@
-param([string]$PythonPath = '',[switch]$PersonalLearning,[switch]$Demo,[string]$BuildDirectory = '')
-$ErrorActionPreference = 'Stop'
-$projectRoot = Split-Path -Parent $PSScriptRoot
-if ([string]::IsNullOrWhiteSpace($BuildDirectory)) {
-    $BuildDirectory = if ($PersonalLearning) { 'Builds\PersonalWindows-0.5.2' } else { 'Builds\Windows' }
-}
-$applicationPath = Join-Path (Join-Path $projectRoot $BuildDirectory) 'ChoreoStudio.exe'
-if (-not (Test-Path -LiteralPath $applicationPath)) { throw '请先执行 Scripts\build.ps1。' }
-if (-not [string]::IsNullOrWhiteSpace($PythonPath)) {
-    $env:SONG_CHOREO_PYTHON = (Get-Command $PythonPath -ErrorAction Stop).Source
-}
-$launchOptions = @{ FilePath=$applicationPath; WorkingDirectory=$projectRoot; WindowStyle='Normal' }
-if ($Demo) { $launchOptions.ArgumentList = '-demo-paused' }
-Start-Process @launchOptions
+param([switch]$Smoke)
+$ErrorActionPreference='Stop'
+$projectRoot=Split-Path -Parent $PSScriptRoot
+$application=Join-Path $projectRoot 'Builds\AIStudio\ChoreoAIStudio.exe'
+if (-not (Test-Path -LiteralPath $application)) { throw '请先运行 Scripts\build.ps1。' }
+$options=@{FilePath=$application;WorkingDirectory=$projectRoot;WindowStyle='Normal'}
+if ($Smoke) { $options.ArgumentList='-smoke -report-dir "'+(Join-Path $projectRoot 'TestResults\AIStudioSmoke')+'"' }
+Start-Process @options

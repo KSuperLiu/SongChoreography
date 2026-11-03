@@ -1,0 +1,24 @@
+{
+  "id": "mixkit-623",
+  "providerId": "623",
+  "title": "Deep Urban",
+  "artist": "Eugenio Mininni",
+  "genre": "Tech House",
+  "sourceUrl": "https://mixkit.co/free-stock-music/house/",
+  "downloadUrl": "https://assets.mixkit.co/music/623/623.mp3",
+  "expectedDurationSeconds": 289,
+  "file": "mixkit-623/track.mp3",
+  "durationSeconds": 288.6922902494331,
+  "sampleRate": 44100,
+  "channels": 2,
+  "bytes": 9240540,
+  "sha256": "ac7e28f0cdd6c607df199c759f34ca66cfebd881ea61c26473fb4cecebe64fa8",
+  "licenseName": "Mixkit Stock Music Free License",
+  "licenseUrl": "https://mixkit.co/license/modal/musicFree/",
+  "downloadedAt": "2026-11-03T06:22:51.197153+00:00",
+  "verification": {
+    "fullDecode": true,
+    "rms": 0.2624838968859841,
+    "peak": 1.3438403606414795
+  }
+}

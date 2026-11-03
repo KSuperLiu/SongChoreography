@@ -1,0 +1,73 @@
+{
+  "characterSignature": "236d2537423188c92093a204e88e528cb55beca213e8e1d0a9ee3b68a1a34191",
+  "fps": 30,
+  "meshStride": 4,
+  "scope": "Complete source clips: 30 Hz kinematics, 10 Hz native-skinned geometry, stride 4. Technical screening does not approve choreography.",
+  "issues": [
+    {
+      "id": "mixamo-pack-breakdance-breakdance-footwork-2-ea7c3c04",
+      "sourceHash": "ea7c3c04b58880d3919669bc682a7bb12df04fe7c6e36b53a73b8ad82588087e",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-pack-breakdance-breakdance-footwork-3-a9acfe07",
+      "sourceHash": "a9acfe070ee40432804ecf54c4a9b0508dac9e674f50cfbf3a5fee65589585be",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-pack-breakdance-breakdance-freezes-a2dfbb54",
+      "sourceHash": "a2dfbb54546437cd4c383bb1cad33a7a19845fb8ba552256ccd71cb4e9ad5756",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-pack-breakdance-breakdance-freeze-var-3-fbda7bcc",
+      "sourceHash": "fbda7bcca43567a7262838518cd5b53fa54af8c7b872ef2394e8a2f24d3c4109",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-pack-breakdance-breakdance-uprock-to-grou-d2985cfc",
+      "sourceHash": "d2985cfcf3d0d5adcc29cc083b91d7e3e426ed767fe8ec76a958261d87c9d393",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-breakdance-freezes-121860901",
+      "sourceHash": "7afcd89b2d3ee01ea02b557317d02e414787629e8a6d930b3f22e2278b20c925",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-breakdance-footwork-3-121820901",
+      "sourceHash": "d3d6aa7f01a3d58e88fe00c1e825d6e5adfc33beb1f08264fa5e2a556e857778",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-headspin-end-116400903",
+      "sourceHash": "9bdd1cbaa74ad7dc949e4f74b0326e34b008af09f47b89e03d00214243b04d6d",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-breakdance-footwork-2-121810901",
+      "sourceHash": "d97c08769baa60362e28691136ae8daa4e4a57ad46227275933859acd7484f47",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-breakdance-freeze-var-3-121890901",
+      "sourceHash": "3baafaea3f390a0ff95fe232e9bb5a323f5926c795a0a4fc4ef357b228369723",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-northern-soul-spin-combo-121420901",
+      "sourceHash": "77a299ed405577728f00d1727cedabb8f1a78adda8e3fd5c26a77ca3f08ace67",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-breakdance-uprock-to-ground-122080901",
+      "sourceHash": "c23178bf8e6c4a01112d4840a89632928bfeb3333a4b4dec09f56f79d8ca3467",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-northern-soul-floor-combo-121430901",
+      "sourceHash": "f82609204fdb7c4f73cbbabe4c74f5237d931f67cad4d3bee512ad9db6e8ed1b",
+      "issue": "轨迹待修复"
+    }
+  ]
+}

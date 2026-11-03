@@ -1,0 +1,17 @@
+{
+  "date": "2026-11-03",
+  "assetId": "dancer-female-v1",
+  "sourceFile": "Assets/Generated/Characters/dancer-female-v1/dancer-female-v1.fbx",
+  "sha256": "58801c64eac3ff971ef86bb2ac27755485782320becda7950a075f62ff35c7a6",
+  "provider": "tripo",
+  "generationCredits": 20.0,
+  "rigCheckCredits": 0.0,
+  "rigCredits": 25.0,
+  "totalCredits": 45,
+  "remainingCreditsAfterTask": 55,
+  "unityHumanoidImport": "passed",
+  "unityEditorPlayMode": "viewed; front facing character visible",
+  "motionCount": 0,
+  "limitations": "Static appearance and skeleton validity checked; dance deformation has not been tested without a motion clip.",
+  "publicationNote": "Metrics summary. Full per-frame motion traces remain local and are not part of the public source distribution."
+}

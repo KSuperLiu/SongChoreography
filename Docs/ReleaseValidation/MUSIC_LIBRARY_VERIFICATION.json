@@ -1,0 +1,44 @@
+{
+  "checkedAt": "2026-11-03T06:28:11.135584+00:00",
+  "tracks": 10,
+  "fullMp3DecodePassed": true,
+  "sha256Verified": true,
+  "downloadBytes": 41594693,
+  "coreChecks": 22,
+  "generationTests": 11,
+  "mixamoRegistrationTests": 5,
+  "analyzerTests": 4,
+  "unityInitialCompile": {
+    "success": true,
+    "errorCount": 0,
+    "warningCount": 0
+  },
+  "unityInitialPlayCheck": {
+    "durationSeconds": 3,
+    "errorCount": 0,
+    "displayedBuiltinTracks": 10
+  },
+  "sampleAnalysis": {
+    "trackId": "mixkit-989",
+    "durationSeconds": 40.0,
+    "estimatedBpm": 120.18531976744185,
+    "needsManualGrid": false,
+    "normalSeconds": 40,
+    "slow075Seconds": 53.333,
+    "slow050Seconds": 80
+  },
+  "paidApisUsed": false,
+  "purpose": "personal dance learning",
+  "windowsBuild": "passed",
+  "packagedMusicHashVerified": true,
+  "reviewedMotionsPreserved": 3,
+  "finalLayoutVerified": true,
+  "screenshot": "Docs/BuiltinMusic.png",
+  "windowsStartup": {
+    "passed": true,
+    "runtimeErrors": [],
+    "screenshot": "not-used: hidden Windows launch produced a black screen capture",
+    "visualVerification": "Unity Game View: Docs/BuiltinMusic.png"
+  },
+  "publicationNote": "Metrics summary. Full per-frame motion traces remain local and are not part of the public source distribution."
+}

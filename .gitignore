@@ -13,6 +13,19 @@ __pycache__/
 TestResults/
 /Runtime/
 .build-cache/
+.rebuild-backup/
+.generation/
+**/.idea/
+Assets/Generated/**
+!Assets/Generated/.gitkeep
+Assets/Resources/GeneratedLibrary.asset*
+Assets/Resources/ArmPoseLibrary.asset*
+Generation/library.json
+Generation/reviews.json
+/Assets/StreamingAssets/MusicLibrary/**/*.mp3
+/Assets/StreamingAssets/MusicLibrary/**/*.mp3.meta
+/Assets/StreamingAssets/MusicLibrary/catalog.json
+/Assets/StreamingAssets/MusicLibrary/catalog.json.meta
 Samples/RuntimeSources/
 .vs/
 *.csproj.user
@@ -20,31 +33,11 @@ Samples/RuntimeSources/
 *.csproj
 !Tests/CoreTests.csproj
 
-# Downloads and generated media are prepared locally, not published as asset packs.
-Samples/CharacterSources/
-Samples/MusicSources/
-Samples/MotionSources/CMU93/*.asf
-Samples/MotionSources/CMU93/*.amc
-Samples/demo-source.wav
-Samples/Demo/
-Assets/StreamingAssets/Demo/
-Assets/StreamingAssets/MusicLibrary/*/*.wav
-Assets/StreamingAssets/MusicLibrary/*/*.wav.meta
-Assets/StreamingAssets/MusicLibrary/*/progress.json*
-Assets/StreamingAssets/MusicLibrary/*/analysis.json*
-Assets/SongChoreography/Editor/MocapData/93_*.json*
-Assets/Resources/Motions/*.anim
-Assets/Resources/Motions/*.anim.meta
 .env
 .env.*
+!.env.example
 *.pfx
 *.p12
 *.key
-
-# Locally licensed learning motions must never be committed or redistributed.
-/PersonalAssets/
-Assets/Resources/PersonalMotionCatalog.json*
-Assets/StreamingAssets/PersonalMotionCredits/
-Assets/StreamingAssets/PersonalMotionCredits.meta
-Assets/Resources/Motions/personal-*
-
+/Docs/*VERIFICATION.json
+/Docs/*PLAYMODE.json

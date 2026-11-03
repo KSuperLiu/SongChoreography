@@ -1,0 +1,11 @@
+{
+  "title": "Original Groove \u00b7 100 BPM",
+  "bpm": 100,
+  "firstBeatSeconds": 0,
+  "durationSeconds": 38.4,
+  "beats": 64,
+  "sampleRate": 44100,
+  "authorship": "Original procedural composition created for this project; no external recording or paid service.",
+  "generator": "Tools/make_practice_track.py",
+  "seed": 20261103
+}

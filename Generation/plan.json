@@ -1,0 +1,169 @@
+{
+  "schemaVersion": 2,
+  "tripo": {
+    "model": "v3.1-20260211",
+    "rigModel": "v3.0-20260909"
+  },
+  "fal": {
+    "model": "fal-ai/hunyuan-motion"
+  },
+  "characters": [
+    {
+      "id": "dancer-female-v1",
+      "name": "半写实舞者",
+      "seed": 20261103,
+      "faceLimit": 40000,
+      "prompt": "Full-body semi-realistic adult female dance instructor, natural athletic proportions, friendly refined face, neat tied-back dark hair, fitted teal cropped training top and charcoal full-length dance trousers, white trainers. Neutral A pose, arms separated from torso, fingers separated, feet apart. Clear shoulder elbow wrist knee and ankle contours. Realistic fabric, clean game character topology, complete symmetrical body, no props, no background."
+    }
+  ],
+  "motions": [
+    {
+      "id": "jazz-side-step-v1",
+      "name": "侧点步与打开手臂",
+      "prompt": "An adult dancer performs one beginner pop-jazz dance phrase, facing forward. Natural human joint motion, clear weight transfers, small travel within one meter, no floorwork, no jumps. Alternating left and right side steps with coordinated arm openings. Finish balanced with feet close.",
+      "seed": 20261103,
+      "bpm": 120,
+      "beats": 8,
+      "energy": 0.35,
+      "tags": [
+        "steps",
+        "arms"
+      ]
+    },
+    {
+      "id": "jazz-cross-step-v1",
+      "name": "交叉步与侧伸",
+      "prompt": "An adult dancer performs one beginner pop-jazz dance phrase, facing forward. Natural human joint motion, clear weight transfers, small travel within one meter, no floorwork, no jumps. Small cross steps and alternating diagonal arm reaches. Keep knees softly bent.",
+      "seed": 20261104,
+      "bpm": 120,
+      "beats": 8,
+      "energy": 0.5,
+      "tags": [
+        "steps",
+        "arms"
+      ]
+    },
+    {
+      "id": "jazz-shoulder-groove-v1",
+      "name": "肩部律动",
+      "prompt": "An adult dancer performs one beginner pop-jazz dance phrase, facing forward. Natural human joint motion, clear weight transfers, small travel within one meter, no floorwork, no jumps. Alternating shoulder isolations with gentle knee pulses and a stable upright torso.",
+      "seed": 20261105,
+      "bpm": 120,
+      "beats": 8,
+      "energy": 0.3,
+      "tags": [
+        "isolation"
+      ]
+    },
+    {
+      "id": "jazz-chest-isolation-v1",
+      "name": "胸部隔离",
+      "prompt": "An adult dancer performs one beginner pop-jazz dance phrase, facing forward. Natural human joint motion, clear weight transfers, small travel within one meter, no floorwork, no jumps. Controlled chest isolations forward, backward and sideways over simple weight shifts.",
+      "seed": 20261106,
+      "bpm": 120,
+      "beats": 8,
+      "energy": 0.35,
+      "tags": [
+        "isolation"
+      ]
+    },
+    {
+      "id": "jazz-hip-shift-v1",
+      "name": "髋部重心变化",
+      "prompt": "An adult dancer performs one beginner pop-jazz dance phrase, facing forward. Natural human joint motion, clear weight transfers, small travel within one meter, no floorwork, no jumps. Gentle side-to-side hip shifts with planted supporting feet and relaxed arm accents.",
+      "seed": 20261107,
+      "bpm": 120,
+      "beats": 8,
+      "energy": 0.4,
+      "tags": [
+        "isolation",
+        "weight"
+      ]
+    },
+    {
+      "id": "jazz-arm-circle-v1",
+      "name": "手臂划圈组合",
+      "prompt": "An adult dancer performs one beginner pop-jazz dance phrase, facing forward. Natural human joint motion, clear weight transfers, small travel within one meter, no floorwork, no jumps. Flowing arm circles and diagonal reaches, accompanied by simple side steps.",
+      "seed": 20261108,
+      "bpm": 120,
+      "beats": 8,
+      "energy": 0.45,
+      "tags": [
+        "arms"
+      ]
+    },
+    {
+      "id": "jazz-walk-back-v1",
+      "name": "前进退回",
+      "prompt": "An adult dancer performs one beginner pop-jazz dance phrase, facing forward. Natural human joint motion, clear weight transfers, small travel within one meter, no floorwork, no jumps. Two small steps forward, two small steps back, with coordinated pop-jazz arm gestures.",
+      "seed": 20261109,
+      "bpm": 120,
+      "beats": 8,
+      "energy": 0.45,
+      "tags": [
+        "travel"
+      ]
+    },
+    {
+      "id": "jazz-quarter-turn-v1",
+      "name": "四分之一转身",
+      "prompt": "An adult dancer performs one beginner pop-jazz dance phrase, facing forward. Natural human joint motion, clear weight transfers, small travel within one meter, no floorwork, no jumps. A slow quarter turn to the left with controlled steps, then return to face forward.",
+      "seed": 20261110,
+      "bpm": 120,
+      "beats": 8,
+      "energy": 0.5,
+      "tags": [
+        "turn"
+      ]
+    },
+    {
+      "id": "jazz-body-wave-v1",
+      "name": "轻柔身体律动",
+      "prompt": "An adult dancer performs one beginner pop-jazz dance phrase, facing forward. Natural human joint motion, clear weight transfers, small travel within one meter, no floorwork, no jumps. A subtle controlled body wave from chest to hips while maintaining stable feet.",
+      "seed": 20261111,
+      "bpm": 120,
+      "beats": 8,
+      "energy": 0.4,
+      "tags": [
+        "isolation"
+      ]
+    },
+    {
+      "id": "jazz-diagonal-reach-v1",
+      "name": "斜向伸展",
+      "prompt": "An adult dancer performs one beginner pop-jazz dance phrase, facing forward. Natural human joint motion, clear weight transfers, small travel within one meter, no floorwork, no jumps. Alternating diagonal arm reaches and matching side weight shifts, returning to center.",
+      "seed": 20261112,
+      "bpm": 120,
+      "beats": 8,
+      "energy": 0.5,
+      "tags": [
+        "arms",
+        "weight"
+      ]
+    },
+    {
+      "id": "jazz-step-touch-v1",
+      "name": "并步律动",
+      "prompt": "An adult dancer performs one beginner pop-jazz dance phrase, facing forward. Natural human joint motion, clear weight transfers, small travel within one meter, no floorwork, no jumps. Rhythmic step touches to both sides with soft knee pulses and compact arm swings.",
+      "seed": 20261113,
+      "bpm": 120,
+      "beats": 8,
+      "energy": 0.55,
+      "tags": [
+        "steps"
+      ]
+    },
+    {
+      "id": "jazz-finish-pose-v1",
+      "name": "收尾定姿",
+      "prompt": "An adult dancer performs one beginner pop-jazz dance phrase, facing forward. Natural human joint motion, clear weight transfers, small travel within one meter, no floorwork, no jumps. Small step touches followed by a balanced confident finishing pose, with arms lowered naturally.",
+      "seed": 20261114,
+      "bpm": 120,
+      "beats": 8,
+      "energy": 0.25,
+      "tags": [
+        "ending"
+      ]
+    }
+  ]
+}

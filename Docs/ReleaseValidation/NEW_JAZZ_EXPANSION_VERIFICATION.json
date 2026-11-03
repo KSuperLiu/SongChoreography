@@ -1,0 +1,503 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-03",
+  "unity": "2022.3.62f3",
+  "unityInstance": "CHOREOAIStudio_D1109BAA",
+  "buildPerformed": false,
+  "paidRequests": 0,
+  "characterSignature": "4b61ef44e42b351e409bdc82ef14e6af1b782d11bae92fe059d376af5315bd63",
+  "importedMotions": 243,
+  "rawCandidateCaptures": 13,
+  "newReviewedMotions": 5,
+  "approvedMotions": 8,
+  "newReviewedDirectedTransitions": 7,
+  "approvedDirectedTransitions": 10,
+  "sourceGenresPreserved": true,
+  "newJazzScope": "agent-assisted foundation practice adaptation; no expert style or teaching certification",
+  "newPhrases": [
+    {
+      "id": "mixamo-snake-hip-hop-dance-109070901",
+      "name": "躯干 Snake 律动",
+      "sourceBeatTimes": [
+        5.6,
+        6.43,
+        6.97,
+        7.5,
+        8.37,
+        9.07,
+        9.73,
+        10.6,
+        11.23
+      ],
+      "energy": 0.55
+    },
+    {
+      "id": "mixamo-hip-hop-dancing-108690901",
+      "name": "肩部 Shimmy",
+      "sourceBeatTimes": [
+        0.53,
+        1.07,
+        1.7,
+        2.27,
+        2.83,
+        3.57,
+        4.13,
+        4.7,
+        5.33
+      ],
+      "energy": 0.6
+    },
+    {
+      "id": "mixamo-hip-hop-dancing-108660901",
+      "name": "侧移摆胯",
+      "sourceBeatTimes": [
+        5.03,
+        5.7,
+        6.3,
+        6.9,
+        7.53,
+        8.17,
+        8.77,
+        9.5,
+        10.07
+      ],
+      "energy": 0.65
+    },
+    {
+      "id": "mixamo-arms-hip-hop-dance-108990901",
+      "name": "手臂延展组合",
+      "sourceBeatTimes": [
+        2.93,
+        3.57,
+        4.23,
+        4.93,
+        5.5,
+        6.37,
+        6.87,
+        7.7,
+        8.43
+      ],
+      "energy": 0.52
+    },
+    {
+      "id": "mixamo-slide-hip-hop-dance-108870901",
+      "name": "交叉滑步",
+      "sourceBeatTimes": [
+        6.4,
+        6.83,
+        7.3,
+        7.77,
+        8.23,
+        8.63,
+        9.07,
+        9.53,
+        10.0
+      ],
+      "energy": 0.62
+    }
+  ],
+  "rejectedCandidates": [
+    {
+      "id": "mixamo-step-hip-hop-dance-109010901",
+      "reason": "Sustained exaggerated toe-support pose in side view; did not approve; replaced with selected crossing-slide phrase."
+    }
+  ],
+  "playMode": {
+    "completed": true,
+    "segmentCount": 8,
+    "uniqueMotionCount": 8,
+    "sequence": [
+      "mixamo-hip-hop-dancing-101960901",
+      "mixamo-snake-hip-hop-dance-109070901",
+      "mixamo-slide-hip-hop-dance-108870901",
+      "mixamo-hip-hop-dancing-101960905",
+      "mixamo-hip-hop-dancing-108690901",
+      "mixamo-hip-hop-dancing-108660901",
+      "mixamo-arms-hip-hop-dance-108990901",
+      "mixamo-hip-hop-dancing-108650901"
+    ],
+    "sequenceNames": [
+      "手臂 Wave",
+      "躯干 Snake 律动",
+      "交叉滑步",
+      "胸部 Rib Pops",
+      "肩部 Shimmy",
+      "侧移摆胯",
+      "手臂延展组合",
+      "轻步律动"
+    ],
+    "bpm": 100.0,
+    "firstBeat": 0.0,
+    "duration": 38.4,
+    "samples": 441,
+    "errors": [],
+    "phases": {
+      "full-song": {
+        "samples": 360,
+        "observedMotionCount": 8,
+        "audioDriftP95Seconds": 0.0213292134598305,
+        "audioDriftMaxSeconds": 0.08531517330811766,
+        "measuredRateMedian": 1.0,
+        "pitchAlwaysOne": true,
+        "minMeshY": 0.004999876022338867,
+        "maxMinimumMeshY": 0.022776830941438675
+      },
+      "rate-075": {
+        "samples": 24,
+        "observedMotionCount": 1,
+        "audioDriftP95Seconds": 0.016013617037970107,
+        "audioDriftMaxSeconds": 0.032003414391965634,
+        "measuredRateMedian": 0.75,
+        "pitchAlwaysOne": true,
+        "minMeshY": 0.004999998956918716,
+        "maxMinimumMeshY": 0.005000002682209015
+      },
+      "rate-050": {
+        "samples": 24,
+        "observedMotionCount": 1,
+        "audioDriftP95Seconds": 0.011208754725839761,
+        "audioDriftMaxSeconds": 0.021335613170776924,
+        "measuredRateMedian": 0.5,
+        "pitchAlwaysOne": true,
+        "minMeshY": 0.004999998956918716,
+        "maxMinimumMeshY": 0.005000002682209015
+      },
+      "loop": {
+        "samples": 33,
+        "observedMotionCount": 1,
+        "audioDriftP95Seconds": 0.021310694217318037,
+        "audioDriftMaxSeconds": 0.021328772862398093,
+        "measuredRateMedian": 1.0,
+        "pitchAlwaysOne": true,
+        "minMeshY": 0.004999998956918716,
+        "maxMinimumMeshY": 0.005000002682209015
+      }
+    }
+  },
+  "librarySettingsUI": {
+    "completed": true,
+    "libraryCount": 243,
+    "recommendedCount": 8,
+    "previewTimeAdvance": 1.0547083616256714,
+    "previewHandMovement": 1.051722764968872,
+    "passed": [
+      "all 243 imported motions remain available for preview",
+      "unreviewed Jazz candidate can be previewed",
+      "live preview advances time and deforms actual Humanoid bones",
+      "checked unreviewed candidate stays outside automatic choreography",
+      "custom checked selection is saved locally",
+      "StudioApp generation respects saved library selection",
+      "a three-motion selection generates only those three motions",
+      "New Jazz recommendation selects eight reviewed phrases"
+    ],
+    "errors": []
+  },
+  "coreAssertionsPassed": 28,
+  "reviews": {
+    "schemaVersion": 2,
+    "motions": [
+      {
+        "characterId": "dancer-female-v1",
+        "characterSignature": "4b61ef44e42b351e409bdc82ef14e6af1b782d11bae92fe059d376af5315bd63",
+        "motionId": "mixamo-hip-hop-dancing-101960901",
+        "motionSignature": "d4c67b173ea3d21eabec851821912099be23f47189104a775423ff532ee0d6d8",
+        "notes": "Agent-assisted visual and 30 Hz geometric review on the actual Tripo avatar, front and side CPU-skinned snapshots. Cropped source .83–4.33 s: eight-count training phrase, alternating down/up accents; 100 BPM demonstration only. Wave transfers between elbows/shoulders. Knees >=148 degrees; mesh minimum approximately 5 mm. Hip-hop source used for New Jazz foundations, not a New Jazz style certification. Evidence: .generation/motion-review-100bpm."
+      },
+      {
+        "characterId": "dancer-female-v1",
+        "characterSignature": "4b61ef44e42b351e409bdc82ef14e6af1b782d11bae92fe059d376af5315bd63",
+        "motionId": "mixamo-hip-hop-dancing-101960905",
+        "motionSignature": "2a48abccd3a6e43e2fe6a73b6c9ade0747efdb2897186a19bc4f4bb60e428f9a",
+        "notes": "Agent-assisted visual and 30 Hz geometric review on the actual Tripo avatar. Source 0–3.33 s mapped with manually selected .40–.44 s count intervals, chest/shoulder accents and weight changes; 100 BPM demonstration. Front/side snapshots show no gross limb inversion; hands intentionally pass near face, not verified collision-free. Knees >=147 degrees. Hip-hop foundation, not a New Jazz style certification."
+      },
+      {
+        "characterId": "dancer-female-v1",
+        "characterSignature": "4b61ef44e42b351e409bdc82ef14e6af1b782d11bae92fe059d376af5315bd63",
+        "motionId": "mixamo-hip-hop-dancing-108650901",
+        "motionSignature": "15dc2e4079155d952ee0b6ae1a164027f5bfc6934fdf3c19ae2db0b99a8fdd8e",
+        "notes": "Agent-assisted visual and 30 Hz geometric review on the actual Tripo avatar. Source 6.53–11.47 s; selected eight down-groove accents around hip-height minima, with arm gestures and light alternating footwork. 100 BPM demonstration. Front/side CPU-skinned snapshots; knees >=146 degrees, mesh minimum approximately 5 mm. Hip-hop foundation, not a New Jazz style certification."
+      },
+      {
+        "characterId": "dancer-female-v1",
+        "characterSignature": "4b61ef44e42b351e409bdc82ef14e6af1b782d11bae92fe059d376af5315bd63",
+        "motionId": "mixamo-snake-hip-hop-dance-109070901",
+        "motionSignature": "ad4cd6136236c2f0f597ec0f6d2a747d1369858fabf1a4d1d130d5c9aa13d740",
+        "notes": "Agent-assisted review on actual Tripo avatar: front/side CPU-skinned snapshots and 30 Hz trajectory review, cropped count map at 100 BPM. Torso flexion/extension and lateral Snake isolation. Minimum knee angle 118.0 degrees; no sampled mesh-floor penetration. New Jazz foundation adaptation of Mixamo Hip Hop, not expert artistic/teaching certification. Full collision and foot-lock not certified. Evidence: .generation/newjazz-expansion-100bpm/mixamo-snake-hip-hop-dance-109070901."
+      },
+      {
+        "characterId": "dancer-female-v1",
+        "characterSignature": "4b61ef44e42b351e409bdc82ef14e6af1b782d11bae92fe059d376af5315bd63",
+        "motionId": "mixamo-hip-hop-dancing-108690901",
+        "motionSignature": "a6988cbc2740c090251159b2830f3eb49b9b72f66ab51aa31202df60e8eb1037",
+        "notes": "Agent-assisted review on actual Tripo avatar: front/side CPU-skinned snapshots and 30 Hz trajectory review, cropped count map at 100 BPM. Shoulder Shimmy with alternating weight transfers. Minimum knee angle 124.3 degrees; no sampled mesh-floor penetration. New Jazz foundation adaptation of Mixamo Hip Hop, not expert artistic/teaching certification. Full collision and foot-lock not certified. Evidence: .generation/newjazz-expansion-100bpm/mixamo-hip-hop-dancing-108690901."
+      },
+      {
+        "characterId": "dancer-female-v1",
+        "characterSignature": "4b61ef44e42b351e409bdc82ef14e6af1b782d11bae92fe059d376af5315bd63",
+        "motionId": "mixamo-hip-hop-dancing-108660901",
+        "motionSignature": "b2e8e7bd5469d466a2b0d0a5b31621087824e8923c4f4e1a5849f093f7142c4b",
+        "notes": "Agent-assisted review on actual Tripo avatar: front/side CPU-skinned snapshots and 30 Hz trajectory review, cropped count map at 100 BPM. Lateral travel, hip sway and open/close steps; small authored airborne interval retained. Minimum knee angle 128.2 degrees; no sampled mesh-floor penetration. New Jazz foundation adaptation of Mixamo Hip Hop, not expert artistic/teaching certification. Full collision and foot-lock not certified. Evidence: .generation/newjazz-expansion-100bpm/mixamo-hip-hop-dancing-108660901."
+      },
+      {
+        "characterId": "dancer-female-v1",
+        "characterSignature": "4b61ef44e42b351e409bdc82ef14e6af1b782d11bae92fe059d376af5315bd63",
+        "motionId": "mixamo-arms-hip-hop-dance-108990901",
+        "motionSignature": "3b3b48ed7d9e974b41fefe50502d3ef1caa7da6b31df1befba755e55d81fb32c",
+        "notes": "Agent-assisted review on actual Tripo avatar: front/side CPU-skinned snapshots and 30 Hz trajectory review, cropped count map at 100 BPM. Arm reach, head framing and sweep gestures over a grounded groove. Minimum knee angle 132.7 degrees; no sampled mesh-floor penetration. New Jazz foundation adaptation of Mixamo Hip Hop, not expert artistic/teaching certification. Full collision and foot-lock not certified. Evidence: .generation/newjazz-expansion-100bpm/mixamo-arms-hip-hop-dance-108990901."
+      },
+      {
+        "characterId": "dancer-female-v1",
+        "characterSignature": "4b61ef44e42b351e409bdc82ef14e6af1b782d11bae92fe059d376af5315bd63",
+        "motionId": "mixamo-slide-hip-hop-dance-108870901",
+        "motionSignature": "11f00aae907ed3bfc02a5d1d065823f27701f0c9af5ac43e491670fed909d923",
+        "notes": "Agent-assisted review on actual Tripo avatar: front/side CPU-skinned snapshots and 30 Hz trajectory review, cropped count map at 100 BPM. Crossing and opening slide steps; selected section avoids sustained en-pointe style toe support seen in rejected Step candidate. Minimum knee angle 119.3 degrees; no sampled mesh-floor penetration. New Jazz foundation adaptation of Mixamo Hip Hop, not expert artistic/teaching certification. Full collision and foot-lock not certified. Evidence: .generation/newjazz-expansion-100bpm/mixamo-slide-hip-hop-dance-108870901."
+      }
+    ],
+    "transitions": [
+      {
+        "characterId": "dancer-female-v1",
+        "characterSignature": "4b61ef44e42b351e409bdc82ef14e6af1b782d11bae92fe059d376af5315bd63",
+        "from": "mixamo-hip-hop-dancing-101960901",
+        "fromSignature": "d4c67b173ea3d21eabec851821912099be23f47189104a775423ff532ee0d6d8",
+        "to": "mixamo-hip-hop-dancing-101960905",
+        "toSignature": "2a48abccd3a6e43e2fe6a73b6c9ade0747efdb2897186a19bc4f4bb60e428f9a",
+        "blendBeats": 1,
+        "notes": "Agent-assisted front/side snapshot review plus 30 Hz bone trajectory inspection at 100 BPM, 1-beat (0.6 s) SmoothStep blend. Reviewed only this directed pair. Maximum hand displacement <0.063 m/frame, foot <0.051 m/frame at 30 Hz; no visible gross inversion/mesh-floor penetration. Evidence: .generation/transition-review-100bpm/mixamo-hip-hop-dancing-101960901--mixamo-hip-hop-dancing-101960905. Not a full contact/foot-lock or artistic certification."
+      },
+      {
+        "characterId": "dancer-female-v1",
+        "characterSignature": "4b61ef44e42b351e409bdc82ef14e6af1b782d11bae92fe059d376af5315bd63",
+        "from": "mixamo-hip-hop-dancing-101960905",
+        "fromSignature": "2a48abccd3a6e43e2fe6a73b6c9ade0747efdb2897186a19bc4f4bb60e428f9a",
+        "to": "mixamo-hip-hop-dancing-108650901",
+        "toSignature": "15dc2e4079155d952ee0b6ae1a164027f5bfc6934fdf3c19ae2db0b99a8fdd8e",
+        "blendBeats": 1,
+        "notes": "Agent-assisted front/side snapshot review plus 30 Hz bone trajectory inspection at 100 BPM, 1-beat (0.6 s) SmoothStep blend. Reviewed only this directed pair. Maximum hand displacement <0.063 m/frame, foot <0.051 m/frame at 30 Hz; no visible gross inversion/mesh-floor penetration. Evidence: .generation/transition-review-100bpm/mixamo-hip-hop-dancing-101960905--mixamo-hip-hop-dancing-108650901. Not a full contact/foot-lock or artistic certification."
+      },
+      {
+        "characterId": "dancer-female-v1",
+        "characterSignature": "4b61ef44e42b351e409bdc82ef14e6af1b782d11bae92fe059d376af5315bd63",
+        "from": "mixamo-hip-hop-dancing-108650901",
+        "fromSignature": "15dc2e4079155d952ee0b6ae1a164027f5bfc6934fdf3c19ae2db0b99a8fdd8e",
+        "to": "mixamo-hip-hop-dancing-101960901",
+        "toSignature": "d4c67b173ea3d21eabec851821912099be23f47189104a775423ff532ee0d6d8",
+        "blendBeats": 1,
+        "notes": "Agent-assisted front/side snapshot review plus 30 Hz bone trajectory inspection at 100 BPM, 1-beat (0.6 s) SmoothStep blend. Reviewed only this directed pair. Maximum hand displacement <0.063 m/frame, foot <0.051 m/frame at 30 Hz; no visible gross inversion/mesh-floor penetration. Evidence: .generation/transition-review-100bpm/mixamo-hip-hop-dancing-108650901--mixamo-hip-hop-dancing-101960901. Not a full contact/foot-lock or artistic certification."
+      },
+      {
+        "characterId": "dancer-female-v1",
+        "characterSignature": "4b61ef44e42b351e409bdc82ef14e6af1b782d11bae92fe059d376af5315bd63",
+        "from": "mixamo-hip-hop-dancing-101960901",
+        "fromSignature": "d4c67b173ea3d21eabec851821912099be23f47189104a775423ff532ee0d6d8",
+        "to": "mixamo-snake-hip-hop-dance-109070901",
+        "toSignature": "ad4cd6136236c2f0f597ec0f6d2a747d1369858fabf1a4d1d130d5c9aa13d740",
+        "blendBeats": 1,
+        "notes": "Agent-assisted front/side snapshot and 30 Hz continuity review on current Tripo avatar, 100 BPM and 1-beat SmoothStep blend. Max sampled hand displacement 0.0963 m/frame, foot 0.0360 m/frame. No visible gross limb inversion or sampled floor penetration; full collision/foot-lock not certified. Only this direction approved. Evidence: .generation/newjazz-expansion-transitions/mixamo-hip-hop-dancing-101960901--mixamo-snake-hip-hop-dance-109070901."
+      },
+      {
+        "characterId": "dancer-female-v1",
+        "characterSignature": "4b61ef44e42b351e409bdc82ef14e6af1b782d11bae92fe059d376af5315bd63",
+        "from": "mixamo-snake-hip-hop-dance-109070901",
+        "fromSignature": "ad4cd6136236c2f0f597ec0f6d2a747d1369858fabf1a4d1d130d5c9aa13d740",
+        "to": "mixamo-slide-hip-hop-dance-108870901",
+        "toSignature": "11f00aae907ed3bfc02a5d1d065823f27701f0c9af5ac43e491670fed909d923",
+        "blendBeats": 1,
+        "notes": "Agent-assisted front/side snapshot and 30 Hz continuity review on current Tripo avatar, 100 BPM and 1-beat SmoothStep blend. Max sampled hand displacement 0.0190 m/frame, foot 0.0373 m/frame. No visible gross limb inversion or sampled floor penetration; full collision/foot-lock not certified. Only this direction approved. Evidence: .generation/newjazz-expansion-transitions/mixamo-snake-hip-hop-dance-109070901--mixamo-slide-hip-hop-dance-108870901."
+      },
+      {
+        "characterId": "dancer-female-v1",
+        "characterSignature": "4b61ef44e42b351e409bdc82ef14e6af1b782d11bae92fe059d376af5315bd63",
+        "from": "mixamo-slide-hip-hop-dance-108870901",
+        "fromSignature": "11f00aae907ed3bfc02a5d1d065823f27701f0c9af5ac43e491670fed909d923",
+        "to": "mixamo-hip-hop-dancing-101960905",
+        "toSignature": "2a48abccd3a6e43e2fe6a73b6c9ade0747efdb2897186a19bc4f4bb60e428f9a",
+        "blendBeats": 1,
+        "notes": "Agent-assisted front/side snapshot and 30 Hz continuity review on current Tripo avatar, 100 BPM and 1-beat SmoothStep blend. Max sampled hand displacement 0.0574 m/frame, foot 0.0332 m/frame. No visible gross limb inversion or sampled floor penetration; full collision/foot-lock not certified. Only this direction approved. Evidence: .generation/newjazz-expansion-transitions/mixamo-slide-hip-hop-dance-108870901--mixamo-hip-hop-dancing-101960905."
+      },
+      {
+        "characterId": "dancer-female-v1",
+        "characterSignature": "4b61ef44e42b351e409bdc82ef14e6af1b782d11bae92fe059d376af5315bd63",
+        "from": "mixamo-hip-hop-dancing-101960905",
+        "fromSignature": "2a48abccd3a6e43e2fe6a73b6c9ade0747efdb2897186a19bc4f4bb60e428f9a",
+        "to": "mixamo-hip-hop-dancing-108690901",
+        "toSignature": "a6988cbc2740c090251159b2830f3eb49b9b72f66ab51aa31202df60e8eb1037",
+        "blendBeats": 1,
+        "notes": "Agent-assisted front/side snapshot and 30 Hz continuity review on current Tripo avatar, 100 BPM and 1-beat SmoothStep blend. Max sampled hand displacement 0.1073 m/frame, foot 0.0975 m/frame. No visible gross limb inversion or sampled floor penetration; full collision/foot-lock not certified. Only this direction approved. Evidence: .generation/newjazz-expansion-transitions/mixamo-hip-hop-dancing-101960905--mixamo-hip-hop-dancing-108690901."
+      },
+      {
+        "characterId": "dancer-female-v1",
+        "characterSignature": "4b61ef44e42b351e409bdc82ef14e6af1b782d11bae92fe059d376af5315bd63",
+        "from": "mixamo-hip-hop-dancing-108690901",
+        "fromSignature": "a6988cbc2740c090251159b2830f3eb49b9b72f66ab51aa31202df60e8eb1037",
+        "to": "mixamo-hip-hop-dancing-108660901",
+        "toSignature": "b2e8e7bd5469d466a2b0d0a5b31621087824e8923c4f4e1a5849f093f7142c4b",
+        "blendBeats": 1,
+        "notes": "Agent-assisted front/side snapshot and 30 Hz continuity review on current Tripo avatar, 100 BPM and 1-beat SmoothStep blend. Max sampled hand displacement 0.0717 m/frame, foot 0.0833 m/frame. No visible gross limb inversion or sampled floor penetration; full collision/foot-lock not certified. Only this direction approved. Evidence: .generation/newjazz-expansion-transitions/mixamo-hip-hop-dancing-108690901--mixamo-hip-hop-dancing-108660901."
+      },
+      {
+        "characterId": "dancer-female-v1",
+        "characterSignature": "4b61ef44e42b351e409bdc82ef14e6af1b782d11bae92fe059d376af5315bd63",
+        "from": "mixamo-hip-hop-dancing-108660901",
+        "fromSignature": "b2e8e7bd5469d466a2b0d0a5b31621087824e8923c4f4e1a5849f093f7142c4b",
+        "to": "mixamo-arms-hip-hop-dance-108990901",
+        "toSignature": "3b3b48ed7d9e974b41fefe50502d3ef1caa7da6b31df1befba755e55d81fb32c",
+        "blendBeats": 1,
+        "notes": "Agent-assisted front/side snapshot and 30 Hz continuity review on current Tripo avatar, 100 BPM and 1-beat SmoothStep blend. Max sampled hand displacement 0.0797 m/frame, foot 0.0847 m/frame. No visible gross limb inversion or sampled floor penetration; full collision/foot-lock not certified. Only this direction approved. Evidence: .generation/newjazz-expansion-transitions/mixamo-hip-hop-dancing-108660901--mixamo-arms-hip-hop-dance-108990901."
+      },
+      {
+        "characterId": "dancer-female-v1",
+        "characterSignature": "4b61ef44e42b351e409bdc82ef14e6af1b782d11bae92fe059d376af5315bd63",
+        "from": "mixamo-arms-hip-hop-dance-108990901",
+        "fromSignature": "3b3b48ed7d9e974b41fefe50502d3ef1caa7da6b31df1befba755e55d81fb32c",
+        "to": "mixamo-hip-hop-dancing-108650901",
+        "toSignature": "15dc2e4079155d952ee0b6ae1a164027f5bfc6934fdf3c19ae2db0b99a8fdd8e",
+        "blendBeats": 1,
+        "notes": "Agent-assisted front/side snapshot and 30 Hz continuity review on current Tripo avatar, 100 BPM and 1-beat SmoothStep blend. Max sampled hand displacement 0.0655 m/frame, foot 0.0353 m/frame. No visible gross limb inversion or sampled floor penetration; full collision/foot-lock not certified. Only this direction approved. Evidence: .generation/newjazz-expansion-transitions/mixamo-arms-hip-hop-dance-108990901--mixamo-hip-hop-dancing-108650901."
+      }
+    ],
+    "clips": [
+      {
+        "id": "mixamo-hip-hop-dancing-108650901",
+        "sourceHash": "856becac3c7fba006be62cdb9cad75bead2f8dc648e75288925f878fabf62363",
+        "clipName": "mixamo.com",
+        "beatTimes": [
+          6.53,
+          7.13,
+          7.77,
+          8.4,
+          9.0,
+          9.57,
+          10.2,
+          10.87,
+          11.47
+        ]
+      },
+      {
+        "id": "mixamo-hip-hop-dancing-101960905",
+        "sourceHash": "35d4b2e0eb91ed29ebaf57096a61d0f89b6ec0082c9fc1e40ac269434bcc8226",
+        "clipName": "mixamo.com",
+        "beatTimes": [
+          0,
+          0.4,
+          0.83,
+          1.27,
+          1.67,
+          2.1,
+          2.5,
+          2.93,
+          3.33
+        ]
+      },
+      {
+        "id": "mixamo-hip-hop-dancing-101960901",
+        "sourceHash": "c1f9df90381377cbe2e800b3dd3283fa345884e70bf7aab7949ce6f1de186bf1",
+        "clipName": "mixamo.com",
+        "beatTimes": [
+          0.83,
+          1.27,
+          1.7,
+          2.13,
+          2.57,
+          3.0,
+          3.47,
+          3.9,
+          4.33
+        ]
+      },
+      {
+        "id": "mixamo-snake-hip-hop-dance-109070901",
+        "sourceHash": "16d0f20b6f8f3b1ef7926577dbe3f77c81cc091b69993be35820066d7f7cde0d",
+        "clipName": "mixamo.com",
+        "beatTimes": [
+          5.6,
+          6.43,
+          6.97,
+          7.5,
+          8.37,
+          9.07,
+          9.73,
+          10.6,
+          11.23
+        ]
+      },
+      {
+        "id": "mixamo-hip-hop-dancing-108690901",
+        "sourceHash": "ed4788c54d0a09cdd86b2c827b08ad964caf14e526879c37c028ba5c73822904",
+        "clipName": "mixamo.com",
+        "beatTimes": [
+          0.53,
+          1.07,
+          1.7,
+          2.27,
+          2.83,
+          3.57,
+          4.13,
+          4.7,
+          5.33
+        ]
+      },
+      {
+        "id": "mixamo-arms-hip-hop-dance-108990901",
+        "sourceHash": "cc1169ff3a7184631fd5a3586c0f368d58babd99ef7f3a3b1c2201f9cd289a17",
+        "clipName": "mixamo.com",
+        "beatTimes": [
+          2.93,
+          3.57,
+          4.23,
+          4.93,
+          5.5,
+          6.37,
+          6.87,
+          7.7,
+          8.43
+        ]
+      },
+      {
+        "id": "mixamo-hip-hop-dancing-108660901",
+        "sourceHash": "ca6cf8c3da96c4fd9b361db89d02e5cbc2398f8d4ba98f390818d646787b9fee",
+        "clipName": "mixamo.com",
+        "beatTimes": [
+          5.03,
+          5.7,
+          6.3,
+          6.9,
+          7.53,
+          8.17,
+          8.77,
+          9.5,
+          10.07
+        ]
+      },
+      {
+        "id": "mixamo-slide-hip-hop-dance-108870901",
+        "sourceHash": "09fb8517d266f765660c5890e0d6ed22f778beee8d391c7f2ca4f0edf76681af",
+        "clipName": "mixamo.com",
+        "beatTimes": [
+          6.4,
+          6.83,
+          7.3,
+          7.77,
+          8.23,
+          8.63,
+          9.07,
+          9.53,
+          10.0
+        ]
+      }
+    ]
+  },
+  "limitations": [
+    "Other tempi and full-song loop seam not reviewed.",
+    "No full collision or foot-lock certification.",
+    "All 243 motions are browsable; eight reviewed phrases can enter generation, according to the saved user selection."
+  ],
+  "laterQualityFinding": {
+    "motionId": "mixamo-snake-hip-hop-dance-109070901",
+    "reviewRevoked": true,
+    "currentApprovedMotions": 7,
+    "currentApprovedTransitions": 8,
+    "evidence": "Docs/HAND_BODY_INTERSECTION_VERIFICATION.json",
+    "note": "The eight-motion runtime report below is historical and does not certify freedom from body intersections."
+  },
+  "publicationNote": "Metrics summary. Full per-frame motion traces remain local and are not part of the public source distribution."
+}

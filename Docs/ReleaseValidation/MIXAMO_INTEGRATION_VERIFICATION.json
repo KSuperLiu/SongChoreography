@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-03",
+  "unity": "2022.3.62f3",
+  "paidRequests": 0,
+  "buildPerformed": false,
+  "downloadScope": "Mixamo hip hop search: 186 results",
+  "downloaded": 186,
+  "batchStatus": "complete",
+  "charactersImported": 1,
+  "motionsImported": 243,
+  "importIssues": 0,
+  "motions": [
+    "243 local candidates; full metadata in Generation/library.json"
+  ],
+  "verification": {
+    "coreAssertionsPassed": 28,
+    "humanoidSamples": 15,
+    "maxAbsoluteModelYaw": 9.658415365265682e-06,
+    "minimumShoulderForwardZ": 0.9111080765724182,
+    "editorPreviewPlayed": "Hip Hop Slide Step",
+    "unityPlayModeStarted": true,
+    "newExceptionsAfterLayoutRecovery": 0,
+    "layoutRecovery": "Default layout restored after floating-window reload error; previous layout backed up locally in .generation/layout-before-recovery.dwlt",
+    "downloadReceipt": ".generation/mixamo-batch.json",
+    "downloadHashVerifiedFbxFiles": 243,
+    "downloadHashErrors": 0,
+    "registrationChecksPassed": 5,
+    "unitySkillsConnected": true,
+    "unityInstance": "CHOREOAIStudio_D1109BAA",
+    "unityBatchImport": "completed",
+    "homepageTitle": "CHOREO / AI",
+    "removedHomepageText": "舞蹈练习室",
+    "homepageCompileErrors": 0,
+    "homepageScreenshot": "Docs/StudioHeaderRemoved.png",
+    "practice100PlayMode": "completed: eight different motions in eight slots, 441 samples, no new errors",
+    "motionLibrarySettings": "runtime UI, all 243 previews, genre categories, recommendations, persistent selection; eight integration checks passed"
+  },
+  "review": {
+    "beatMarkers": "eight-cropped-eight-count-phrases-reviewed-at-100bpm",
+    "transitions": "ten-directed-pairs-reviewed-at-100bpm",
+    "artisticQuality": "agent-assisted-foundation-practice-review-not-expert-certification",
+    "newJazz": "foundation-practice-adaptation-of-Mixamo-Hip-Hop",
+    "approvedMotions": 7,
+    "approvedTransitions": 8,
+    "evidence": "Docs/HAND_BODY_INTERSECTION_VERIFICATION.json",
+    "handBodyIntersectionFinding": "Snake isolated clip intersects current Tripo avatar; review revoked, preview retained"
+  },
+  "rawFbxFiles": 243,
+  "publicationNote": "Metrics summary. Full per-frame motion traces remain local and are not part of the public source distribution."
+}

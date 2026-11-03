@@ -1,7 +1,0 @@
-Electrodoodle — Kevin MacLeod (incompetech.com)
-Licensed under Creative Commons: By Attribution 4.0 License
-https://creativecommons.org/licenses/by/4.0/
-Source: https://incompetech.com/music/royalty-free/index.html?Search=Search&isrc=USUAN1200079
-Changes: excerpt 15–55 seconds, PCM WAV conversion; 0.75x and 0.5x pitch-preserving time-stretch versions.
-Original SHA-256: 75227ad153780ee0c57ae529caa7f8a891877a46596ff8800a16c90b34b6d18c
-Retrieved: 2026-11-02

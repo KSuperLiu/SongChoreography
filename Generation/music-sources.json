@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Personal dance learning and offline practice",
+  "licenseName": "Mixkit Stock Music Free License",
+  "licenseUrl": "https://mixkit.co/license/modal/musicFree/",
+  "licenseCheckedAt": "2026-11-03",
+  "tracks": [
+    {"id":"mixkit-872","providerId":"872","title":"Gimme that Groove!","artist":"Michael Ramir C.","genre":"Funk","sourceUrl":"https://mixkit.co/free-stock-music/funk/","downloadUrl":"https://assets.mixkit.co/music/872/872.mp3","expectedDurationSeconds":88},
+    {"id":"mixkit-989","providerId":"989","title":"Dirty Thinkin'","artist":"Michael Ramir C.","genre":"Jazz Funk","sourceUrl":"https://mixkit.co/free-stock-music/funk/","downloadUrl":"https://assets.mixkit.co/music/989/989.mp3","expectedDurationSeconds":89},
+    {"id":"mixkit-1141","providerId":"1141","title":"Funky Triplets","artist":"Michael Ramir C.","genre":"Funk / R&B","sourceUrl":"https://mixkit.co/free-stock-music/funk/","downloadUrl":"https://assets.mixkit.co/music/1141/1141.mp3","expectedDurationSeconds":109},
+    {"id":"mixkit-849","providerId":"849","title":"Light it Up Boy","artist":"Michael Ramir C.","genre":"Jazz Funk","sourceUrl":"https://mixkit.co/free-stock-music/funk/","downloadUrl":"https://assets.mixkit.co/music/849/849.mp3","expectedDurationSeconds":94},
+    {"id":"mixkit-738","providerId":"738","title":"Hip Hop 02","artist":"Lily J","genre":"Hip Hop / R&B","sourceUrl":"https://mixkit.co/free-stock-music/hip-hop/","downloadUrl":"https://assets.mixkit.co/music/738/738.mp3","expectedDurationSeconds":115},
+    {"id":"mixkit-400","providerId":"400","title":"C.B.P.D","artist":"Arulo","genre":"Hip Hop / Trap","sourceUrl":"https://mixkit.co/free-stock-music/hip-hop/","downloadUrl":"https://assets.mixkit.co/music/400/400.mp3","expectedDurationSeconds":99},
+    {"id":"mixkit-349","providerId":"349","title":"Basketball Training","artist":"Arulo","genre":"Hip Hop / Pop","sourceUrl":"https://mixkit.co/free-stock-music/hip-hop/","downloadUrl":"https://assets.mixkit.co/music/349/349.mp3","expectedDurationSeconds":112},
+    {"id":"mixkit-623","providerId":"623","title":"Deep Urban","artist":"Eugenio Mininni","genre":"Tech House","sourceUrl":"https://mixkit.co/free-stock-music/house/","downloadUrl":"https://assets.mixkit.co/music/623/623.mp3","expectedDurationSeconds":289},
+    {"id":"mixkit-371","providerId":"371","title":"Cat Walk","artist":"Arulo","genre":"House / EDM","sourceUrl":"https://mixkit.co/free-stock-music/house/","downloadUrl":"https://assets.mixkit.co/music/371/371.mp3","expectedDurationSeconds":124},
+    {"id":"mixkit-744","providerId":"744","title":"House 02","artist":"Lily J","genre":"Deep House","sourceUrl":"https://mixkit.co/free-stock-music/house/","downloadUrl":"https://assets.mixkit.co/music/744/744.mp3","expectedDurationSeconds":113}
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "id": "mixkit-989",
+  "providerId": "989",
+  "title": "Dirty Thinkin'",
+  "artist": "Michael Ramir C.",
+  "genre": "Jazz Funk",
+  "sourceUrl": "https://mixkit.co/free-stock-music/funk/",
+  "downloadUrl": "https://assets.mixkit.co/music/989/989.mp3",
+  "expectedDurationSeconds": 89,
+  "file": "mixkit-989/track.mp3",
+  "durationSeconds": 89.15263038548753,
+  "sampleRate": 44100,
+  "channels": 2,
+  "bytes": 2854705,
+  "sha256": "e36220dbbaf56e0380bb106e32779b1832fa8f4bd8d40edcaf15b07a17bb9a8f",
+  "licenseName": "Mixkit Stock Music Free License",
+  "licenseUrl": "https://mixkit.co/license/modal/musicFree/",
+  "downloadedAt": "2026-11-03T06:22:30.032032+00:00",
+  "verification": {
+    "fullDecode": true,
+    "rms": 0.11465053329500757,
+    "peak": 1.0376309156417847
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "id": "mixkit-371",
+  "providerId": "371",
+  "title": "Cat Walk",
+  "artist": "Arulo",
+  "genre": "House / EDM",
+  "sourceUrl": "https://mixkit.co/free-stock-music/house/",
+  "downloadUrl": "https://assets.mixkit.co/music/371/371.mp3",
+  "expectedDurationSeconds": 124,
+  "file": "mixkit-371/track.mp3",
+  "durationSeconds": 123.99038548752834,
+  "sampleRate": 44100,
+  "channels": 2,
+  "bytes": 3969820,
+  "sha256": "e241cba000ce12e52cadd4c9956274e391ef1f66d1e48a5dd40bfc21645aa489",
+  "licenseName": "Mixkit Stock Music Free License",
+  "licenseUrl": "https://mixkit.co/license/modal/musicFree/",
+  "downloadedAt": "2026-11-03T06:23:01.508949+00:00",
+  "verification": {
+    "fullDecode": true,
+    "rms": 0.20496179042144622,
+    "peak": 1.0278396606445312
+  }
+}

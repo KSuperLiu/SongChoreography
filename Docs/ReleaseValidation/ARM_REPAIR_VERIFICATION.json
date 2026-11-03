@@ -1,0 +1,495 @@
+{
+  "date": "2026-11-03",
+  "unity": "2022.3.62f3",
+  "characterSignature": "fec4b71a489c6528c50faa729a724a2227713f93daa51582cb6d4b1734730b23",
+  "playbackRevision": 4,
+  "characterSourceHash": "58801c64eac3ff971ef86bb2ac27755485782320becda7950a075f62ff35c7a6",
+  "penetrationToleranceMetres": 0.002,
+  "source": {
+    "clips": 8,
+    "frames": 1100,
+    "points": 2688400,
+    "penetratingFrames": 0,
+    "fps": 30.0,
+    "meshStride": 1,
+    "maxAddedHandStep": 0.07702772319316864,
+    "maxAddedElbowStep": 0.049038633704185486,
+    "evidenceCharacterSignature": "fe2f576e5c070957b42f41072b8291e8746a700e7c4d92d35ff2040e50fe67be",
+    "evidenceDirectory": ".generation/arm-final-newjazz-source"
+  },
+  "mapped100Bpm": {
+    "clips": 8,
+    "frames": 2312,
+    "points": 5650528,
+    "penetratingFrames": 0,
+    "fps": 60.0,
+    "meshStride": 1,
+    "maxAddedHandStep": 0.053626447916030884,
+    "maxAddedElbowStep": 0.032442815601825714,
+    "evidenceCharacterSignature": "fe2f576e5c070957b42f41072b8291e8746a700e7c4d92d35ff2040e50fe67be",
+    "evidenceDirectory": ".generation/arm-final-newjazz-mapped"
+  },
+  "transitionsAndPreviewLoops": {
+    "clips": 18,
+    "frames": 1438,
+    "points": 3514472,
+    "penetratingFrames": 0,
+    "fps": 60.0,
+    "meshStride": 1,
+    "maxAddedHandStep": 0.053626932203769684,
+    "maxAddedElbowStep": 0.02641824632883072,
+    "evidenceCharacterSignature": "fe2f576e5c070957b42f41072b8291e8746a700e7c4d92d35ff2040e50fe67be",
+    "evidenceDirectory": ".generation/arm-final-transitions-loops"
+  },
+  "libraryScreen": {
+    "clips": 243,
+    "frames": 16526,
+    "points": 3156466,
+    "penetratingFrames": 0,
+    "fps": 10.0,
+    "meshStride": 16,
+    "maxAddedHandStep": 0.5801762938499451,
+    "maxAddedElbowStep": 0.3831615447998047,
+    "evidenceCharacterSignature": "fec4b71a489c6528c50faa729a724a2227713f93daa51582cb6d4b1734730b23",
+    "evidenceDirectory": ".generation/arm-final-library-screen"
+  },
+  "flaggedFullSourceCandidates": [
+    {
+      "id": "mixamo-slide-step-v1",
+      "sourceHash": "a9b6e9e963609d2ec30711e0fe3bc094e99f9fb328f629b79a8c34220b2d7def",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-kick-step-v1",
+      "sourceHash": "8d842ba2d02f73ab264befdd2f3cc13ac7d3e970a0fd5a5395a9e70342bde98e",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-locking-hip-hop-dance-108830901",
+      "sourceHash": "265a2bb0a2be12f195a19543443448b8e673a2d8d1757c82be69904e59fb934c",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-hip-hop-dancing-108780902",
+      "sourceHash": "b7b14afabbf059b96ad48e1799be866abafbcc5eb6ff1e448294ab3df143f8b0",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-hip-hop-dancing-108860901",
+      "sourceHash": "befd3edfb11ae2b8927640816a1e91c3b2310e217914bdf534a728524cc1dbce",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-hip-hop-dancing-108350901",
+      "sourceHash": "be1c89311e3afc4191f82cf2febf588c96dfe21fa942650c5415f34df2e18c13",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-wave-hip-hop-dance-108900901",
+      "sourceHash": "f2170edac6c1807f7a5b4755b7bdc6cf5183bdf5efab6cb5a31f4d52be41b783",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-bboy-hip-hop-move-108810902",
+      "sourceHash": "81c048a449912b0dac30f3949c7035535e53c8ca4a2f9350a949ca9b829a121b",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-robot-hip-hop-dance-108850901",
+      "sourceHash": "6b297a0a991d11357a921dcf0e01ff30c99f74cb8d800c737caf0898838a7933",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-bboy-hip-hop-move-108810903",
+      "sourceHash": "dc5754256343b174ce057fcf47cfdefc73186fc9468d1e57768e3e45f66f2322",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-pack-breakdance-crossleg-freeze-5ccc62b3",
+      "sourceHash": "5ccc62b34ae464f70dd7abc97a10d38472e1186d814c586f6349e4090b959906",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-pack-breakdance-breakdance-ending-1-caad9e20",
+      "sourceHash": "caad9e20d3006fc13dc85988a94d20ecd49a41b24b9216c9962e338e93cce283",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-pack-breakdance-breakdance-ending-2-7a33aa80",
+      "sourceHash": "7a33aa8010e5b6c312c392df1c5d66c8bed51c971fed6096375656590e7b04a9",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-pack-breakdance-breakdance-ending-3-0bbeba11",
+      "sourceHash": "0bbeba1133221c04238733c338637161d92e258a91f8b872cb7f6a569e6d24e5",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-pack-breakdance-breakdance-footwork-2-ea7c3c04",
+      "sourceHash": "ea7c3c04b58880d3919669bc682a7bb12df04fe7c6e36b53a73b8ad82588087e",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-pack-breakdance-breakdance-footwork-3-a9acfe07",
+      "sourceHash": "a9acfe070ee40432804ecf54c4a9b0508dac9e674f50cfbf3a5fee65589585be",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-pack-breakdance-breakdance-freezes-a2dfbb54",
+      "sourceHash": "a2dfbb54546437cd4c383bb1cad33a7a19845fb8ba552256ccd71cb4e9ad5756",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-pack-breakdance-flair-c0b933b8",
+      "sourceHash": "c0b933b838386c92e06f193004cafd4d720a29da63be816ec6a2af4bf47a5404",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-pack-breakdance-breakdance-footwork-1-a7a1587a",
+      "sourceHash": "a7a1587a4f7294002a49b79a7d07c5c0b7b681f34eb18f83d56cd62a2dc86b0a",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-pack-breakdance-breakdance-footwork-to-id-6747e2d4",
+      "sourceHash": "6747e2d487e1f0cf5633d8f0d7e7eddf55cc2a044118f61927db62a5dd7d555f",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-pack-breakdance-breakdance-freeze-var-3-fbda7bcc",
+      "sourceHash": "fbda7bcca43567a7262838518cd5b53fa54af8c7b872ef2394e8a2f24d3c4109",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-pack-breakdance-breakdance-swipes-fbc1a215",
+      "sourceHash": "fbc1a215175c3f1035dfe25169c34e8237046eada69af0cb8a07512833090799",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-pack-breakdance-breakdance-uprock-to-grou-d2985cfc",
+      "sourceHash": "d2985cfcf3d0d5adcc29cc083b91d7e3e426ed767fe8ec76a958261d87c9d393",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-pack-breakdance-breakdance-uprock-var-1-e-b47d1e58",
+      "sourceHash": "b47d1e589b076c65b63840fa5bf051f807a01b78abeb38808cd05a3737cf9be2",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-breakdance-swipes-122050901",
+      "sourceHash": "feceeadf670975418e2c23dea40a680a5112aa1ff3df1644fcf08b01b0a42a59",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-thriller-part-2-114690901",
+      "sourceHash": "aefec138b84a01c6982192ac57da8b56c52807bb2369b1bfc609960e5ba2f4bb",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-macarena-dance-109080901",
+      "sourceHash": "e3925cb69d14f770c53f57787489f69bdaf7b454e5ea116a009d0c7f26523647",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-breakdance-freezes-121860901",
+      "sourceHash": "7afcd89b2d3ee01ea02b557317d02e414787629e8a6d930b3f22e2278b20c925",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-breakdance-footwork-1-121800901",
+      "sourceHash": "5ae04c6b4de275d92e02c45ea996219f75e21c8d07a6d0a005a83953edb9eddf",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-breakdance-footwork-3-121820901",
+      "sourceHash": "d3d6aa7f01a3d58e88fe00c1e825d6e5adfc33beb1f08264fa5e2a556e857778",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-thriller-part-4-114710901",
+      "sourceHash": "e2c28b402004479010ff466a3d8a53cace5deee9c69f1d03136b9505e4c39490",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-breakdance-uprock-var-1-end-122100901",
+      "sourceHash": "e7cc9875cc72cb7bd7d37b13fedeb98c1a48f1ad3f2b57d873b94156e77fab1c",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-house-dancing-108710901",
+      "sourceHash": "ffe26cc562c809b9fd08466eb5540dc26b1d318049dc78ad802e660cf8a9d5b6",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-house-dancing-108720901",
+      "sourceHash": "9abf932a79aa38ec89e0605453e0e94a1e1084c1ca61c432e4ff4bb89e9397be",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-breakdance-footwork-to-idle-121850901",
+      "sourceHash": "6f037dd531fbeb33a754f530f5825f6ae0e29efdbdaac5c496edaa1ca2006557",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-dancing-108820901",
+      "sourceHash": "3ca366abed6a587f3722c1c14feb1d87b95d3ed4638c02b9d716caab7f6b8239",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-flair-121770901",
+      "sourceHash": "be5f1b7c5090a094fc9c0c0b6a4844d42628fe22a4db3919283853a2afa1681f",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-shopping-cart-dance-109090901",
+      "sourceHash": "be1890afdfe6685bc1afb408eb497ea922d6454475f646b18c0a8db89cd2a2df",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-house-dancing-109560901",
+      "sourceHash": "167b00eb9e505cb4812f5e5134c0acde6f98d757b11f31d6dc43f49dac80e8c4",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-headspin-end-116400903",
+      "sourceHash": "9bdd1cbaa74ad7dc949e4f74b0326e34b008af09f47b89e03d00214243b04d6d",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-thriller-part-1-114680902",
+      "sourceHash": "6e6db7c30b2303c2d3ba8be048023dbdf00f6cad2b36db97b1538cbaf2f5ac80",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-breakdance-footwork-2-121810901",
+      "sourceHash": "d97c08769baa60362e28691136ae8daa4e4a57ad46227275933859acd7484f47",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-dancing-108970901",
+      "sourceHash": "cdc8682713de09eb743bc5ec9bca955d43dd47721253ed9f0b64c183778ec565",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-dancing-twerk-128660903",
+      "sourceHash": "d852b23c86227e9300846e1aa47f7daeecc2a6d335910e3fb520986409515308",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-salsa-dancing-109460905",
+      "sourceHash": "656e7d510960824ef9db84aba1168c80589287e0e360a3114fac72d8aa44e2b0",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-breakdance-freeze-var-3-121890901",
+      "sourceHash": "3baafaea3f390a0ff95fe232e9bb5a323f5926c795a0a4fc4ef357b228369723",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-thriller-part-3-114700901",
+      "sourceHash": "77e67ee9d5a3e020e6456da9391716870cf35143717322ccb37644ab4994d1c7",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-salsa-dancing-109510901",
+      "sourceHash": "e11d2b32d5262f29817a5235edbc6b3e928c6d624dee017e426102b77669a279",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-salsa-dancing-101960908",
+      "sourceHash": "74f1cb26544e67e18ccc0b8d5369ebe216ee71d594c114976e0ac61409134a3c",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-pack-free-test-samba-dancing-421097da",
+      "sourceHash": "421097daadbcfbff2857e3e81181234590502c63e650959fc00808fd497fb7d9",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-pack-free-test-back-flip-to-uppercut-81f6a427",
+      "sourceHash": "81f6a427c4fe715d277a1104b09e4e4bb9af2d6a9e5e8ce80e98b88705dda84b",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-northern-soul-spin-combo-121420901",
+      "sourceHash": "77a299ed405577728f00d1727cedabb8f1a78adda8e3fd5c26a77ca3f08ace67",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-salsa-dancing-109500901",
+      "sourceHash": "94c4390c1ceb7380be93344c0c6258116bc366ea6cc1ec1ea687e046bc2f348b",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-salsa-dancing-109460904",
+      "sourceHash": "16a86a86b223a1565a543ed96502cc85adb1e3ce2f309bb70bf1f543c6a431d4",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-samba-dancing-109290901",
+      "sourceHash": "7d98f7741e6b38567e8d45cb65f1d776f5b55302d572cce6e3920341d558e993",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-breakdance-uprock-to-ground-122080901",
+      "sourceHash": "c23178bf8e6c4a01112d4840a89632928bfeb3333a4b4dec09f56f79d8ca3467",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-salsa-dancing-109490901",
+      "sourceHash": "1dd4b14532c78fe11d6a42d4a3fa330a455c1a135b2ce4d076d95f149b330534",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-breakdance-ending-3-121760901",
+      "sourceHash": "1146eb48b103f0d7a467b59c3294c53d96c96885a0a273a38b5ecbdd5d044e55",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-northern-soul-floor-spin-121440901",
+      "sourceHash": "d4928af270348da8f4c22e51a438b5f6d0168c37310b249dbc08a3fcfea0d8ad",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-crossleg-freeze-121730901",
+      "sourceHash": "9be1b64fc4d0eebe6c5beeb4408b8232b543f402374eaa7e2f9898b32b62777e",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-northern-soul-floor-combo-121430901",
+      "sourceHash": "f82609204fdb7c4f73cbbabe4c74f5237d931f67cad4d3bee512ad9db6e8ed1b",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-breakdance-ending-1-121740901",
+      "sourceHash": "0a5719418765bde72999c8a4e17c0967b4471d3f4edbfe59ff5cd384eca01caa",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-silly-dancing-101920902",
+      "sourceHash": "e909430920d01568ce9821c8bc895c8e585de2c051fb0aeda2581b7cdbdfcf05",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-breakdance-ending-2-121750901",
+      "sourceHash": "05545fd531c7c22bd46902208dee799b590a34a2adbca6b5cc323b37e52f81da",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-swing-dancing-109620901",
+      "sourceHash": "1c600fa62ed139334b05b2948717d8d69c8a36c6493badc9a350245b18480c09",
+      "issue": "轨迹待修复"
+    },
+    {
+      "id": "mixamo-run-forward-arc-right-123880901",
+      "sourceHash": "af27fde8ea590cda67b2c8064e828d24c5f6a42efc9098dec226571ccc5223b3",
+      "issue": "轨迹待修复"
+    }
+  ],
+  "fullSourcePenetrationCandidates": 0,
+  "fullSourceTrajectoryWarningCandidates": 66,
+  "approvedRangeEquivalence": {
+    "before": {
+      "mixamo-snake-hip-hop-dance-109070901": "27102b2ef76893006810c5e4cb2f2fe0a42536c75a28e55f65968a445f5d62d0",
+      "mixamo-hip-hop-dancing-108690901": "61d47ff7017428de3fa9791e461db92cb313e4721f61099b962570ad8efd4a3f",
+      "mixamo-hip-hop-dancing-108650901": "72d987dd9ab971e63cfcb8380db915ce1e9711a6e285028feaefdd0c301449c7",
+      "mixamo-arms-hip-hop-dance-108990901": "9a7c00bf369c6a6d80a710f4f9c9db5b50a9b28f841e7f9abed27a70b940c056",
+      "mixamo-slide-hip-hop-dance-108870901": "2e3804d5ba843e948695fa86cb012380928cd2a3491d9ec333a3e248eccd2a68",
+      "mixamo-hip-hop-dancing-101960905": "575ab4f5baba9871430e92c7d19a6d8911f87ebe1a35fe952c842803453a586f",
+      "mixamo-hip-hop-dancing-108660901": "e4ca826ad5f251c46abbc0ec3f39acb03e7c85c429f7ccf5f0581db1349d87f7",
+      "mixamo-hip-hop-dancing-101960901": "2ace29f4af45e593a449653d179200a58e91c24b34e558b19125a0651599b258"
+    },
+    "after": {
+      "mixamo-snake-hip-hop-dance-109070901": "27102b2ef76893006810c5e4cb2f2fe0a42536c75a28e55f65968a445f5d62d0",
+      "mixamo-hip-hop-dancing-108690901": "61d47ff7017428de3fa9791e461db92cb313e4721f61099b962570ad8efd4a3f",
+      "mixamo-hip-hop-dancing-108650901": "72d987dd9ab971e63cfcb8380db915ce1e9711a6e285028feaefdd0c301449c7",
+      "mixamo-slide-hip-hop-dance-108870901": "2e3804d5ba843e948695fa86cb012380928cd2a3491d9ec333a3e248eccd2a68",
+      "mixamo-hip-hop-dancing-101960905": "575ab4f5baba9871430e92c7d19a6d8911f87ebe1a35fe952c842803453a586f",
+      "mixamo-hip-hop-dancing-101960901": "2ace29f4af45e593a449653d179200a58e91c24b34e558b19125a0651599b258",
+      "mixamo-arms-hip-hop-dance-108990901": "9a7c00bf369c6a6d80a710f4f9c9db5b50a9b28f841e7f9abed27a70b940c056",
+      "mixamo-hip-hop-dancing-108660901": "e4ca826ad5f251c46abbc0ec3f39acb03e7c85c429f7ccf5f0581db1349d87f7"
+    },
+    "changed": []
+  },
+  "checkerRefitRegression": {
+    "clipsCompared": 17,
+    "sameFramePointAndPenetrationCounts": true
+  },
+  "deterministicPlayback": {
+    "passed": true,
+    "repeatError": 0.0,
+    "seekError": 0.0,
+    "boneLengthError": 3.427267074584961e-07,
+    "wristRotationError": 0.0,
+    "legPoseError": 0.0,
+    "maxRawStep": 0.0957518219947815,
+    "maxFixedStep": 0.10791072994470596,
+    "maxAddedStep": 0.052491769194602966,
+    "maxAddedTime": 6.0,
+    "errors": []
+  },
+  "playMode": {
+    "completed": true,
+    "errors": [],
+    "sequence": [
+      "mixamo-hip-hop-dancing-101960901",
+      "mixamo-snake-hip-hop-dance-109070901",
+      "mixamo-slide-hip-hop-dance-108870901",
+      "mixamo-hip-hop-dancing-101960905",
+      "mixamo-hip-hop-dancing-108690901",
+      "mixamo-hip-hop-dancing-108660901",
+      "mixamo-arms-hip-hop-dance-108990901",
+      "mixamo-hip-hop-dancing-108650901"
+    ],
+    "uniqueMotions": 8,
+    "samples": 465,
+    "collisionFrames": 234,
+    "collisionPoints": 70434,
+    "collisionBadFrames": 0,
+    "worstPenetration": 0.0,
+    "loopWraps": 6,
+    "maxLoopWrapHandStep": 0.010652417317032814,
+    "loopHandoffs": 6,
+    "maxLoopHandoffHandStep": 0.01582314260303974,
+    "phase": {
+      "full-song": {
+        "samples": 353,
+        "audioTimeErrorP95": 0.042648234049920575
+      },
+      "rate-075": {
+        "samples": 24,
+        "audioTimeErrorP95": 0.01599665594039834
+      },
+      "rate-050": {
+        "samples": 24,
+        "audioTimeErrorP95": 0.010673493861759198
+      },
+      "loop": {
+        "samples": 32,
+        "audioTimeErrorP95": 0.02135150686845
+      },
+      "loop-transition": {
+        "samples": 32,
+        "audioTimeErrorP95": 0.02133330790071497
+      }
+    }
+  },
+  "motionLibrary": {
+    "completed": true,
+    "libraryCount": 243,
+    "recommendedCount": 8,
+    "previewTimeAdvance": 1.6961069107055664,
+    "previewHandMovement": 0.2017775923013687,
+    "passed": [
+      "all 243 imported motions remain available for preview",
+      "unreviewed Jazz candidate can be previewed",
+      "live preview advances time and deforms actual Humanoid bones",
+      "checked unreviewed candidate stays outside automatic choreography",
+      "custom checked selection is saved locally",
+      "StudioApp generation respects saved library selection",
+      "a three-motion selection generates only those three motions",
+      "New Jazz recommendation contains only currently reviewed phrases"
+    ],
+    "errors": []
+  },
+  "publicationNote": "Metrics summary. Full per-frame motion traces remain local and are not part of the public source distribution."
+}

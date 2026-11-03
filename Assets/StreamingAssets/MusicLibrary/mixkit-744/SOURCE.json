@@ -1,0 +1,24 @@
+{
+  "id": "mixkit-744",
+  "providerId": "744",
+  "title": "House 02",
+  "artist": "Lily J",
+  "genre": "Deep House",
+  "sourceUrl": "https://mixkit.co/free-stock-music/house/",
+  "downloadUrl": "https://assets.mixkit.co/music/744/744.mp3",
+  "expectedDurationSeconds": 113,
+  "file": "mixkit-744/track.mp3",
+  "durationSeconds": 113.28589569160998,
+  "sampleRate": 44100,
+  "channels": 2,
+  "bytes": 4527542,
+  "sha256": "5610ba37ab13f997f66c0a00ac1943b782d82f5c04ae1b171e40361ce8ef692f",
+  "licenseName": "Mixkit Stock Music Free License",
+  "licenseUrl": "https://mixkit.co/license/modal/musicFree/",
+  "downloadedAt": "2026-11-03T06:22:58.359314+00:00",
+  "verification": {
+    "fullDecode": true,
+    "rms": 0.2535795720556335,
+    "peak": 1.04311203956604
+  }
+}

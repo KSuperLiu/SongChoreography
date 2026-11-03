@@ -1,0 +1,124 @@
+{
+  "motionId": "mixamo-snake-hip-hop-dance-109070901",
+  "characterSignature": "4b61ef44e42b351e409bdc82ef14e6af1b782d11bae92fe059d376af5315bd63",
+  "motionSignature": "ad4cd6136236c2f0f597ec0f6d2a747d1369858fabf1a4d1d130d5c9aa13d740",
+  "isolatedClip": true,
+  "bodyTriangles": 11637,
+  "worstSourceTime": 7.666666507720947,
+  "worstSignedDistance": -0.08011872321367264,
+  "worstPoint": "right-palm",
+  "date": "2026-11-03",
+  "checkedFrames": 170,
+  "sampling": "30 Hz in original animation seconds, cropped interval 5.6–11.23",
+  "method": "Nearest deformed torso/upper-leg triangle surface, surface-normal sign, four-direction ray parity. Body triangles require >0.65 torso/upper-leg skin weight at every vertex; arm/hand geometry excluded. Diagnostic, not general collision certification.",
+  "pointsInsideMoreThan1cm": 506,
+  "framesWithPointsInsideMoreThan1cm": 148,
+  "worstFrame": {
+    "sourceTime": 7.666666507720947,
+    "points": [
+      {
+        "point": "left-wrist",
+        "position": {
+          "x": -0.11035984009504318,
+          "y": 0.9476734399795532,
+          "z": -0.08026310801506042
+        },
+        "surface": {
+          "x": -0.09356085956096649,
+          "y": 0.9703183174133301,
+          "z": -0.07802453637123108
+        },
+        "signedDistance": 0.028284402564167976,
+        "insideVotes": 0
+      },
+      {
+        "point": "left-palm",
+        "position": {
+          "x": -0.0639881119132042,
+          "y": 0.9363815784454346,
+          "z": -0.05105765908956528
+        },
+        "surface": {
+          "x": -0.05868276208639145,
+          "y": 0.9495548605918884,
+          "z": -0.0504661463201046
+        },
+        "signedDistance": 0.014213795773684978,
+        "insideVotes": 0
+      },
+      {
+        "point": "left-middle-finger",
+        "position": {
+          "x": 0.03943382203578949,
+          "y": 0.9228287935256958,
+          "z": 0.005990343168377876
+        },
+        "surface": {
+          "x": 0.022373856976628304,
+          "y": 0.9551036953926086,
+          "z": -0.011054255068302155
+        },
+        "signedDistance": 0.04028932750225067,
+        "insideVotes": 0
+      },
+      {
+        "point": "right-wrist",
+        "position": {
+          "x": 0.13739383220672607,
+          "y": 0.993193507194519,
+          "z": -0.1613646000623703
+        },
+        "surface": {
+          "x": 0.16171929240226746,
+          "y": 1.0216280221939087,
+          "z": -0.19083625078201294
+        },
+        "signedDistance": -0.047632213681936264,
+        "insideVotes": 4
+      },
+      {
+        "point": "right-palm",
+        "position": {
+          "x": 0.12795212864875793,
+          "y": 0.9446437358856201,
+          "z": -0.14773069322109222
+        },
+        "surface": {
+          "x": 0.06385667622089386,
+          "y": 0.9347217679023743,
+          "z": -0.10069520771503448
+        },
+        "signedDistance": -0.08011872321367264,
+        "insideVotes": 4
+      },
+      {
+        "point": "right-middle-finger",
+        "position": {
+          "x": 0.09204186499118805,
+          "y": 0.8352977633476257,
+          "z": -0.11576782912015915
+        },
+        "surface": {
+          "x": 0.08240756392478943,
+          "y": 0.8218215703964233,
+          "z": -0.13528569042682648
+        },
+        "signedDistance": -0.025600282475352287,
+        "insideVotes": 4
+      }
+    ]
+  },
+  "conclusion": "Reproduced hand/body intersection on the current Tripo avatar in an isolated Snake clip, without transitions. No source character skin was available to determine whether the original Mixamo character also intersects.",
+  "causeBoundary": "Current clip/avatar adaptation lacks body-aware arm correction; source-clip authorship defect not established.",
+  "action": "Snake motion review and its two transition reviews revoked; removed from recommendations; retained in full preview library as needs repair. Trajectory not fixed.",
+  "currentReviewedMotions": 7,
+  "currentReviewedDirectedTransitions": 8,
+  "rawReport": ".generation/snake-hand-body-check/report.json",
+  "afterQuarantineGeneration": {
+    "validated": true,
+    "slots": 8,
+    "distinctMotions": 7,
+    "excludedMotionAbsent": true
+  },
+  "publicationNote": "Metrics summary. Full per-frame motion traces remain local and are not part of the public source distribution."
+}

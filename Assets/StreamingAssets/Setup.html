@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><title>CHOREO AI · 素材准备</title>
+<style>body{max-width:850px;margin:65px auto;padding:0 25px;background:#101923;color:#e4edf3;font:18px/1.8 'Microsoft YaHei',sans-serif}a{color:#63d9c1}code{background:#20313e;padding:3px 8px}h1{font-size:34px}li{margin:18px 0}</style>
+<h1>创建你的舞者与动作库</h1>
+<p>CHOREO AI 使用 Tripo 人物与 Humanoid 骨骼动作。动作可从现成动作库导入；使用这条路径无需 fal 额度。</p>
+<ol>
+<li>在 <a href="https://www.mixamo.com/">Mixamo</a> 登录 Adobe 账号，选择舞蹈动作。下载设置：FBX for Unity、Without Skin、30 FPS、Keyframe Reduction: None。</li>
+<li>用 Unity 2022.3.62f3 打开源码项目，停止 Play Mode，进入 <code>Tools → CHOREO AI → Import motion FBX</code>，填写名称、来源和真实舞种标签后导入。Tripo 人物无需上传到动作库。</li>
+<li>在素材工作台检查人物关节、接地和穿插；裁剪真正的一组八拍，校正每个拍点，填写复查记录。</li>
+<li>分别预览并复查需要的动作连接，然后直接在 Unity Play Mode 中导入音乐练习。</li>
+<li>需要交付独立 Windows 程序时，再执行 <code>Tools → CHOREO AI → Build Windows</code>。</li>
+</ol>
+<p>生成人物使用 <a href="https://developers.tripo3d.ai/en/keys">Tripo API</a>；文字生成动作仍可选用 <a href="https://fal.ai/dashboard">fal</a>。Key 在编辑器的 Generation console 中本地保存，不要发到聊天或放进构建。</p>
+<p>FBX 导入在 Unity 编辑器完成。成品使用已打包的素材离线练习，不支持直接导入任意 FBX。先确认少量素材的动作质量，再扩大动作库；全片均分拍点只是预览草稿。</p>
+</html>

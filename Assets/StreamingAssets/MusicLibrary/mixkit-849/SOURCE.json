@@ -1,0 +1,24 @@
+{
+  "id": "mixkit-849",
+  "providerId": "849",
+  "title": "Light it Up Boy",
+  "artist": "Michael Ramir C.",
+  "genre": "Jazz Funk",
+  "sourceUrl": "https://mixkit.co/free-stock-music/funk/",
+  "downloadUrl": "https://assets.mixkit.co/music/849/849.mp3",
+  "expectedDurationSeconds": 94,
+  "file": "mixkit-849/track.mp3",
+  "durationSeconds": 93.77133786848073,
+  "sampleRate": 44100,
+  "channels": 2,
+  "bytes": 3320778,
+  "sha256": "81524013af681bb0ae425281b889ad4c69165e363cdc858eac248d315512f2a1",
+  "licenseName": "Mixkit Stock Music Free License",
+  "licenseUrl": "https://mixkit.co/license/modal/musicFree/",
+  "downloadedAt": "2026-11-03T06:22:30.101518+00:00",
+  "verification": {
+    "fullDecode": true,
+    "rms": 0.1480060741575865,
+    "peak": 0.8411446809768677
+  }
+}

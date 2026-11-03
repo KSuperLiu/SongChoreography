@@ -1,70 +1,111 @@
-# CHOREO / 编舞练习室 0.5.2
+# CHOREO AI Studio · 0.6.0 重构
 
-Windows 本地歌曲编舞与跟学应用，采用 **Unity 2022.3.62f3、C#、便携 CPython 3.13.17、librosa 0.11**。
+Unity 2022.3.62f3 / Windows。人物使用 **Tripo**，动作可从 **Mixamo 等已有动作库导入 FBX**，也保留 fal Hunyuan Motion 生成入口。旧 Quaternius 人物、CMU/FineDance 动捕、52 关节专用轨道、固定八段导入器和旧发行流程已移出活动项目。
 
-**0.5.2 修复重新编排及项目查找体验。** 主按钮改为“重新排列现有动作”，每次比较实际动作顺序并显示变化数量；保存后显示完整路径，旁边可直接“打开目录”，“打开项目”默认定位当前或上次保存目录。当前个人爵士库存仍为 8 段，不是生成全新舞步。详见 [本版说明](Docs/WINDOWS_052_RELEASE.md)。
+Windows 发行包内置一个 Tripo 人物及 243 个 Mixamo 候选，按真实来源分类。首页右上角的 **动作库设置** 可预览全部动作、按类型筛选并保存自动编排的选择。当前 **12 种已复查基础动作、15 条有向连接**。原来待适配的 66 段完整原片中，53 段通过本轮技术指标，13 段仍标为待修复，不进入推荐编排。新增侧滑、踢步、流动 Wave 和 Boogaloo。详见 [本轮修复与 Unity 实播记录](Docs/REPAIR66_REVIEW.md)。已有素材不需要 fal Key 或额度。
 
-**0.5.1 修复动作反关节问题。** 旧个人版的坐标手性转换和关节轴适配有误，男女角色也不能共用同一组局部旋转。现分别校准并烘焙两套轨道，约束手腕、手指、肘膝及全身关节，增加 120 Hz 插值与混合阶段的弯曲方向检查。旧版批准记录已作废，详见 [修复与验证](Docs/ANATOMY_051_VERIFICATION.md)。
+![Unity 实际运行画面](Docs/Repair66Live.png)
 
-点击“一键演示”即可观看内置 40 秒音乐与真实动捕改编的 **Charleston 八拍练习组合**。包括两个完整蒙皮角色、七种镜头、镜像、三档保留音高慢放、节拍校正、区间循环、替换、锁定和项目恢复。导入 WAV／MP3 无需另装 Python。
+直接使用：[下载 Windows 成品](https://github.com/KSuperLiu/SongChoreography/releases/latest)。解压整个目录，运行 `ChoreoAIStudio.exe`，点击“100 BPM 练习示例”即可开始。成品包含原创练习伴奏和音乐分析所需的便携 Python，可另外选择自己的 WAV/MP3。
 
-公共舞蹈库由四段 CMU Charleston 裁剪及四个左右变体组成，附来源和复查记录。**0.5.0 增加个人学习用的 New Jazz／流行爵士改编接入**：选用 FineDance 真人动捕中原作者标注 `Street / Jazz` 的八个八拍，适配两个角色，复查 20 条连接。数据许可限制第三方分发，因此动作和个人版应用只留在使用者本机，不放进源码或公共下载。[个人学习版准备与许可](Docs/PERSONAL_LEARNING.md)。本版采用动作库和规则编排，没有生成式 AI。
+源码仓库包含程序、测试、导入工具、原创练习音频及复查报告；**原始第三方 FBX、生成缓存、API Key 和本机任务历史不上传**。从源码打开时，先导入自己获得授权的模型与动作并完成复查，或直接使用发行包中已编译的完整练习体验。第三方内容不适用本项目代码的 MIT 许可，见 [发行内容与许可说明](THIRD_PARTY_NOTICES.md)。
 
-## 运行
+## 开始
 
-从 [公共 Windows 版 0.5.2](https://github.com/KSuperLiu/SongChoreography/releases/tag/v0.5.2) 下载 ZIP，完整解压后双击 `ChoreoStudio.exe`。公共下载展示 Charleston，包含关节和重排修复；个人版需按上述说明在本机准备。公共版无需安装 Unity 或 Python。复制公共版时请复制整个目录，保留 `Runtime`、`ChoreoStudio_Data`、`MonoBleedingEdge` 和 DLL。详见 [发行包说明](Docs/WINDOWS_052_RELEASE.md)。
+1. 用 Unity Hub 打开本目录（2022.3.62f3）。
+2. 打开 **Tools > CHOREO AI > Generation console**。
+3. 在官方平台注册 API 账号、查看余额和定价，创建 Key；在窗口的掩码输入框中保存。Key 写入根目录 `.env`，不会放进 Assets、构建或 Git。
+4. 人物计划已按用户选择准备：半写实成年女性、自然比例、训练上衣、长裤和运动鞋。先生成一个人物和少量动作候选；不自动批量消费额度。
+5. 点击续查。人物依次经过生成、双足检查和骨骼绑定；动作下载 FBX。任务记录保存在 `.generation/jobs`，中断后继续查询。
+6. 点击“导入下载结果并打开素材复查”。检查 Unity Humanoid 映射、实际角色播放、每拍拍点及有向连接，填写复查说明。
+7. 执行 **Tools > CHOREO AI > Prepare studio**，打开 `Assets/Scenes/Studio.unity` 运行。导入 WAV/MP3，选取 30～60 秒，校正节拍，编排并练习。
 
-![编舞练习室实际运行画面](Docs/Preview.png)
+生成任务成功和时长匹配不等于舞风或踩拍正确。未复查候选不会进入编排；人物、动画、导入配置或拍点变更后，旧复查自动失效。可以只预览少量候选；动作库不再要求固定八段。
 
-[快速使用](Docs/QUICK_START.md) · [个人版说明](Docs/PERSONAL_LEARNING.md) · [0.5.1 关节修复验证](Docs/ANATOMY_051_VERIFICATION.md) · [公共版验证](Docs/VERIFICATION.md) · [第三方署名](Docs/THIRD_PARTY_NOTICES.md)
+## 使用免费现成动作
 
-项目位于 `%USERPROFILE%\AppData\LocalLow\SongChoreography\Choreo Practice Studio\Projects`，包含普通与慢速音频、节拍、编舞及镜头设置。退出自动保存有效项目，下次启动暂停恢复。移动时复制整个项目目录，再打开 `project.danceproj`。
+1. 在 [Mixamo](https://www.mixamo.com/) 用 Adobe 账号登录，搜索 Dance 并选择动作。先选 3～5 段用于验证；保留动作的真实名称和舞种。
+2. 下载设置选择 **FBX for Unity / Without Skin / 30 FPS / Keyframe Reduction: None**。无需把 Tripo 人物上传到 Mixamo；在本地通过 Unity Humanoid 重定向。
+3. 停止 Unity Play Mode，打开 **Tools > CHOREO AI > Import motion FBX**。选择下载文件，填写唯一 ID、名称、来源和真实标签，然后导入。
+4. 在素材工作台检查 Tripo 人物上的完整动画。首尾拍点用于裁剪一组八拍，中间拍点逐一校正；全片均分的初始拍点只是草稿。
+5. 复查关节、接地、穿插和舞风后记录动作复查，再分别检查需要的有向连接。完成后直接在 Unity Play Mode 验证编排和播放。
 
-## 素材与范围
+每个文件复制到 `Assets/Generated/Motions/<id>`，原下载保留。重复 ID 不覆盖；导入失败的 FBX 保留在清单，修复 Rig / Animation 后可在素材工作台重新导入。一个 FBX 含多个动画时，在导入窗口填写精确的 Clip 名。拍点复查同时绑定文件哈希和 Clip 名，更换动画片段后必须重查。
 
-[动作复查](Docs/CHARLESTON_REVIEW.md)记录八个八拍片段与正式使用的 20 条有向连接。批准绑定到曲线 SHA-256；改动后需重新复查。[角色与镜头](Docs/CHARACTERS_AND_CAMERA.md)采用 Quaternius CC0 资源；[音乐](Docs/MUSIC_CREDITS.md)为 Kevin MacLeod 的三首 CC BY 4.0 节选。
+整批下载完成后，执行 `Runtime/Python/python.exe -I -X utf8 Tools/prepare_mixamo_library.py` 可按本地 `.generation/mixamo-batch.json` 批量登记，再在 Unity 执行 **Import generated assets**。登记会核对每个 FBX 的哈希、保留已有条目并避免重复登记，不会自动批准。搜索结果还含 Salsa、Samba、静态姿势和走跑动作，均保留各自分类；不同文件哈希也不代表动作内容一定不同，动作包可能与单条结果重叠。
 
-技术及 Codex 画面复查不代表舞蹈教师认证。软件时钟误差不包含扬声器硬件延迟。默认面向稳定四拍音乐、30～60 秒片段、单角色；整首歌曲、多舞种、摄像头评分、视频导出、运行时 FBX 导入与生成式动作留待后续。
+[Adobe 官方 FAQ](https://helpx.adobe.com/creative-cloud/faq/mixamo-faq.html) 说明免费使用、授权和地区限制；账号无法使用时不要先购买其他服务。其他动作库也可用同一 FBX 入口，记录其各自来源和条款。
 
-## 开发与复现
+## 内置跟练音乐
 
-需要 Windows x64、Unity 2022.3.62f3（Windows Build Support），以及用于下载依赖的 Python 3.13 和 pip；运行核心测试另需 .NET 8 SDK。源码仓库包含 CC0 角色、编排代码和动作复查元数据；音乐 PCM、动捕原始数据与转换动画、便携 Python 和构建产物不提交到 Git。首次开发需联网准备素材，成品运行全部离线。
+已下载 10 首 Mixkit 免费音乐，搭配 Funk / Jazz Funk、Hip Hop / R&B 和 House，供个人舞蹈学习使用。Unity 运行界面左侧“内置跟练音乐”中选择曲目，再点击“分析音乐与准备慢放”；默认截取前 40 秒，也可修改起点和 30～60 秒长度。切歌不会覆盖当前编舞，待新音频加载完成后才替换项目。
 
-```powershell
-git clone https://github.com/KSuperLiu/SongChoreography.git
-cd SongChoreography
-# 下载官方便携 Python 及锁定的 Windows 依赖；python 应指向本机 Python 3.13。
-.\Scripts\prepare-runtime.ps1 -PackagingPython python
-# 从原作者下载音乐和选定 CMU 动捕，生成音频、编辑器姿态数据与合成测试音轨。
-.\Scripts\prepare-assets.ps1
-# 按本机 Unity 安装位置调整路径。首次构建同时烘焙动画及校验复查记录。
-.\Scripts\build.ps1 -Isolated -UnityPath 'C:\Program Files\Unity\Hub\Editor\2022.3.62f3\Editor\Unity.exe'
+这些 Mixkit MP3 仅保留在本机，公开发行包使用项目原创 100 BPM 伴奏，不附带这十首原始录音。完整本机曲目与操作见 [内置音乐说明](Docs/MUSIC_LIBRARY.md)。需要恢复本地学习媒体时，运行 `Runtime/Python/python.exe -I -X utf8 Tools/prepare_music_library.py`；脚本保留已下载文件，检查完整解码、时长和哈希，不调用付费接口。
 
-dotnet run --project Tests/CoreTests.csproj -p:UseSharedCompilation=false
-.\Runtime\Python\python.exe -I -m unittest discover -s Tests -p test_analyzer.py -v
-.\Runtime\Python\python.exe -I -m unittest discover -s Tests -p test_personal_motion.py -v
-.\Runtime\Python\python.exe -I Scripts\verify-distribution.py --git-index
-.\Scripts\test-portable.ps1 -BuildDirectory Builds\Windows
+## 网站与配置
+
+- [Tripo API 账号与 Key](https://developers.tripo3d.ai/en/keys)
+- [Tripo API 文档](https://developers.tripo3d.ai/en/docs/quick-start)
+- [fal 控制台](https://fal.ai/dashboard)
+- [Hunyuan Motion 模型与价格](https://fal.ai/models/fal-ai/hunyuan-motion)
+- [fal API Key 文档](https://fal.ai/docs/documentation/setting-up/authentication)
+
+API 用量按平台账户结算；网站会员不应默认视为 API 余额。真实 Key 不要发送到聊天。也可以复制 `.env.example` 为 `.env` 后本地填写：
+
+```dotenv
+TRIPO_API_KEY=你的Tripo密钥
+FAL_KEY=你的fal密钥
 ```
 
-也可在素材准备后，用 Unity Hub 添加仓库根目录，执行菜单 `Tools > Song Choreography > Prepare Prototype`，打开 `Assets/Scenes/Practice.unity` 运行。镜头、角色和编舞界面由运行时代码创建。若下载失败，检查网络后重跑准备命令；脚本保留已下载的文件。上游素材改变后，曲线校验可能拒绝旧批准，应重新复查，不能绕过批准门槛。
+## 命令行
 
-隔离构建复用 `.build-cache/UnityProject`，避免占用已打开的 Unity 项目。开发者可在高级设置指定分析器，或用 `SONG_CHOREO_PYTHON` 覆盖；正常使用无需设置。
+生成工具只使用 Python 标准库（Python 3.10+）。默认读取根目录 `.env`，环境变量优先。
 
-## 模块接口
+```powershell
+python -X utf8 Tools/generation.py doctor
+python -X utf8 Tools/generation.py plan
+python -X utf8 Tools/generation.py character dancer-female-v1
+python -X utf8 Tools/generation.py motion jazz-side-step-v1
+python -X utf8 Tools/generation.py sync all --wait 30
+```
 
-音乐分析为独立进程，通过 `schemaVersion: 1` JSON 交换请求、进度和结果；可取消，失败保留原项目。输出三档 PCM WAV、节拍、BPM、强弱和人工校正提示，只解码指定片段。
+已提交的 ID 再次调用只会续查。修改提示词、种子或模型时请用新 ID。若 POST 返回结果前网络中断，不自动重提；从平台控制台找回任务 ID：
 
-`MotionCatalog` 记录拍数、强弱、许可、复查及允许后继；`DanceProject` 记录八拍时间槽、种子、锁定、节拍、角色和镜头。动态规划遵守连接和未来锁定，替换不改时长，约束无解保留原序列。
+```powershell
+python -X utf8 Tools/generation.py recover jazz-side-step-v1 generate 平台任务ID
+```
 
-首拍对应计数会设置首段的真实动画相位与长度，再从下一次计数 1 按八拍分组。完整拍组不受自动检测相邻间隔的小幅波动截短；旧项目按已保存序列恢复，重新生成后使用新规则。
+人物的阶段也可能是 `rig-check` 或 `rig`。本地查询超时不会取消远端任务，也不会返还额度。生成请求与下载各自保存状态；下载失败可以续传任务流程（重新下载文件，不重复生成）。
 
-公共动作以 DSP 音频时钟采样 Humanoid Playables；个人动捕通过同一时钟驱动角色专用的四元数轨道。轨道经过中性骨架校准、关节约束和滤波，手部为适合当前模型的简化改编。慢速读取离线保留音高音频。动作按已复查的边界混合，并根据实际蒙皮修正接地。未来动作生成可沿用相同的编舞播放接口。
+## 构建与检查
 
-## 开源许可
+```powershell
+.\Scripts\test.ps1
+.\Scripts\build.ps1
+.\Scripts\build.ps1 -PublicRelease
+.\Scripts\run.ps1
+```
 
-原创应用代码、脚本和文档采用 [MIT](LICENSE)。Quaternius 角色为 CC0；演示音乐为 Kevin MacLeod 的 CC BY 4.0 作品；CMU 动捕受其原始使用条款约束，未改为 MIT。原创诊断动画及合成节拍夹具为 CC0。Unity、Python 与依赖保留各自条款，详见[第三方说明](Docs/THIRD_PARTY_NOTICES.md)。
+构建默认使用 `.build-cache/AIStudioProject` 隔离副本，复用已有本机包，不占用打开的编辑器。普通本机构建输出 `Builds/AIStudio/ChoreoAIStudio.exe`；`-PublicRelease` 输出 `Builds/PublicAIStudio/ChoreoAIStudio.exe`，只在隔离副本中移除本机曲目并加入原创伴奏。本机媒体不变；整个成品目录一起移动。若未准备音乐分析运行时，先运行 `Scripts/prepare-runtime.ps1`。
 
-CMU ASF／AMC、编辑器姿态数据及烘焙动画不作为独立素材包放入公开源码；开发时由准备脚本下载和转换。发行版中的动作仅随完整练习应用提供。发布修改版时也应保留第三方署名与许可。
+日常验证直接使用 Unity 编辑器运行；需要交付 Windows 成品时再构建。
 
-FineDance 数据采用作者的非商业科研／教育／艺术用途许可，禁止未经书面许可向第三方提供。`PersonalAssets`、个人动作资产、私人复查画面与包含它们的应用均被排除；公开打包器会拒绝个人版。公开复查清单仅含本项目编写的说明、摘要和连接批准，不含姿态或动画。
+生成需要开发环境和网络；打包后使用已导入资源离线练习。成品里的“生成与账号配置”打开本地说明；**FBX 导入和重新打包在 Unity 编辑器执行**，没有声称支持成品运行时导入任意 FBX。支持的练习功能包括镜头、镜像、保留音高慢放、片段锁定、替换、区间循环和新版项目保存。
+
+## 目录
+
+| 目录 | 内容 |
+|---|---|
+| `Generation/plan.json` | 可编辑人物方案和 12 个不同动作候选 |
+| `Tools/generation.py` | Tripo/fal 请求、持久化任务、恢复与下载 |
+| `Assets/Generated` | 本机 FBX、贴图与人物预制体，默认不提交 |
+| `Generation/library.json` | 下载后的来源、哈希和请求编号 |
+| `Generation/reviews.json` | 本机拍点、逐人物动作复查与连接复查 |
+| `Assets/SongChoreography/Core` | 素材契约、八拍编排、版本验证 |
+| `Assets/SongChoreography/Editor` | 配置、导入、实际动画预览和构建 |
+| `Assets/SongChoreography/Runtime` | 新版跟学界面、音乐时钟播放和镜头 |
+| `Analyzer` | 本地节拍分析和保留音高慢放 |
+
+重构前的源文件、用户未提交改动和旧本机素材保存在 `.rebuild-backup/legacy-20261103/source-and-assets.zip`，只用于本地恢复，不属于新构建或发布内容。旧版项目不自动迁移为新版。
+
+原创代码采用 MIT；Unity、Python 依赖及生成平台内容分别遵守其条款。不能把“AI 生成”或平台网页标签视为已经完成素材质量和授权确认。

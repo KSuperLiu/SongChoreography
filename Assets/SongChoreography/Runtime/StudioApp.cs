@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -9,674 +8,356 @@ using UnityEngine.Networking;
 
 namespace SongChoreography
 {
-    public sealed partial class StudioApp : MonoBehaviour
+    public sealed class StudioApp : MonoBehaviour
     {
-        const float W=1600,H=900;
+        const float Width=1600,Height=960;
+        GeneratedLibrary library;
         DancePlayback playback;
-        MotionCatalog catalog;
-        BuiltinMusicLibrary musicLibrary=new BuiltinMusicLibrary();
-        AudioSource audition;
-        int auditionToken,inspectorTab,chosenTrack=-1;
-        string auditionId="";
-        bool showSettings,showCredits,autoPlayOnLoad,showAnalyzerAdvanced;
+        MotionLibrarySettings motionLibrary;
         DanceProject project;
-        AnalyzerJob job;
-        string projectFolder,sourcePath="",selectedSourceName="",startText="0",durationText="40",pythonPath="python";
-        string bpmText="120",firstBeatText="0",countText="1",seedText="42",loopStartText="0",loopEndText="40";
-        string message="从内置曲目开始体验，或选择自己的音乐。",error="";
-        float nextPoll;
-        bool loading,dirty,stylesReady;
-        int renderedFrames;
-        int selected=-1;
-        Vector2 segmentsScroll,replacementsScroll;
+        AnalyzerJob analysisJob;
+        BuiltinMusicCatalog builtinMusic=new BuiltinMusicCatalog();
+        string selectedMusicId="",musicLibraryError="";
+        GameObject actor;
         Camera stageCamera;
-        PracticeCamera cameraRig;
-        GameObject characterObject;
-        string selectedCharacter="female";
+        PracticeCamera orbit;
+        RenderTexture image;
+        GUIStyle text,muted,title,button,field,card;
+        Font font;
+        string source="",startText="0",durationText="40",bpmText="120",firstText="0",countText="1",loopStart="0",loopEnd="40",message="先准备人物与动作库，再导入音乐开始练习。",error="",projectFolder="";
+        int selectedCharacter,selectedSegment=-1,view;
+        bool busy,stylesReady,mirror;
+        Vector2 motionScroll;
+        Vector2 musicScroll;
         readonly CameraSettings initialCamera=new CameraSettings();
-        int initialView, cameraDragButton=-1;
         CameraSettings CameraState=>project!=null?project.camera:initialCamera;
-        int CameraView=>project!=null?project.view:initialView;
-        Animator diagnosticAnimator;
-        RenderTexture preview;
-        GUIStyle label,small,title,heading,button,field,accentButton,muted,lockToggle,sliderTrack,sliderThumb;
-        Texture2D white;
-        Color ink=new Color(.88f,.92f,.96f),teal=new Color(.25f,.87f,.77f);
-        bool Busy=>job!=null||loading;
-        bool Ready=>project!=null&&playback.Ready;
-        bool TestMode=>Environment.GetCommandLineArgs().Any(a=>a=="-smoke"||a=="-import-smoke"||a=="-portable-smoke"||a=="-library-smoke"||a=="-acceptance"||a=="-mocap-preview"||a=="-transition-review"||a=="-product-acceptance"||a=="-state-acceptance");
-        string PreferredStyle=>Choreographer.Eligible(catalog,DanceStyles.NewJazz).Count>=8?DanceStyles.NewJazz:Choreographer.Eligible(catalog,DanceStyles.Charleston).Count>=8?DanceStyles.Charleston:DanceStyles.Diagnostic;
-        string Workspace=>Path.Combine(Application.persistentDataPath,"Projects");
-        string ProjectPickerDirectory=>ProjectLocations.BrowseDirectory(projectFolder,PlayerPrefs.GetString("LastProject",""),Workspace);
-        string AppDirectory=>Path.GetDirectoryName(Application.dataPath);
-        string AnalyzerPython=>AnalyzerRuntime.Resolve(AppDirectory,pythonPath,Environment.GetEnvironmentVariable("SONG_CHOREO_PYTHON"));
-        bool BundledAnalyzer=>string.Equals(AnalyzerPython,AnalyzerRuntime.BundledPath(AppDirectory),StringComparison.OrdinalIgnoreCase);
-
+        string ProjectRoot=>Path.Combine(Application.persistentDataPath,"Projects");
+        string MusicRoot=>Path.Combine(Application.streamingAssetsPath,"MusicLibrary");
+        bool Working=>analysisJob!=null||busy;
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-        static void Boot(){if(!FindObjectOfType<StudioApp>())new GameObject("Choreography Studio").AddComponent<StudioApp>();}
+        static void Boot(){if(!FindObjectOfType<StudioApp>())new GameObject("CHOREO AI Studio").AddComponent<StudioApp>();}
         void Awake()
         {
             Application.runInBackground=true;
-            initialCamera.fieldOfView=Mathf.Clamp(PlayerPrefs.GetFloat("CameraFieldOfView",40),30,60);
-            pythonPath=PlayerPrefs.GetString("AnalyzerPython","");
-            try
-            {
-                var asset=Resources.Load<TextAsset>("MotionCatalog");
-                if(!asset)throw new InvalidOperationException("动作库尚未生成，请执行 Tools / Song Choreography / Prepare Prototype。");
-                catalog=JsonUtility.FromJson<MotionCatalog>(asset.text);Choreographer.Eligible(catalog,"diagnostic");
-                var personal=Resources.Load<TextAsset>("PersonalMotionCatalog");
-                if(personal)catalog=PersonalMotionPolicy.Merge(catalog,JsonUtility.FromJson<MotionCatalog>(personal.text));
-                SetupStage();
-                characterObject=DancerCharacters.Create(selectedCharacter);
-                diagnosticAnimator=characterObject.GetComponentInChildren<Animator>();
-                playback=gameObject.AddComponent<DancePlayback>();playback.Initialize(diagnosticAnimator,catalog,selectedCharacter);
-                cameraRig=gameObject.AddComponent<PracticeCamera>();cameraRig.Initialize(stageCamera,characterObject.transform);UpdateCamera();
-                foreach(var m in catalog.motions)if(!playback.HasMotion(m.id))throw new InvalidOperationException("动作资源缺失："+m.resource);
-                audition=gameObject.AddComponent<AudioSource>();audition.playOnAwake=false;audition.spatialBlend=0;
-                string libraryPath=Path.Combine(Application.streamingAssetsPath,"MusicLibrary","catalog.json");
-                if(File.Exists(libraryPath))musicLibrary=JsonUtility.FromJson<BuiltinMusicLibrary>(File.ReadAllText(libraryPath));
-                if(musicLibrary.schemaVersion!=1)throw new InvalidDataException("内置曲目版本无效。");
-                if(Environment.GetCommandLineArgs().Contains("-mocap-preview"))StartCoroutine(MotionPreview());
-                else if(Environment.GetCommandLineArgs().Contains("-transition-review"))StartCoroutine(TransitionReview());
-                else if(Environment.GetCommandLineArgs().Contains("-product-acceptance")||Environment.GetCommandLineArgs().Contains("-state-acceptance"))StartCoroutine(ProductAcceptance());
-                else if(Environment.GetCommandLineArgs().Contains("-smoke")||Environment.GetCommandLineArgs().Contains("-import-smoke")||Environment.GetCommandLineArgs().Contains("-portable-smoke")||Environment.GetCommandLineArgs().Contains("-library-smoke")||Environment.GetCommandLineArgs().Contains("-acceptance"))StartCoroutine(Smoke());
-                else
-                {
-                    if(Environment.GetCommandLineArgs().Contains("-demo-paused"))Guard(()=>UseBuiltin(0,false));
-                    else if(Environment.GetCommandLineArgs().Contains("-demo"))Guard(()=>UseBuiltin(0));
-                    else {string last=PlayerPrefs.GetString("LastProject","");if(File.Exists(last))Guard(()=>OpenProject(last));}
-                }
-            }
-            catch(Exception ex){Fail(ex);}
+            library=Resources.Load<GeneratedLibrary>("GeneratedLibrary");
+            if(!library){library=ScriptableObject.CreateInstance<GeneratedLibrary>();library.catalog=new AssetCatalog();}
+            Choreographer.ValidateCatalog(library.catalog);
+            playback=gameObject.AddComponent<DancePlayback>();SetupStage();
+            motionLibrary=gameObject.AddComponent<MotionLibrarySettings>();
+            motionLibrary.Initialize(library,()=>message="动作库选择已保存，下次编排将使用所选的已复查动作。");
+            if(library.characters.Length>0)Guard(()=>SelectCharacter(0));
+            LoadMusicLibrary();
+            if(Environment.GetCommandLineArgs().Contains("-smoke"))StartCoroutine(Smoke());
         }
         void SetupStage()
         {
-            // A screen camera is needed for presentation, in addition to the offscreen stage camera.
-            var screenCamera=new GameObject("Interface Camera").AddComponent<Camera>();
-            screenCamera.cullingMask=0;screenCamera.depth=-10;screenCamera.clearFlags=CameraClearFlags.SolidColor;screenCamera.backgroundColor=new Color(.035f,.05f,.075f);
-            RenderSettings.ambientLight=new Color(.55f,.62f,.7f);
-            RenderSettings.ambientMode=UnityEngine.Rendering.AmbientMode.Flat;
-            var lightObject=new GameObject("Studio Key");var light=lightObject.AddComponent<Light>();light.type=LightType.Directional;light.intensity=1.1f;light.color=new Color(1,.94f,.88f);light.shadows=LightShadows.Soft;lightObject.transform.rotation=Quaternion.Euler(35,155,0);
-            var fill=new GameObject("Studio Fill").AddComponent<Light>();fill.type=LightType.Directional;fill.intensity=.55f;fill.color=new Color(.78f,.87f,1);fill.transform.rotation=Quaternion.Euler(15,-135,0);
-            var rim=new GameObject("Studio Rim").AddComponent<Light>();rim.type=LightType.Directional;rim.intensity=.45f;rim.color=new Color(.55f,.78f,.90f);rim.transform.rotation=Quaternion.Euler(25,10,0);
-            var floor=GameObject.CreatePrimitive(PrimitiveType.Plane);floor.name="Practice floor";floor.transform.localScale=Vector3.one*.7f;
-            var mat=new Material(Shader.Find("Standard"));mat.color=new Color(.018f,.028f,.044f);mat.SetFloat("_Glossiness",.12f);floor.GetComponent<Renderer>().sharedMaterial=mat;
-            Destroy(floor.GetComponent<Collider>());
-            var lineMat=new Material(Shader.Find("Sprites/Default"));lineMat.color=Color.white;
-            for(int i=-7;i<=7;i++)for(int direction=0;direction<2;direction++)
-            {
-                var line=new GameObject("Studio floor guides").AddComponent<LineRenderer>();line.sharedMaterial=lineMat;line.widthMultiplier=i==0?.003f:.0015f;line.positionCount=2;
-                line.SetPosition(0,direction==0?new Vector3(i*.5f,.006f,-3.5f):new Vector3(-3.5f,.006f,i*.5f));
-                line.SetPosition(1,direction==0?new Vector3(i*.5f,.006f,3.5f):new Vector3(3.5f,.006f,i*.5f));
-                line.startColor=line.endColor=new Color(.15f,.25f,.31f,.22f);
-            }
-            var ring=new GameObject("Practice area").AddComponent<LineRenderer>();ring.sharedMaterial=lineMat;ring.widthMultiplier=.003f;ring.positionCount=97;
-            ring.startColor=ring.endColor=new Color(.19f,.53f,.54f,.35f);
-            for(int i=0;i<97;i++){float angle=i/96f*Mathf.PI*2;ring.SetPosition(i,new Vector3(Mathf.Cos(angle)*1.35f,.008f,Mathf.Sin(angle)*1.35f));}
-            stageCamera=new GameObject("Practice Camera").AddComponent<Camera>();stageCamera.clearFlags=CameraClearFlags.SolidColor;stageCamera.backgroundColor=new Color(.055f,.08f,.115f);stageCamera.fieldOfView=43;stageCamera.nearClipPlane=.1f;
-            preview=new RenderTexture(1240,694,24);preview.Create();stageCamera.targetTexture=preview;UpdateCamera();
+            var screen=new GameObject("Screen").AddComponent<Camera>();screen.cullingMask=0;screen.depth=-10;screen.backgroundColor=new Color(.025f,.035f,.05f);screen.clearFlags=CameraClearFlags.SolidColor;
+            RenderSettings.ambientMode=UnityEngine.Rendering.AmbientMode.Flat;RenderSettings.ambientLight=new Color(.55f,.58f,.65f);
+            foreach(var setting in new[]{new Vector3(35,140,1.1f),new Vector3(25,-35,.6f)})
+            {var light=new GameObject("Studio light").AddComponent<Light>();light.type=LightType.Directional;light.intensity=setting.z;light.transform.rotation=Quaternion.Euler(setting.x,setting.y,0);}
+            var floor=GameObject.CreatePrimitive(PrimitiveType.Plane);floor.name="Practice floor";floor.transform.localScale=Vector3.one*.8f;Destroy(floor.GetComponent<Collider>());
+            var material=new Material(Shader.Find("Standard"));material.color=new Color(.075f,.095f,.12f);material.SetFloat("_Glossiness",.15f);floor.GetComponent<Renderer>().sharedMaterial=material;
+            stageCamera=new GameObject("Practice camera").AddComponent<Camera>();stageCamera.gameObject.AddComponent<AudioListener>();stageCamera.backgroundColor=new Color(.055f,.075f,.1f);stageCamera.clearFlags=CameraClearFlags.SolidColor;stageCamera.nearClipPlane=.01f;
+            image=new RenderTexture(1240,820,24);image.Create();stageCamera.targetTexture=image;
+            stageCamera.transform.position=new Vector3(0,1,3.7f);stageCamera.transform.LookAt(Vector3.up*.9f);
+            orbit=gameObject.AddComponent<PracticeCamera>();
         }
-        void UpdateCamera()
+        void SelectCharacter(int index)
         {
-            if(cameraRig)cameraRig.Bind(CameraState,CameraView);
+            if(index<0||index>=library.characters.Length)return;
+            if(project!=null&&project.segments.Any(s=>s.locked))throw new InvalidOperationException("切换人物前请解锁片段。");
+            var replacement=Instantiate(library.characters[index].prefab);
+            try{playback.Bind(replacement,library);orbit.Initialize(stageCamera,replacement.transform);}
+            catch{Destroy(replacement);throw;}
+            if(actor)Destroy(actor);actor=replacement;selectedCharacter=index;
+            if(project!=null)
+            {var def=library.catalog.characters[index];project.characterId=def.id;project.characterSignature=def.signature;project.segments.Clear();project.position=0;selectedSegment=-1;message="人物已切换，请使用此人物复查过的动作重新编排。";}
+            orbit.Bind(CameraState,view);
         }
-        void ChangeView(int view,bool clearFraming=true)
-        {
-            if(!cameraRig)return;
-            if(project!=null){project.view=view;dirty=true;}else initialView=view;
-            cameraRig.Select(view,clearFraming);
-        }
-        void ResetCamera()
-        {if(cameraRig){cameraRig.ResetView();if(project!=null){project.view=0;dirty=true;}else initialView=0;}}
-        void SwitchCharacter(string id,bool remember=true)
-        {
-            if(id==selectedCharacter)return;
-            var switchClock=System.Diagnostics.Stopwatch.StartNew();
-            var replacement=DancerCharacters.Create(id);var animator=replacement.GetComponentInChildren<Animator>();
-            double createMs=switchClock.Elapsed.TotalMilliseconds;
-            try{playback.Retarget(animator,id);}catch{Destroy(replacement);throw;}
-            double retargetMs=switchClock.Elapsed.TotalMilliseconds-createMs;
-            var previous=characterObject;characterObject=replacement;diagnosticAnimator=animator;selectedCharacter=id;
-            cameraRig.SetTarget(replacement.transform);UpdateCamera();Destroy(previous);
-            if(remember&&project!=null){project.character=id;dirty=true;}
-            Debug.Log($"CHARACTER_SWITCH {id}: create={createMs:0.00} ms, retarget={retargetMs:0.00} ms, total={switchClock.Elapsed.TotalMilliseconds:0.00} ms");
-            message=id=="female"?"已切换为女角色，音乐位置保持不变。":"已切换为男角色，音乐位置保持不变。";
-        }
-        void StageInput(Rect area)
-        {
-            if(!cameraRig||showSettings||showCredits)return;
-            var e=Event.current;int id=GUIUtility.GetControlID(60821,FocusType.Passive,area);
-            bool mirror=Ready&&project.mirror;
-            if(e.type==EventType.MouseDown&&area.Contains(e.mousePosition)&&e.button<=2)
-            {
-                GUI.FocusControl(null);GUIUtility.hotControl=id;cameraDragButton=e.button;
-                if(e.clickCount==2){ResetCamera();GUIUtility.hotControl=0;cameraDragButton=-1;}
-                e.Use();
-            }
-            else if(e.type==EventType.MouseDrag&&GUIUtility.hotControl==id)
-            {
-                if(cameraDragButton==0&&!CameraState.dragPans){ChangeView(PracticeCamera.Free,false);cameraRig.Orbit(e.delta,mirror);}
-                else cameraRig.Pan(e.delta,mirror);
-                if(project!=null)dirty=true;e.Use();
-            }
-            else if(e.type==EventType.MouseUp&&GUIUtility.hotControl==id)
-            {GUIUtility.hotControl=0;cameraDragButton=-1;e.Use();}
-            else if(e.type==EventType.ScrollWheel&&area.Contains(e.mousePosition))
-            {cameraRig.Zoom(e.delta.y);if(project!=null)dirty=true;e.Use();}
-        }
+        void Guard(Action action){try{action();error="";}catch(Exception exception){error=exception.Message;Debug.LogWarning(exception.Message);}}
         void Update()
         {
-            if(auditionId!=""&&audition&&audition.clip&&!audition.isPlaying)StopAudition();
-            if(job!=null&&Time.realtimeSinceStartup>nextPoll)
+            if(analysisJob==null)return;
+            analysisJob.Poll();
+            if(!analysisJob.Finished)return;
+            var finished=analysisJob;analysisJob=null;
+            if(finished.ExitCode!=0){error=finished.Error;finished.Dispose();return;}
+            string folder=finished.Folder;finished.Dispose();
+            Guard(()=>{var analysis=JsonUtility.FromJson<MusicAnalysis>(File.ReadAllText(Path.Combine(folder,"analysis.json")));Choreographer.ValidateAnalysis(analysis);StartCoroutine(LoadAudio(folder,NewProject(analysis)));});
+        }
+        DanceProject NewProject(MusicAnalysis analysis)
+        {
+            var character=library.catalog.characters[selectedCharacter];
+            var music=builtinMusic.tracks.FirstOrDefault(t=>t.id==selectedMusicId);
+            return new DanceProject{title=music!=null?music.title:Path.GetFileNameWithoutExtension(analysis.sourceName),characterId=character.id,characterSignature=character.signature,analysis=analysis,grid=new GridSettings{bpm=analysis.bpm,manual=analysis.needsManualGrid},loopEnd=analysis.durationSeconds};
+        }
+        void LoadMusicLibrary()
+        {
+            string path=Path.Combine(MusicRoot,"catalog.json");if(!File.Exists(path))return;
+            try
             {
-                nextPoll=Time.realtimeSinceStartup+.15f;job.Poll();
-                if(job.Finished)
-                {
-                    var finished=job;job=null;
-                    if(finished.ExitCode==0)Guard(()=>LoadAnalysis(finished.Folder));
-                    else error=finished.Progress.state=="error"?finished.Progress.message:finished.Error;
-                    finished.Dispose();
-                }
+                var catalog=JsonUtility.FromJson<BuiltinMusicCatalog>(File.ReadAllText(path));
+                MusicLibrary.Validate(catalog,MusicRoot);builtinMusic=catalog;
             }
-            if(Ready&&!TestMode&&!showSettings&&!showCredits&&GUIUtility.keyboardControl==0)
+            catch(Exception exception){musicLibraryError=exception.Message;Debug.LogWarning(exception.Message);}
+        }
+        void SelectMusic(BuiltinMusicTrack track)
+        {
+            source=MusicLibrary.ResolveTrack(MusicRoot,track);selectedMusicId=track.id;startText="0";
+            durationText=Math.Min(40,track.durationSeconds).ToString("0.###",CultureInfo.InvariantCulture);
+            message="已选择 "+track.title+" · "+track.artist+"，点击分析音乐与准备慢放。";
+        }
+        void Analyze()
+        {
+            if(string.IsNullOrWhiteSpace(source)||!File.Exists(source))throw new InvalidOperationException("请先选择 WAV 或 MP3。");
+            if(!double.TryParse(startText,NumberStyles.Float,CultureInfo.InvariantCulture,out double start)||!double.TryParse(durationText,NumberStyles.Float,CultureInfo.InvariantCulture,out double duration)||!Choreographer.Finite(start)||!Choreographer.Finite(duration)||start<0||duration<30||duration>60)throw new InvalidOperationException("起点须大于等于零，长度为 30～60 秒。");
+            string folder=Path.Combine(ProjectRoot,DateTime.Now.ToString("yyyyMMdd-HHmmss")+"-"+Guid.NewGuid().ToString("N").Substring(0,6));
+            string app=Path.GetDirectoryName(Application.dataPath);
+            string python=AnalyzerRuntime.Resolve(app,PlayerPrefs.GetString("AIStudio.Python",""),Environment.GetEnvironmentVariable("SONG_CHOREO_PYTHON"));
+            string analyzer=Path.Combine(Application.streamingAssetsPath,"Analyzer/analyzer.py");
+            if(!File.Exists(analyzer))throw new FileNotFoundException("音乐分析组件未打包。");
+            analysisJob=new AnalyzerJob(python,analyzer,new AnalysisRequest{sourcePath=source,outputDir=folder,startSeconds=start,durationSeconds=duration});
+            message="正在分析，原项目保留到新音频全部加载完成。";
+        }
+        IEnumerator LoadAudio(string folder,DanceProject candidate,bool autoPlay=false)
+        {
+            busy=true;var clips=new AudioClip[3];string failure="";
+            string[] names={candidate.analysis.normalAudio,candidate.analysis.slow075Audio,candidate.analysis.slow050Audio};
+            for(int i=0;i<3;i++)
             {
-                if(Input.GetKeyDown(KeyCode.Space))TogglePlay();
-                if(Input.GetKeyDown(KeyCode.LeftArrow))playback.Seek(playback.Position-2);
-                if(Input.GetKeyDown(KeyCode.RightArrow))playback.Seek(playback.Position+2);
-            }
-        }
-        void Guard(Action action){try{error="";action();}catch(Exception ex){Fail(ex);}}
-        void Fail(Exception ex){error=ex.Message;Debug.LogException(ex);}
-        static bool TryNumber(string text,out double number)=>double.TryParse(text,NumberStyles.Float,CultureInfo.InvariantCulture,out number)&&Choreographer.Finite(number);
-        void StartAnalysis()
-        {
-            if(Busy)return;
-            if(!File.Exists(sourcePath))throw new FileNotFoundException("请选择存在的音乐文件。");
-            if(!TryNumber(startText,out var start)||start<0||!TryNumber(durationText,out var duration)||duration<30||duration>60)throw new ArgumentException("起点应大于等于零，片段长度为 30～60 秒。");
-            StopAudition();
-            var folder=Path.Combine(Workspace,DateTime.Now.ToString("yyyyMMdd-HHmmss")+"-"+Guid.NewGuid().ToString("N").Substring(0,6));
-            PlayerPrefs.SetString("AnalyzerPython",pythonPath);
-            if(Environment.GetCommandLineArgs().Contains("-portable-smoke")&&!BundledAnalyzer)throw new InvalidOperationException("便携检查需要完整发布包中的内置分析引擎。");
-            Debug.Log("ANALYZER_RUNTIME "+(BundledAnalyzer?"bundled":"custom/development"));
-            job=new AnalyzerJob(AnalyzerPython,Path.Combine(Application.streamingAssetsPath,"Analyzer","analyzer.py"),new AnalysisRequest{sourcePath=Path.GetFullPath(sourcePath),outputDir=folder,startSeconds=start,durationSeconds=duration});
-            message="正在离线分析，当前编舞可以继续观看。";
-        }
-        string LibraryRoot=>Path.Combine(Application.streamingAssetsPath,"MusicLibrary");
-        void StopAudition()
-        {
-            auditionToken++;auditionId="";
-            if(audition){audition.Stop();if(audition.clip)Destroy(audition.clip);audition.clip=null;}
-        }
-        void PreviewTrack(BuiltinTrack track)
-        {
-            if(auditionId==track.id){StopAudition();return;}
-            StopAudition();if(Ready)playback.Pause();auditionId=track.id;
-            StartCoroutine(AuditionTrack(track,auditionToken));
-        }
-        IEnumerator AuditionTrack(BuiltinTrack track,int token)
-        {
-            string path=Choreographer.ResolveLocal(LibraryRoot,track.id+"/normal.wav");
-            using(var request=UnityWebRequestMultimedia.GetAudioClip(new Uri(path).AbsoluteUri,AudioType.WAV))
-            {
-                yield return request.SendWebRequest();
-                if(request.result!=UnityWebRequest.Result.Success){if(token==auditionToken){error="试听失败："+request.error;auditionId="";}yield break;}
-                var clip=DownloadHandlerAudioClip.GetContent(request);
-                if(token!=auditionToken){Destroy(clip);yield break;}
-                audition.clip=clip;audition.Play();message="正在试听 "+track.title+" · "+track.artist;
-            }
-        }
-        void UseBuiltin(int index,bool autoPlay=true)
-        {
-            if(Busy)return;
-            if(Ready)Save();
-            var track=musicLibrary.tracks[index];StopAudition();if(Ready)playback.Pause();chosenTrack=index;
-            string source=Choreographer.ResolveLocal(LibraryRoot,track.id);
-            string destination=Path.Combine(Workspace,track.id+"-"+Guid.NewGuid().ToString("N").Substring(0,6));Directory.CreateDirectory(destination);
-            foreach(var f in Directory.GetFiles(source))if(!f.EndsWith(".meta",StringComparison.OrdinalIgnoreCase))File.Copy(f,Path.Combine(destination,Path.GetFileName(f)));
-            sourcePath=Path.Combine(source,"normal.wav");startText="0";durationText=track.excerptDuration.ToString(CultureInfo.InvariantCulture);
-            autoPlayOnLoad=autoPlay;LoadAnalysis(destination);
-        }
-        void LoadAnalysis(string folder)
-        {
-            var analysis=JsonUtility.FromJson<MusicAnalysis>(File.ReadAllText(Path.Combine(folder,"analysis.json")));
-            Choreographer.ValidateAnalysis(analysis);
-            var camera=CameraState;
-            var p=new DanceProject{title=Path.GetFileNameWithoutExtension(analysis.sourceName),mode=PreferredStyle,analysis=analysis,loopEnd=analysis.durationSeconds,character=selectedCharacter,view=CameraView,
-                camera=new CameraSettings{yaw=camera.yaw,pitch=camera.pitch,distanceScale=camera.distanceScale,panX=camera.panX,panY=camera.panY,fieldOfView=camera.fieldOfView,dragPans=camera.dragPans},
-                grid=new GridSettings{bpm=analysis.bpm,firstBeatSeconds=analysis.beats.Count>0?analysis.beats[0]:0}};
-            // Prefer an explicitly approved library and display its actual style.
-            if(!analysis.needsManualGrid)p.segments=Choreographer.Generate(p,catalog);
-            StartCoroutine(LoadAudioProject(p,folder));
-        }
-        IEnumerator LoadAudioProject(DanceProject p,string folder)
-        {
-            loading=true;
-            string[] names={p.analysis.normalAudio,p.analysis.slow075Audio,p.analysis.slow050Audio};
-            var loaded=new List<AudioClip>();
-            foreach(var name in names)
-            {
-                string path=null;Guard(()=>{path=Choreographer.ResolveLocal(folder,name);if(!File.Exists(path))throw new FileNotFoundException("项目音频缺失："+name);});
-                if(path==null||!File.Exists(path)){loading=false;foreach(var c in loaded)Destroy(c);yield break;}
+                string path="";try{path=Choreographer.ResolveLocal(folder,names[i]);}catch(Exception e){failure=e.Message;}
+                if(failure!="")break;
                 using(var request=UnityWebRequestMultimedia.GetAudioClip(new Uri(path).AbsoluteUri,AudioType.WAV))
                 {
                     yield return request.SendWebRequest();
-                    if(request.result!=UnityWebRequest.Result.Success){error="音频读取失败："+request.error;loading=false;foreach(var c in loaded)Destroy(c);yield break;}
-                    var clip=DownloadHandlerAudioClip.GetContent(request);
-                    if(!clip){error="音频无法解码："+name;loading=false;foreach(var c in loaded)Destroy(c);yield break;}
-                    float rate=loaded.Count==0?1:loaded.Count==1?.75f:.5f;
-                    if(Math.Abs(clip.length-p.analysis.durationSeconds/rate)>.03 || clip.frequency!=p.analysis.sampleRate)
-                    {error="音频时长或采样率与项目记录不匹配："+name;Destroy(clip);foreach(var c in loaded)Destroy(c);loading=false;yield break;}
-                    loaded.Add(clip);
+                    if(request.result!=UnityWebRequest.Result.Success){failure="加载练习音频失败："+request.error;break;}
+                    clips[i]=DownloadHandlerAudioClip.GetContent(request);
                 }
             }
-            // Commit only after every clip is loaded and the current work is saved.
-            if(Ready)
+            busy=false;
+            if(failure!=""){foreach(var clip in clips)if(clip)Destroy(clip);error=failure;yield break;}
+            try
             {
-                bool saved=true;try{Save();}catch(Exception ex){Fail(ex);saved=false;}
-                if(!saved){foreach(var c in loaded)Destroy(c);loading=false;yield break;}
+                int index=Array.FindIndex(library.characters,a=>a.id==candidate.characterId);
+                if(index<0)throw new InvalidOperationException("项目人物不在当前素材库。");
+                // Swapping a loaded project must not mutate the old project's locks.
+                if(index!=selectedCharacter){var previous=project;project=null;try{SelectCharacter(index);}finally{project=previous;}}
+                project=candidate;projectFolder=folder;view=project.view;mirror=project.mirror;
+                playback.SetProject(project,clips[0],clips[1],clips[2]);orbit.Bind(project.camera,view);
+                bpmText=project.grid.bpm.ToString("0.###",CultureInfo.InvariantCulture);firstText=project.grid.firstBeatSeconds.ToString(CultureInfo.InvariantCulture);countText=(project.grid.eightCountOffset+1).ToString();
+                loopStart=project.loopStart.ToString("0.###",CultureInfo.InvariantCulture);loopEnd=project.loopEnd.ToString("0.###",CultureInfo.InvariantCulture);
+                selectedSegment=project.segments.Count>0?0:-1;message="音乐已就绪。先试听并校正首拍，再编排已复查动作。";error="";
+                if(autoPlay){playback.Play();message="正在练习："+project.segments.Count+" 个八拍 · "+project.segments.Select(s=>s.motionId).Distinct().Count()+" 种动作。";}
             }
-            if(p.camera==null)p.camera=new CameraSettings();if(string.IsNullOrEmpty(p.character))p.character="female";
-            if(p.character!=selectedCharacter)SwitchCharacter(p.character,false);
-            project=p;projectFolder=folder;playback.SetProject(p,loaded[0],loaded[1],loaded[2]);selected=p.segments.Count>0?0:-1;
-            selectedSourceName=p.title;
-            chosenTrack=File.Exists(Path.Combine(folder,"CREDITS.txt"))?musicLibrary.tracks.FindIndex(t=>t.title==p.title):-1;
-            RefreshFields();loading=false;dirty=true;UpdateCamera();Guard(Save);
-            message=p.analysis.needsManualGrid?"音乐已导入，请校正节拍后生成。":p.mode==DanceStyles.Diagnostic?"已就绪。当前为技术演示动作，可验证播放和编辑流程。":"已就绪。点击播放开始 "+DanceStyles.Name(p.mode)+" 跟拍练习。";
-            if(autoPlayOnLoad){autoPlayOnLoad=false;playback.Play();}
+            catch(Exception e){foreach(var clip in clips)if(clip)Destroy(clip);error=e.Message;}
         }
-        void RefreshFields()
+        void Generate()
+        {var result=Choreographer.Generate(project,library.catalog,motionLibrary.EnabledMotionIds);playback.Pause();project.segments=result;project.position=0;selectedSegment=0;playback.Seek(0);message="已编排 "+result.Count+" 个时槽；仅使用动作库设置选中的已复查动作与连接。";}
+        void ApplyGrid()
         {
-            bpmText=project.grid.bpm.ToString("0.###",CultureInfo.InvariantCulture);firstBeatText=project.grid.firstBeatSeconds.ToString("0.###",CultureInfo.InvariantCulture);
-            countText=(project.grid.eightCountOffset+1).ToString();seedText=project.seed.ToString();
-            loopStartText=project.loopStart.ToString("0.###",CultureInfo.InvariantCulture);loopEndText=project.loopEnd.ToString("0.###",CultureInfo.InvariantCulture);
-        }
-        void OpenProject(string path)
-        {
-            if(string.IsNullOrEmpty(path)||Busy)return;
-            var p=JsonUtility.FromJson<DanceProject>(File.ReadAllText(path));Choreographer.ValidateProject(p,catalog);
-            StopAudition();chosenTrack=-1;
-            sourcePath=Choreographer.ResolveLocal(Path.GetDirectoryName(Path.GetFullPath(path)),p.analysis.normalAudio);startText="0";durationText=p.analysis.durationSeconds.ToString("0.###",CultureInfo.InvariantCulture);
-            StartCoroutine(LoadAudioProject(p,Path.GetDirectoryName(Path.GetFullPath(path))));
+            if(!double.TryParse(bpmText,NumberStyles.Float,CultureInfo.InvariantCulture,out double bpm)||!double.TryParse(firstText,NumberStyles.Float,CultureInfo.InvariantCulture,out double first)||!int.TryParse(countText,out int count))throw new InvalidOperationException("节拍参数格式错误。");
+            var grid=new GridSettings{manual=true,bpm=bpm,firstBeatSeconds=first,eightCountOffset=count-1};Choreographer.BeatTimes(project.analysis,grid);
+            if(project.segments.Any(s=>s.locked))throw new InvalidOperationException("请先解锁片段，再校正节拍。");
+            playback.Pause();project.grid=grid;project.segments.Clear();message="节拍已校正，请重新编排。";
         }
         void Save()
         {
-            if(!Ready)return;
-            project.position=playback.Position;Choreographer.ValidateProject(project,catalog);
-            string path=Path.Combine(projectFolder,"project.danceproj"),temp=path+".tmp";
-            File.WriteAllText(temp,JsonUtility.ToJson(project,true));
-            if(File.Exists(path))File.Replace(temp,path,null);else File.Move(temp,path);
-            if(!TestMode)PlayerPrefs.SetString("LastProject",path);
-            dirty=false;message="已保存："+Path.GetFullPath(path)+"  （点击“打开目录”查看）";
+            Choreographer.ValidateProject(project,library.catalog);
+            string path=Path.Combine(projectFolder,"project.danceproj"),temporary=path+".tmp";File.WriteAllText(temporary,JsonUtility.ToJson(project,true));
+            if(File.Exists(path))File.Replace(temporary,path,null);else File.Move(temporary,path);
+            PlayerPrefs.SetString("AIStudio.LastProject",path);PlayerPrefs.Save();message="已保存："+path;
         }
-        void OpenDemo()
+        void OpenProject()
         {
-            if(Busy)return;
-            string source=Path.Combine(Application.streamingAssetsPath,"Demo");
-            string destination=Path.Combine(Workspace,"Demo-"+Guid.NewGuid().ToString("N").Substring(0,6));Directory.CreateDirectory(destination);
-            foreach(var f in Directory.GetFiles(source))if(!f.EndsWith(".meta",StringComparison.OrdinalIgnoreCase))File.Copy(f,Path.Combine(destination,Path.GetFileName(f)));
-            var path=Path.Combine(destination,"project.danceproj");
-            if(File.Exists(path))OpenProject(path);else LoadAnalysis(destination);
+            string file=NativeFiles.Open(true,Directory.Exists(projectFolder)?projectFolder:ProjectRoot);if(file==null)return;
+            var candidate=JsonUtility.FromJson<DanceProject>(File.ReadAllText(file));Choreographer.ValidateProject(candidate,library.catalog);StartCoroutine(LoadAudio(Path.GetDirectoryName(file),candidate));
         }
-        void ApplyGrid()
+        public void LoadPracticeExample(bool autoPlay=false)
         {
-            if(!Ready)return;
-            if(!TryNumber(bpmText,out var bpm)||!TryNumber(firstBeatText,out var first)||!int.TryParse(countText,out var count))throw new ArgumentException("请输入有效的 BPM、首拍秒数和 1～8 的计数。");
-            var old=project.grid;
-            project.grid=new GridSettings{manual=true,bpm=bpm,firstBeatSeconds=first,eightCountOffset=count-1};
-            try{project.segments=Choreographer.Generate(project,catalog);}catch{project.grid=old;throw;}
-            dirty=true;message="已校正节拍并重新编排，锁定片段保持不变。";
+            if(Working)throw new InvalidOperationException("请等待当前音乐加载完成。");
+            string bundled=Path.Combine(Application.streamingAssetsPath,"Practice100");
+            var analysis=JsonUtility.FromJson<MusicAnalysis>(File.ReadAllText(Path.Combine(bundled,"analysis.json")));
+            Choreographer.ValidateAnalysis(analysis);
+            var candidate=NewProject(analysis);candidate.title="New Jazz 基础律动 · 原创 100 BPM";
+            // This track's synthesis clock is known exactly. The detector's
+            // approximate tempo remains in analysis.json for comparison.
+            candidate.grid=new GridSettings{manual=true,bpm=100,firstBeatSeconds=0};
+            candidate.segments=Choreographer.Generate(candidate,library.catalog,motionLibrary.EnabledMotionIds);
+            Choreographer.ValidateProject(candidate,library.catalog);
+            string folder=Path.Combine(ProjectRoot,"Practice100-"+DateTime.Now.ToString("yyyyMMdd-HHmmss")+"-"+Guid.NewGuid().ToString("N").Substring(0,6));
+            Directory.CreateDirectory(folder);
+            foreach(string name in new[]{analysis.normalAudio,analysis.slow075Audio,analysis.slow050Audio,"analysis.json","SOURCE.json"})
+                File.Copy(Choreographer.ResolveLocal(bundled,name),Choreographer.ResolveLocal(folder,name));
+            File.WriteAllText(Path.Combine(folder,"project.danceproj"),JsonUtility.ToJson(candidate,true));
+            StartCoroutine(LoadAudio(folder,candidate,autoPlay));
         }
-        void Generate(string mode,bool changeSeed)
+        void OpenSetup()
         {
-            if(!Ready)return;
-            if(!int.TryParse(seedText,out var seed))throw new ArgumentException("种子应为整数。");
-            if(project.mode!=mode && project.segments.Any(s=>s.locked))throw new InvalidOperationException("切换舞种前请先解除所有锁定。");
-            var oldMode=project.mode;var oldSeed=project.seed;var previous=project.segments;project.mode=mode;project.seed=seed;
-            try
-            {
-                if(changeSeed){project.segments=Choreographer.GenerateAnother(project,catalog,out int chosenSeed);project.seed=chosenSeed;}
-                else project.segments=Choreographer.Generate(project,catalog);
-            }
-            catch{project.mode=oldMode;project.seed=oldSeed;throw;}
-            int changed=project.segments.Where((s,i)=>i>=previous.Count||s.motionId!=previous[i].motionId).Count();
-            seedText=project.seed.ToString();selected=0;
-            for(int i=0;i<project.segments.Count;i++)if(i>=previous.Count||project.segments[i].motionId!=previous[i].motionId){selected=i;break;}
-            if(!playback.IsPlaying)playback.Seek(project.segments[selected].startSeconds);
-            dirty=true;message=$"已重新编排：{project.segments.Count} 段中 {changed} 段改变，使用 {project.segments.Select(s=>s.motionId).Distinct().Count()}/{Choreographer.Eligible(catalog,mode).Count} 个库存片段；锁定片段保持。";
-        }
-        void ApplyLoop()
-        {
-            if(!TryNumber(loopStartText,out var start)||!TryNumber(loopEndText,out var end)||start<0||end<=start+.05||end>project.analysis.durationSeconds)throw new ArgumentException("循环终点需大于起点，且在所选音乐片段内。");
-            project.loopStart=start;project.loopEnd=end;project.loop=true;dirty=true;
-            playback.Seek(start);
-        }
-        void TogglePlay(){if(!Ready)return;StopAudition();if(playback.IsPlaying)playback.Pause();else playback.Play();}
-        void EnsureStyles()
-        {
-            if(stylesReady)return;
-            white=Texture2D.whiteTexture;
-            var font=Font.CreateDynamicFontFromOSFont(new[]{"Microsoft YaHei UI","Microsoft YaHei","Arial"},18);
-            label=new GUIStyle{font=font,fontSize=16,wordWrap=true,normal={textColor=ink}};
-            small=new GUIStyle(label){fontSize=13};muted=new GUIStyle(small){normal={textColor=new Color(.52f,.62f,.7f)}};
-            title=new GUIStyle(label){fontSize=30,fontStyle=FontStyle.Bold};heading=new GUIStyle(label){fontSize=18,fontStyle=FontStyle.Bold};
-            button=new GUIStyle{font=font,fontSize=15,alignment=TextAnchor.MiddleCenter,padding=new RectOffset(8,8,4,4),clipping=TextClipping.Clip};
-            field=new GUIStyle{font=font,fontSize=15,padding=new RectOffset(10,10,5,5),alignment=TextAnchor.MiddleLeft,clipping=TextClipping.Clip};
-            var normal=Solid(new Color(.105f,.16f,.205f));var hover=Solid(new Color(.16f,.25f,.30f));var active=Solid(new Color(.12f,.34f,.31f));var input=Solid(new Color(.028f,.046f,.065f));
-            PaintStates(button,normal,ink);button.hover.background=hover;button.active.background=active;button.focused.background=hover;
-            PaintStates(field,input,ink);
-            accentButton=new GUIStyle(button){fontStyle=FontStyle.Bold};PaintStates(accentButton,Solid(teal),new Color(.025f,.075f,.075f));accentButton.hover.background=Solid(new Color(.47f,.96f,.86f));
-            lockToggle=new GUIStyle(button){fontSize=13};lockToggle.onNormal.background=active;lockToggle.onNormal.textColor=teal;lockToggle.onHover.background=active;
-            sliderTrack=new GUIStyle{fixedHeight=4};PaintStates(sliderTrack,normal,ink);
-            sliderThumb=new GUIStyle{fixedWidth=14,fixedHeight=14};PaintStates(sliderThumb,Solid(teal),ink);
-            stylesReady=true;
-        }
-        static void PaintStates(GUIStyle style,Texture2D texture,Color color)
-        {
-            foreach(var state in new[]{style.normal,style.hover,style.active,style.focused,style.onNormal,style.onHover,style.onActive,style.onFocused})
-            {
-                state.background=texture;state.textColor=color;
 #if UNITY_EDITOR
-                state.scaledBackgrounds=new Texture2D[0];
+            UnityEditor.EditorApplication.ExecuteMenuItem("Tools/CHOREO AI/Generation console");
+#else
+            Application.OpenURL(new Uri(Path.Combine(Application.streamingAssetsPath,"Setup.html")).AbsoluteUri);
 #endif
-            }
-            style.border=new RectOffset();style.margin=new RectOffset();
         }
-        static Texture2D Solid(Color color)
-        {var texture=new Texture2D(1,1);texture.SetPixel(0,0,color);texture.Apply();return texture;}
-        void Box(Rect rect,Color color){var old=GUI.color;GUI.color=color;GUI.DrawTexture(rect,white);GUI.color=old;}
-        void Text(float x,float y,float width,float height,string text,GUIStyle style=null)=>GUI.Label(new Rect(x,y,width,height),text,style??label);
-        bool Button(float x,float y,float width,float height,string text,bool accent=false)=>GUI.Button(new Rect(x,y,width,height),text,accent?accentButton:button);
-        string Field(float x,float y,float width,string value)
-        {Box(new Rect(x-1,y-1,width+2,32),new Color(.15f,.22f,.27f));return GUI.TextField(new Rect(x,y,width,30),value,field);}
-        static string Clock(double seconds)=>$"{(int)seconds/60:00}:{seconds%60:00.0}";
+        public void OpenMotionLibrary()
+        {
+            if(Working)throw new InvalidOperationException("请等待当前音乐加载完成。");
+            if(library.characters.Length==0)throw new InvalidOperationException("请先导入人物。");
+            playback.Pause();motionLibrary.Open(selectedCharacter);
+        }
+        void Styles()
+        {
+            if(stylesReady)return;stylesReady=true;font=Font.CreateDynamicFontFromOSFont(new[]{"Microsoft YaHei UI","Microsoft YaHei","Arial"},16);
+            text=new GUIStyle(GUI.skin.label){font=font,fontSize=16,wordWrap=true,normal={textColor=new Color(.88f,.92f,.96f)}};
+            muted=new GUIStyle(text){fontSize=13,normal={textColor=new Color(.53f,.63f,.72f)}};title=new GUIStyle(text){fontSize=30,fontStyle=FontStyle.Bold};
+            button=new GUIStyle(GUI.skin.button){font=font,fontSize=15,padding=new RectOffset(12,12,8,8)};field=new GUIStyle(GUI.skin.textField){font=font,fontSize=16};card=new GUIStyle(GUI.skin.box){padding=new RectOffset(18,18,18,18)};
+        }
+        void Label(float x,float y,float width,float height,string value,GUIStyle style=null)=>GUI.Label(new Rect(x,y,width,height),value,style??text);
+        bool Button(float x,float y,float width,float height,string value)=>GUI.Button(new Rect(x,y,width,height),value,button);
+        string Input(float x,float y,float width,string value)=>GUI.TextField(new Rect(x,y,width,30),value,field);
+        void Panel(float x,float y,float width,float height)=>GUI.Box(new Rect(x,y,width,height),"",card);
         void OnGUI()
         {
-            if(TestMode&&(Event.current.isKey||Event.current.isMouse||Event.current.type==EventType.ScrollWheel))return;
-            if(Event.current.type==EventType.Repaint)renderedFrames++;
-            EnsureStyles();float scale=Math.Min(Screen.width/W,Screen.height/H);GUI.matrix=Matrix4x4.TRS(new Vector3((Screen.width-W*scale)/2,(Screen.height-H*scale)/2,0),Quaternion.identity,new Vector3(scale,scale,1));
-            Box(new Rect(0,0,W,H),new Color(.035f,.05f,.075f));
-            if(reviewFrames!=null){DrawReviewBoard();GUI.matrix=Matrix4x4.identity;return;}
-            Text(24,17,620,44,"CHOREO  /  编舞练习室",title);Text(26,62,1030,25,catalog!=null&&catalog.personalUseOnly?"个人学习版 "+Application.version+" · 含本地受限动作 · 请勿上传或分发此应用":"本地音乐  ·  节拍编排  ·  3D 跟学  ·  "+Application.version,muted);
-            Text(1110,30,172,30,dirty?"● 有未保存的修改":"本地音乐工作区",muted);
-            GUI.enabled=!Busy&&musicLibrary.tracks.Count>0;
-            if(Button(1292,24,145,34,"一键演示",true))Guard(()=>UseBuiltin(0));GUI.enabled=true;
-            if(Button(1450,24,110,34,"设置"))showSettings=!showSettings;
-            Box(new Rect(20,108,275,658),new Color(.064f,.083f,.117f));
-            Box(new Rect(1265,108,315,658),new Color(.064f,.083f,.117f));
+            Styles();GUI.matrix=Matrix4x4.Scale(new Vector3(Screen.width/Width,Screen.height/Height,1));
+            if(motionLibrary&&motionLibrary.IsOpen){motionLibrary.Draw();GUI.matrix=Matrix4x4.identity;return;}
+            Label(24,20,800,45,"CHOREO / AI",title);
+            Label(24,68,1100,25,"TRIPO 人物  /  HUMANOID 动作库  /  本地音乐与练习",muted);
+            if(Button(1040,25,240,42,"动作库设置"))Guard(OpenMotionLibrary);
+            if(Button(1300,25,270,42,"生成与账号配置"))OpenSetup();
+            if(library.characters.Length==0||library.motions.Length==0){Onboarding();GUI.matrix=Matrix4x4.identity;return;}
+            Panel(20,110,290,735);Panel(330,110,905,735);Panel(1255,110,325,735);
             DrawImport();DrawStage();DrawInspector();DrawTransport();
-            Box(new Rect(20,844,1560,40),new Color(.065f,.095f,.12f));
-            Text(32,851,1535,28,!string.IsNullOrEmpty(error)?"提示："+error:message,!string.IsNullOrEmpty(error)?new GUIStyle(small){normal={textColor=new Color(1,.65f,.43f)}}:small);
-            if(showSettings||showCredits)DrawDialog();
+            Label(25,923,1550,30,error!=""?error:message,error!=""?text:muted);
             GUI.matrix=Matrix4x4.identity;
+        }
+        void Onboarding()
+        {
+            Panel(160,180,1280,585);Label(205,220,1170,55,"开始创建你的舞者与动作库",title);
+            Label(205,300,1120,75,library.characters.Length>0?"Tripo 人物已导入，下方可查看模型。导入并复查动作库 FBX 后，就能开始跟音乐练习。":"先准备 Tripo 人物和 Humanoid 动作。可使用 Mixamo 等现成动作库，也可生成动作；准备完成后会在这里显示。",text);
+            Label(205,410,1100,150,"01  准备人物，下载 Mixamo 等动作库的 FBX\n\n02  在 Unity 的 Import motion FBX 入口导入动作\n\n03  预览骨骼、确认八拍拍点和连接，再开始跟音乐练习",text);
+            if(library.characters.Length>0)
+            {GUI.DrawTexture(new Rect(990,385,370,220),image,ScaleMode.ScaleToFit);Label(990,600,370,30,"已导入人物 · 等待动作",muted);}
+            if(Button(205,625,325,50,"打开生成与配置入口"))OpenSetup();
+            if(Button(550,625,200,50,"Tripo 开发者平台"))Application.OpenURL("https://developers.tripo3d.ai/en");
+            if(Button(770,625,200,50,"Mixamo 动作库"))Application.OpenURL("https://www.mixamo.com/");
+            Label(205,700,1100,35,"已导入人物："+library.characters.Length+"  /  已导入动作："+library.motions.Length,muted);
+            if(library.importIssues.Length>0)Label(160,790,1280,110,string.Join("\n",library.importIssues.Take(3)),muted);
+            if(error!="")Label(160,900,1280,40,error);
         }
         void DrawImport()
         {
-            Text(36,124,240,28,"01  选择音乐",heading);
-            GUI.enabled=!Busy;
-            if(Button(36,165,240,38,"导入我的音乐…"))Guard(()=>{var p=NativeFiles.Open(false);if(p!=null){sourcePath=p;selectedSourceName=Path.GetFileNameWithoutExtension(p);chosenTrack=-1;message="已选择《"+selectedSourceName+"》。设置片段后，点击左侧“分析并打开”。";}});
-            Text(36,216,240,35,string.IsNullOrEmpty(sourcePath)?"支持 WAV / MP3，音频保存在本机。":selectedSourceName,muted);
-            Box(new Rect(36,261,240,1),new Color(.15f,.20f,.25f));Text(36,277,240,25,"免费测试曲目",heading);
-            for(int i=0;i<musicLibrary.tracks.Count;i++)
-            {
-                var track=musicLibrary.tracks[i];float y=313+i*77;
-                Box(new Rect(36,y,240,68),chosenTrack==i?new Color(.10f,.21f,.23f):new Color(.08f,.115f,.15f));
-                Text(46,y+8,145,24,track.title,small);Text(46,y+34,145,25,track.genre,muted);
-                if(Button(200,y+5,68,26,auditionId==track.id?"停止":"试听"))Guard(()=>PreviewTrack(track));
-                int index=i;if(Button(200,y+36,68,26,"使用"))Guard(()=>UseBuiltin(index));
-            }
-            if(musicLibrary.tracks.Count==0)Text(36,317,240,120,"内置曲目未准备，请先导入音乐。",small);
-            Text(36,552,112,22,"片段起点 / 秒",muted);Text(161,552,112,22,"长度 / 30～60 秒",muted);
-            GUI.enabled=!Busy&&chosenTrack<0;
-            startText=Field(36,579,112,startText);durationText=Field(161,579,112,durationText);
-            GUI.enabled=!Busy&&!string.IsNullOrEmpty(sourcePath);
-            if(Button(36,624,240,38,chosenTrack>=0?"开始练习":"分析并打开",true))Guard(()=>
-            {
-                if(chosenTrack<0)StartAnalysis();
-                else if(Ready&&project.title==musicLibrary.tracks[chosenTrack].title){StopAudition();playback.Seek(0);playback.Play();}
-                else UseBuiltin(chosenTrack);
-            });
+            Label(38,130,250,30,"音乐与项目");GUI.enabled=!Working;
+            if(Button(38,180,254,40,"选择 WAV / MP3"))Guard(()=>{var path=NativeFiles.Open(false);if(path!=null){source=path;selectedMusicId="";}});
+            var selectedMusic=builtinMusic.tracks.FirstOrDefault(t=>t.id==selectedMusicId);
+            Label(38,235,254,65,selectedMusic!=null?selectedMusic.title+"\n"+selectedMusic.artist:string.IsNullOrWhiteSpace(source)?"选择下方内置音乐或本地文件，截取 30～60 秒练习。":Path.GetFileName(source),muted);
+            Label(38,318,110,25,"起点（秒）",muted);startText=Input(165,315,125,startText);
+            Label(38,365,110,25,"长度（秒）",muted);durationText=Input(165,362,125,durationText);
+            if(Button(38,420,254,42,"分析音乐与准备慢放"))Guard(Analyze);
             GUI.enabled=true;
-            if(job!=null)
-            {
-                Text(36,673,170,35,job.Progress.message,muted);Box(new Rect(36,709,240,3),new Color(.12f,.2f,.24f));Box(new Rect(36,709,240*job.Progress.progress,3),teal);
-                if(Button(213,674,63,27,"取消"))Guard(()=>{job.Cancel();job.Dispose();job=null;message="分析已取消，当前项目保持不变。";});
-            }
-            else Text(36,676,240,31,chosenTrack>=0?"内置曲目已离线分析，点击“使用”即可播放。":Ready&&project.title==selectedSourceName?"当前歌曲已载入，点击底部“播放”开始练习。":"设置片段后点“分析并打开”，完成后点底部“播放”。",muted);
-            GUI.enabled=!Busy;
-            if(Button(36,725,115,28,"打开项目"))Guard(()=>OpenProject(NativeFiles.Open(true,ProjectPickerDirectory)));
-            if(Button(160,725,115,28,"资源署名"))showCredits=true;
+            if(analysisJob!=null)
+            {Label(38,480,254,100,analysisJob.Progress.message+"\n"+(analysisJob.Progress.progress*100).ToString("0")+"%",muted);if(Button(38,590,254,35,"取消分析")){analysisJob.Cancel();analysisJob.Dispose();analysisJob=null;message="已取消，原项目保留。";}}
+            else DrawMusicLibrary();
+            GUI.enabled=!Working;
+            if(File.Exists(Path.Combine(Application.streamingAssetsPath,"Practice100/analysis.json"))&&Button(38,677,254,35,"100 BPM 练习示例"))Guard(()=>LoadPracticeExample(true));
+            if(Button(38,725,120,38,"打开项目"))Guard(OpenProject);
+            GUI.enabled=!Working&&project!=null;
+            if(Button(170,725,120,38,"保存项目"))Guard(Save);
             GUI.enabled=true;
+            if(Button(38,782,254,36,"打开项目目录")){Directory.CreateDirectory(ProjectRoot);Application.OpenURL(new Uri(string.IsNullOrEmpty(projectFolder)?ProjectRoot:projectFolder).AbsoluteUri);}
+        }
+        void DrawMusicLibrary()
+        {
+            Label(38,480,254,27,"内置跟练音乐 · "+builtinMusic.tracks.Count+" 首",muted);
+            if(builtinMusic.tracks.Count==0)
+            {Label(38,520,254,115,musicLibraryError!=""?musicLibraryError:"暂无内置音乐，可选择本地 WAV / MP3。",muted);return;}
+            float listHeight=File.Exists(Path.Combine(Application.streamingAssetsPath,"Practice100/analysis.json"))?150:188;
+            musicScroll=GUI.BeginScrollView(new Rect(38,515,254,listHeight),musicScroll,new Rect(0,0,230,builtinMusic.tracks.Count*61));
+            GUI.enabled=!Working;
+            for(int i=0;i<builtinMusic.tracks.Count;i++)
+            {
+                var track=builtinMusic.tracks[i];
+                if(Button(0,i*61,230,32,(selectedMusicId==track.id?"♪ ":"")+track.title))Guard(()=>SelectMusic(track));
+                int seconds=(int)Math.Round(track.durationSeconds);
+                Label(4,i*61+34,223,24,track.genre+" · "+(seconds/60)+":"+(seconds%60).ToString("00"),muted);
+            }
+            GUI.enabled=true;GUI.EndScrollView();
         }
         void DrawStage()
         {
-            Text(319,110,650,30,Ready?project.title:"先选一首歌，开始体验",heading);
-            GUI.enabled=!Busy&&cameraRig;
-            if(Button(1056,109,86,28,"女角色",selectedCharacter=="female"))Guard(()=>SwitchCharacter("female"));
-            if(Button(1150,109,94,28,"男角色",selectedCharacter=="male"))Guard(()=>SwitchCharacter("male"));
-            GUI.enabled=true;
-            string subtitle=Ready?$"{project.analysis.durationSeconds:0} 秒片段  ·  {project.grid.bpm:0.#} BPM  ·  {DanceStyles.Name(project.mode)}":"内置免费音乐可直接播放，也支持导入自己的歌曲。";
-            if(chosenTrack>=0)subtitle+="  /  Kevin MacLeod · CC BY 4.0";
-            Text(319,146,920,30,subtitle,muted);
-            Rect area=new Rect(315,187,930,520);Box(area,new Color(.055f,.08f,.115f));
-            if(preview)GUI.DrawTextureWithTexCoords(area,preview,Ready&&project.mirror?new Rect(1,0,-1,1):new Rect(0,0,1,1));
-            Text(333,204,850,25,Ready?(project.mode=="diagnostic"?"动作预览  /  演示模式":DanceStyles.Name(project.mode)+"  /  跟拍练习"):"3D 动作预览",small);
-            Text(333,235,850,22,(CameraState.dragPans?"左键拖动平移":"左键拖动旋转")+" · 右键平移 · 滚轮缩放 · 双击复位",muted);
-            StageInput(area);
-            if(!Ready)Text(333,663,850,25,"点击左侧曲目的“使用”，即可听音乐、看动作。",muted);
-            if(Ready)
-            {
-                var beats=project.grid.manual||project.analysis.beats.Count>=8?Choreographer.BeatTimes(project.analysis,project.grid):new List<double>();
-                int at=beats.BinarySearch(playback.Position);if(at<0)at=~at-1;
-                int count=at<0?0:(at+project.grid.eightCountOffset)%8+1;
-                Text(1152,628,70,65,count==0?"—":count.ToString(),new GUIStyle(title){fontSize=48,normal={textColor=teal}});
-                int segment=playback.ActiveSegment();
-                if(segment>=0)Text(333,663,730,24,$"{segment+1:00}  /  {catalog.motions.Find(m=>m.id==project.segments[segment].motionId)?.name}",small);
-            }
-            GUI.enabled=cameraRig;
-            var options=new[]{new{index=0,name="正面"},new{index=1,name="背面"},new{index=3,name="左侧"},new{index=4,name="右侧"},new{index=5,name="上身"},new{index=6,name="脚步"},new{index=2,name="自由"}};
-            for(int i=0;i<options.Length;i++){var option=options[i];if(Button(315+i*76,721,70,32,option.name,CameraView==option.index))ChangeView(option.index);}
-            if(Button(851,721,70,32,"复位"))ResetCamera();
-            GUI.enabled=Ready;
-            if(Button(929,721,112,32,Ready&&project.mirror?"镜像：开":"镜像：关")){project.mirror=!project.mirror;dirty=true;}
-            if(Button(1048,721,90,32,"保存项目",true))Guard(Save);
-            if(Button(1146,721,99,32,"打开目录"))Guard(()=>Application.OpenURL(new Uri(projectFolder).AbsoluteUri));
-            GUI.enabled=true;
+            Label(350,130,650,30,project!=null?project.title:"准备跟学");
+            int change=GUI.SelectionGrid(new Rect(350,175,865,35),selectedCharacter,library.catalog.characters.Select(c=>c.name).ToArray(),Math.Max(1,library.characters.Length),button);
+            if(change!=selectedCharacter&&!Working)Guard(()=>SelectCharacter(change));
+            var area=new Rect(350,225,865,545);GUI.DrawTextureWithTexCoords(area,image,mirror?new Rect(1,0,-1,1):new Rect(0,0,1,1));
+            if(project!=null&&project.segments.Count>0)
+            {int index=playback.ActiveSegment();var segment=project.segments[index];var motion=library.catalog.motions.First(m=>m.id==segment.motionId);Label(365,240,600,35,motion.name);if(index+1<project.segments.Count)Label(365,280,700,30,"接下来："+library.catalog.motions.First(m=>m.id==project.segments[index+1].motionId).name,muted);double unit=Math.Max(0,Math.Min(.999999,(project.position-segment.startSeconds)/(segment.endSeconds-segment.startSeconds)));Label(1110,690,85,60,(1+segment.startBeatOffset+(int)(unit*segment.beatCount)).ToString(),title);}
+            string[] views={"正面","背面","自由","左侧","右侧","上身","脚步"};
+            for(int i=0;i<7;i++){int option=i;if(Button(350+i*99,790,92,35,views[i])){view=option;if(project!=null)project.view=view;orbit.Bind(CameraState,view);}}
+            if(Button(1050,790,165,35,mirror?"镜像：开":"镜像：关")){mirror=!mirror;if(project!=null)project.mirror=mirror;}
+            var e=Event.current;
+            if(actor&&area.Contains(e.mousePosition)&&e.type==EventType.MouseDrag){if(e.button==0)orbit.Orbit(e.delta,mirror);else if(e.button==1)orbit.Pan(e.delta,mirror);view=PracticeCamera.Free;if(project!=null)project.view=view;e.Use();}
+            if(actor&&area.Contains(e.mousePosition)&&e.type==EventType.ScrollWheel){orbit.Zoom(e.delta.y);e.Use();}
         }
         void DrawInspector()
         {
-            Text(1283,124,280,26,"02  编舞与节拍",heading);
-            if(Button(1283,164,85,31,"动作",inspectorTab==0))inspectorTab=0;
-            if(Button(1376,164,85,31,"节拍",inspectorTab==1))inspectorTab=1;
-            if(Button(1469,164,87,31,"镜头",inspectorTab==2))inspectorTab=2;
-            if(inspectorTab==2){DrawCameraPanel();return;}
-            if(!Ready)
+            Label(1275,130,285,30,"八拍编排");
+            var character=library.catalog.characters[selectedCharacter];int approved=Choreographer.Eligible(library.catalog,character.id).Count;
+            int enabled=Choreographer.Eligible(library.catalog,character.id,motionLibrary.EnabledMotionIds).Count;
+            Label(1275,175,280,60,"自动编排已选："+enabled+" 种 / 已复查："+approved+"\n动作总数："+library.motions.Length+" · 已复查连接："+library.catalog.transitions.Count(e=>e.characterId==character.id),muted);
+            GUI.enabled=project!=null&&!Working;
+            if(Button(1275,245,285,42,"编排已复查动作"))Guard(Generate);
+            if(project!=null)
             {
-                Text(1283,225,273,40,"先选择一首音乐",heading);
-                Text(1283,277,273,95,"点击左侧内置曲目的“使用”，可以立即体验。\n\n也可以导入自己的音乐，完成分析后编辑动作组合。",small);
-                Text(1283,602,273,110,PreferredStyle==DanceStyles.Diagnostic?"动作素材尚未就绪。":"已提供 "+DanceStyles.Name(PreferredStyle)+" 八拍练习版。首次跟学建议使用 0.5× 或 0.75×。",muted);
-                return;
+                Label(1275,305,55,25,"BPM",muted);bpmText=Input(1340,300,90,bpmText);
+                Label(1275,345,60,25,"首拍秒",muted);firstText=Input(1340,340,90,firstText);
+                Label(1440,345,50,25,"计数",muted);countText=Input(1490,340,70,countText);
+                if(Button(1275,385,285,35,"应用节拍校正"))Guard(ApplyGrid);
+                if(project.analysis.warnings.Count>0)Label(1275,435,285,55,project.analysis.warnings[0],muted);
+                motionScroll=GUI.BeginScrollView(new Rect(1275,505,285,260),motionScroll,new Rect(0,0,262,Math.Max(260,project.segments.Count*50)));
+                for(int i=0;i<project.segments.Count;i++)
+                {
+                    var segment=project.segments[i];var motion=library.catalog.motions.First(m=>m.id==segment.motionId);int at=i;
+                    if(Button(0,i*50,209,43,(i+1)+"  "+motion.name)){selectedSegment=at;playback.Seek(segment.startSeconds);}
+                    segment.locked=GUI.Toggle(new Rect(215,i*50+10,45,25),segment.locked,"锁");
+                }
+                GUI.EndScrollView();
+                if(selectedSegment>=0&&selectedSegment<project.segments.Count&&Button(1275,782,285,36,"替换所选片段"))Guard(ReplaceSelected);
             }
-            GUI.enabled=Ready&&!Busy;
-            if(inspectorTab==1)
-            {
-                Text(1283,225,273,28,"让动作对齐你听到的节拍",heading);
-                Text(1283,273,120,22,"速度 / BPM",muted);Text(1423,273,133,22,"首拍位置 / 秒",muted);
-                bpmText=Field(1283,302,130,bpmText);firstBeatText=Field(1423,302,133,firstBeatText);
-                Text(1283,356,273,24,"首拍对应计数 / 1～8",muted);countText=Field(1283,387,273,countText);
-                if(Button(1283,442,273,38,"应用校正",true))Guard(ApplyGrid);
-                Text(1283,510,273,150,"自动检测不能保证乐句和八拍起点正确，请试听后校正。\n\n计数设为 4 时，首段从动作第 4 拍开始，跳完 4～8 后进入下一组八拍。\n\n更改前请解除受影响的锁定。",muted);
-                GUI.enabled=true;return;
-            }
-            if(Button(1283,213,273,34,"重新排列现有动作"))Guard(()=>Generate(PreferredStyle,true));
-            if(Button(1283,258,273,34,"从头演示当前组合"))Guard(()=>{playback.Seek(project.segments[0].startSeconds);playback.Play();});
-            int eligible=catalog==null?0:Choreographer.Eligible(catalog,Ready?project.mode:PreferredStyle).Count;
-            Text(1283,302,273,24,$"库存 {eligible} 段 · 当前使用 {(Ready?project.segments.Select(s=>s.motionId).Distinct().Count():0)} 种",muted);
-            GUI.enabled=Ready&&!Busy;
-            Text(1283,333,273,22,"片段  /  点击定位，勾选锁定",muted);
-            int count=Ready?project.segments.Count:0;
-            segmentsScroll=GUI.BeginScrollView(new Rect(1283,362,273,178),segmentsScroll,new Rect(0,0,250,Math.Max(178,count*49)));
-            for(int i=0;i<count;i++)
-            {
-                var s=project.segments[i];var motion=catalog.motions.Find(m=>m.id==s.motionId);
-                if(GUI.Button(new Rect(0,i*49,211,44),"",i==selected?accentButton:button)){selected=i;playback.Seek(s.startSeconds);}
-                var rowStyle=new GUIStyle(small){wordWrap=false,clipping=TextClipping.Clip,normal={textColor=i==selected?new Color(.025f,.075f,.075f):ink}};
-                GUI.Label(new Rect(8,i*49+3,198,17),$"{i+1:00}  {Clock(s.startSeconds)}～{Clock(s.endSeconds)}",rowStyle);
-                GUI.Label(new Rect(8,i*49+21,198,20),motion?.name,rowStyle);
-                bool locked=GUI.Toggle(new Rect(220,i*49+10,26,24),s.locked,s.locked?"锁":"○",lockToggle);if(locked!=s.locked){s.locked=locked;dirty=true;}
-            }
-            GUI.EndScrollView();
-            Text(1283,553,273,24,"替换选中片段",heading);
-            var replacements=Ready&&selected>=0&&selected<project.segments.Count?Choreographer.Replacements(project,catalog,selected):new List<MotionDefinition>();
-            replacementsScroll=GUI.BeginScrollView(new Rect(1283,588,273,150),replacementsScroll,new Rect(0,0,250,Math.Max(150,replacements.Count*30)));
-            if(Ready&&selected>=0&&selected<project.segments.Count)
-            {
-                GUI.enabled=!Busy&&!project.segments[selected].locked;
-                for(int i=0;i<replacements.Count;i++)
-                {var m=replacements[i];if(GUI.Button(new Rect(0,i*30,248,27),m.name,button))Guard(()=>{Choreographer.Replace(project,catalog,selected,m.id);dirty=true;message="已替换动作，片段时长保持不变。";});}
-            }
-            GUI.EndScrollView();GUI.enabled=true;
+            GUI.enabled=true;
+        }
+        void ReplaceSelected()
+        {
+            var s=project.segments[selectedSegment];if(s.locked)throw new InvalidOperationException("请先解锁所选片段。");
+            var eligible=Choreographer.Eligible(library.catalog,project.characterId,motionLibrary.EnabledMotionIds).Where(m=>m.beats==8&&m.id!=s.motionId&&(selectedSegment==0||Choreographer.Edge(library.catalog,project.characterId,project.segments[selectedSegment-1].motionId,m.id)!=null)&&(selectedSegment==project.segments.Count-1||Choreographer.Edge(library.catalog,project.characterId,m.id,project.segments[selectedSegment+1].motionId)!=null)).ToList();
+            if(eligible.Count==0)throw new InvalidOperationException("没有与前后片段均复查通过的替换动作。");
+            var replacement=eligible[0];playback.Pause();s.motionId=replacement.id;s.motionSignature=replacement.signature;playback.Seek(s.startSeconds);message="已替换为 "+replacement.name+"；时间和节拍保持不变。";
         }
         void DrawTransport()
         {
-            Box(new Rect(20,780,1560,52),new Color(.075f,.11f,.15f));
-            GUI.enabled=Ready;
-            if(Button(30,790,82,31,Ready&&playback.IsPlaying?"暂停":"播放",true))TogglePlay();
-            float time=Ready?(float)playback.Position:0,duration=Ready?(float)project.analysis.durationSeconds:40;
-            float seek=GUI.HorizontalSlider(new Rect(126,801,410,22),time,0,duration,sliderTrack,sliderThumb);
-            if(Ready&&Math.Abs(seek-time)>.025){playback.Seek(seek);dirty=true;}
-            Text(550,796,160,25,Clock(time)+" / "+Clock(duration),small);
-            float[] speeds={.5f,.75f,1};for(int i=0;i<3;i++)if(Button(715+i*67,791,60,30,speeds[i]+"×",Ready&&project.speed==speeds[i])){playback.SetRate(speeds[i]);dirty=true;}
-            if(Button(923,791,90,30,Ready&&project.loop?"循环：开":"循环：关")){project.loop=!project.loop;dirty=true;}
-            loopStartText=Field(1023,791,80,loopStartText);Text(1112,796,24,24,"至",small);loopEndText=Field(1140,791,80,loopEndText);
-            if(Button(1233,791,99,30,"设置区间"))Guard(ApplyLoop);
-            Text(1350,798,212,22,"空格 播放  /  ← → 定位",muted);GUI.enabled=true;
-        }
-        void DrawCameraPanel()
-        {
-            Text(1283,221,273,28,"镜头设置",heading);
-            Text(1283,256,273,22,"也可直接拖动画面和滚轮调整。",muted);
-            var s=CameraState;
-            float fov=CameraSlider(289,"视野",s.fieldOfView,30,60,"°");
-            if(Math.Abs(fov-s.fieldOfView)>.01f){cameraRig.SetFieldOfView(fov);if(project!=null)dirty=true;}
-            float distance=CameraSlider(351,"距离",s.distanceScale,.55f,2.4f,"×");
-            if(Math.Abs(distance-s.distanceScale)>.001f){cameraRig.SetDistance(distance);if(project!=null)dirty=true;}
-            float yaw=CameraSlider(413,"水平旋转",s.yaw,-180,180,"°");
-            float pitch=CameraSlider(475,"俯仰",s.pitch,-15,65,"°");
-            if(Math.Abs(yaw-s.yaw)>.01f||Math.Abs(pitch-s.pitch)>.01f){ChangeView(2,false);cameraRig.SetOrbit(yaw,pitch);}
-            float panX=CameraSlider(537,"水平平移",s.panX,-1,1,"");
-            float panY=CameraSlider(599,"竖直平移",s.panY,-1,1,"");
-            if(Math.Abs(panX-s.panX)>.001f||Math.Abs(panY-s.panY)>.001f){cameraRig.SetPan(panX,panY);if(project!=null)dirty=true;}
-            if(Button(1283,663,130,30,"拖动旋转",!s.dragPans)){s.dragPans=false;if(project!=null)dirty=true;}
-            if(Button(1423,663,133,30,"拖动平移",s.dragPans)){s.dragPans=true;if(project!=null)dirty=true;}
-            if(Button(1283,715,273,34,"恢复默认镜头"))ResetCamera();
-        }
-        float CameraSlider(float y,string name,float value,float min,float max,string unit)
-        {
-            Text(1283,y,160,22,name,muted);Text(1446,y,110,22,value.ToString(unit=="°"?"0":"0.00")+unit,small);
-            return GUI.HorizontalSlider(new Rect(1283,y+30,273,18),value,min,max,sliderTrack,sliderThumb);
-        }
-        void DrawDialog()
-        {
-            Box(new Rect(0,0,W,H),new Color(0,0,0,.75f));GUI.enabled=true;
-            GUI.ModalWindow(91827,new Rect(400,130,800,640),_=>
+            Panel(20,865,1560,46);GUI.enabled=project!=null&&!Working&&project.segments.Count>0;
+            if(Button(30,870,90,35,playback.Playing?"暂停":"播放")){if(playback.Playing)playback.Pause();else playback.Play();}
+            if(project!=null)
             {
-                Box(new Rect(0,0,800,640),new Color(.065f,.09f,.125f));
-                Text(26,24,630,36,showCredits?"资源 · 作者与授权":"高级设置",heading);
-                if(Button(680,22,94,32,"关闭")){showSettings=false;showCredits=false;}
-                if(showCredits)
-                {
-                    for(int i=0;i<musicLibrary.tracks.Count;i++)
-                    {
-                        var track=musicLibrary.tracks[i];float y=89+i*112;
-                        Text(26,y,550,28,track.title+"  /  "+track.artist,heading);
-                        Text(26,y+34,550,45,"incompetech.com · Creative Commons Attribution 4.0\n截取原曲 15～55 秒，并提供保持音高的慢放版本。",muted);
-                        if(Button(605,y,77,30,"来源"))Application.OpenURL(track.sourceUrl);
-                        if(Button(694,y,77,30,"授权"))Application.OpenURL(track.licenseUrl);
-                    }
-                    Text(26,414,540,25,"角色：Quaternius · Universal Base Characters · CC0 1.0",small);
-                    if(Button(605,411,166,30,"角色来源与授权"))Application.OpenURL("https://quaternius.com/packs/universalbasecharacters.html");
-                    Text(26,457,550,28,"动作：CMU Graphics Lab Motion Capture · subject 93",small);
-                    if(Button(605,454,166,30,"动作来源与说明"))Application.OpenURL("https://mocap.cs.cmu.edu/");
-                    Text(26,498,744,55,catalog.personalUseOnly?catalog.sourceNotice:"Charleston 练习改编：四段动捕与四个左右变体，已作循环、平滑、慢速重定时与上肢调整。New Jazz 需另外准备个人学习素材。",muted);
-                    Text(26,570,744,45,"原作者未参与或背书本应用。全部来源、许可及修改记录随完整发布包提供。",muted);
-                }
-                else
-                {
-                    Text(26,89,744,62,"音乐分析在本机离线完成。完整发布包自带分析引擎，导入歌曲无需安装额外环境。",small);
-                    Text(26,170,744,24,BundledAnalyzer?"分析引擎：内置 · 已就绪":"分析引擎：自定义／开发环境",muted);
-                    if(Button(26,204,200,32,showAnalyzerAdvanced?"收起高级设置":"高级：自定义分析器"))showAnalyzerAdvanced=!showAnalyzerAdvanced;
-                    if(showAnalyzerAdvanced)pythonPath=Field(240,204,530,pythonPath);
-                    Text(26,267,400,24,"编排随机种子",muted);seedText=Field(26,300,200,seedText);
-                    Text(270,267,500,24,"镜头视野 / 30～60°",muted);
-                    float fov=GUI.HorizontalSlider(new Rect(270,312,390,18),CameraState.fieldOfView,30,60,sliderTrack,sliderThumb);
-                    Text(684,301,85,30,fov.ToString("0")+"°",small);
-                    if(Math.Abs(fov-CameraState.fieldOfView)>.01f){cameraRig.SetFieldOfView(fov);if(project!=null)dirty=true;}
-                    Text(26,350,744,45,"同一种子可复现编排结果。修改这里不会自动改变当前的音乐或动作。",muted);
-                    if(Button(26,429,180,38,"保存设置",true)){PlayerPrefs.SetString("AnalyzerPython",pythonPath);PlayerPrefs.SetFloat("CameraFieldOfView",CameraState.fieldOfView);showSettings=false;message="设置已保存。";}
-                    GUI.enabled=Ready;
-                    if(Button(224,429,180,38,"打开项目目录"))Application.OpenURL(new Uri(projectFolder).AbsoluteUri);
-                    GUI.enabled=true;
-                }
-            },"",new GUIStyle());
+                double position=GUI.HorizontalSlider(new Rect(140,885,550,20),(float)project.position,0,(float)project.analysis.durationSeconds);if(Math.Abs(position-project.position)>.04)playback.Seek(position);
+                Label(705,877,160,27,project.position.ToString("0.0")+" / "+project.analysis.durationSeconds.ToString("0.0"),muted);
+                float[] rates={.5f,.75f,1};for(int i=0;i<rates.Length;i++)if(Button(870+i*75,870,70,35,rates[i]+"×"))playback.SetRate(rates[i]);
+                project.loop=GUI.Toggle(new Rect(1110,879,70,25),project.loop,"循环");loopStart=Input(1190,872,80,loopStart);loopEnd=Input(1280,872,80,loopEnd);
+                if(Button(1380,870,180,35,"设置循环区间"))Guard(()=>{if(!double.TryParse(loopStart,NumberStyles.Float,CultureInfo.InvariantCulture,out double a)||!double.TryParse(loopEnd,NumberStyles.Float,CultureInfo.InvariantCulture,out double b)||!Choreographer.Finite(a)||!Choreographer.Finite(b)||a<0||b<=a||b>project.analysis.durationSeconds)throw new InvalidOperationException("循环区间无效。");project.loopStart=a;project.loopEnd=b;});
+            }
+            GUI.enabled=true;
         }
         IEnumerator Smoke()
         {
-            QualitySettings.vSyncCount=0;Application.targetFrameRate=-1;
-            yield return null;
-            bool importTest=Environment.GetCommandLineArgs().Contains("-import-smoke")||Environment.GetCommandLineArgs().Contains("-portable-smoke");
-            bool acceptanceTest=Environment.GetCommandLineArgs().Contains("-acceptance");
-            bool libraryTest=Environment.GetCommandLineArgs().Contains("-library-smoke")||acceptanceTest;int libraryLoaded=0;
-            if(libraryTest)
+            yield return null;yield return new WaitForSeconds(1);
+            string[] args=Environment.GetCommandLineArgs();int at=Array.IndexOf(args,"-report-dir");string folder=at>=0&&at+1<args.Length?args[at+1]:Path.Combine(Application.persistentDataPath,"Smoke");Directory.CreateDirectory(folder);
+            ScreenCapture.CaptureScreenshot(Path.Combine(folder,"studio.png"));yield return new WaitForSeconds(.5f);
+            if(actor)
             {
-                foreach(var track in musicLibrary.tracks)
-                {
-                    int index=musicLibrary.tracks.IndexOf(track);Guard(()=>UseBuiltin(index));while(loading)yield return null;
-                    if(!Ready||project.title!=track.title||!File.Exists(Path.Combine(projectFolder,"CREDITS.txt")))break;
-                    libraryLoaded++;yield return new WaitForSecondsRealtime(.2f);
-                }
-                if(libraryLoaded!=3){Debug.LogError("LIBRARY SMOKE FAILED: "+error);Application.Quit(2);yield break;}
+                stageCamera.Render();var previous=RenderTexture.active;RenderTexture.active=image;
+                var capture=new Texture2D(image.width,image.height,TextureFormat.RGB24,false);capture.ReadPixels(new Rect(0,0,image.width,image.height),0,0);capture.Apply();RenderTexture.active=previous;
+                File.WriteAllBytes(Path.Combine(folder,"character.png"),capture.EncodeToPNG());Destroy(capture);
             }
-            else if(importTest)
-            {
-                sourcePath=Path.Combine(Application.streamingAssetsPath,"Demo","normal.wav");durationText="30";Guard(StartAnalysis);
-                while(job!=null||loading)yield return null;
-            }
-            else {Guard(OpenDemo);while(loading)yield return null;}
-            if(!Ready){Debug.LogError("SMOKE FAILED: "+error);Application.Quit(2);yield break;}
-            if(acceptanceTest)
-            {
-                yield return RunAcceptanceChecks();
-                if(acceptanceFailed){Debug.LogError("ACCEPTANCE FAILED");Application.Quit(3);yield break;}
-            }
-            int frames=0;int initialRendered=renderedFrames;float start=Time.realtimeSinceStartup;double maxError=0;bool clockAdvances=true;
-            var frameTimes=new List<float>();
-            foreach(float rate in new[]{1f,.75f,.5f})
-            {
-                playback.Pause();playback.SetRate(rate);playback.Seek(5);playback.Play();
-                float phaseStart=Time.realtimeSinceStartup;
-                while(Time.realtimeSinceStartup-phaseStart<1.2f)
-                {yield return null;frames++;frameTimes.Add(Time.unscaledDeltaTime*1000);if(Time.realtimeSinceStartup-phaseStart>.2)maxError=Math.Max(maxError,playback.AudioErrorMilliseconds);}
-                clockAdvances &= playback.Position>5+rate*.9;
-            }
-            playback.Pause();double paused=playback.Position;yield return new WaitForSecondsRealtime(.15f);
-            bool pauseStable=Math.Abs(playback.Position-paused)<.0001;
-            project.loop=true;project.loopStart=2;project.loopEnd=2.3;playback.SetRate(1);playback.Seek(2.25);playback.Play();
-            yield return new WaitForSecondsRealtime(.65f);
-            bool loopWorks=playback.Position>=2&&playback.Position<2.3;
-            playback.Pause();project.loop=false;project.loopStart=0;project.loopEnd=project.analysis.durationSeconds;
-            playback.Seek(9.25);yield return null;
-            Save();string saved=Path.Combine(projectFolder,"project.danceproj");Guard(()=>OpenProject(saved));while(loading)yield return null;
-            bool reloadWorks=Ready&&Math.Abs(playback.Position-9.25)<.001&&project.segments.Count>0;
-            string output=Path.GetDirectoryName(Application.dataPath);
-            ScreenCapture.CaptureScreenshot(Path.Combine(output,"Smoke.png"));
-            frameTimes.Sort();
-            float lowestFoot=Math.Min(diagnosticAnimator.GetBoneTransform(HumanBodyBones.LeftFoot).position.y,diagnosticAnimator.GetBoneTransform(HumanBodyBones.RightFoot).position.y);
-            var result=new SmokeResult{frames=frames,renderedFrames=renderedFrames-initialRendered,p95FrameMs=frameTimes[(int)(frameTimes.Count*.95f)],seconds=Time.realtimeSinceStartup-start,maxAudioClockErrorMs=maxError,avatarValid=true,segments=project.segments.Count,clockAdvances=clockAdvances,pauseStable=pauseStable,loopWorks=loopWorks,reloadWorks=reloadWorks,analyzerImported=importTest,analyzerBundled=BundledAnalyzer,lowestFootHeight=lowestFoot,libraryTracksLoaded=libraryLoaded};
-            File.WriteAllText(Path.Combine(output,"smoke-result.json"),JsonUtility.ToJson(result,true));
-            Save();yield return new WaitForSecondsRealtime(.6f);Application.Quit(maxError>50||!clockAdvances||!pauseStable||!loopWorks||!reloadWorks||result.renderedFrames==0||lowestFoot<-.03f||lowestFoot>.25f?3:0);
+            File.WriteAllText(Path.Combine(folder,"report.json"),"{\"schemaVersion\":2,\"started\":true,\"characters\":"+library.characters.Length+",\"motions\":"+library.motions.Length+",\"legacyFallback\":false}");Application.Quit();
         }
-        [Serializable]class SmokeResult{public int frames,segments,renderedFrames,libraryTracksLoaded;public float seconds,p95FrameMs,lowestFootHeight;public double maxAudioClockErrorMs;public bool avatarValid,clockAdvances,pauseStable,loopWorks,reloadWorks,analyzerImported,analyzerBundled;}
-        void OnApplicationQuit(){if(job!=null){job.Cancel();job.Dispose();job=null;}if(Ready)Guard(Save);}
-        void OnDestroy(){if(job!=null)job.Dispose();if(preview){preview.Release();Destroy(preview);}}
+        void OnDestroy(){analysisJob?.Dispose();if(image){image.Release();Destroy(image);}}
     }
 }

@@ -1,0 +1,32 @@
+{
+  "unityVersion": "2022.3.62f3",
+  "characterSignature": "236d2537423188c92093a204e88e528cb55beca213e8e1d0a9ee3b68a1a34191",
+  "completed": true,
+  "segmentCount": 8,
+  "bpm": 100.0,
+  "firstBeat": 0.0,
+  "samplesOmittedCount": 478,
+  "errors": [],
+  "sequence": [
+    "mixamo-slide-step-v1",
+    "mixamo-kick-step-v1",
+    "mixamo-wave-hip-hop-dance-108900901",
+    "mixamo-dancing-108820901",
+    "mixamo-snake-hip-hop-dance-109070901",
+    "mixamo-slide-hip-hop-dance-108870901",
+    "mixamo-hip-hop-dancing-101960905",
+    "mixamo-hip-hop-dancing-108690901"
+  ],
+  "seed": 68,
+  "uniqueMotionCount": 8,
+  "expectedDistinctMotions": 8,
+  "collisionFrames": 240,
+  "collisionBadFrames": 0,
+  "collisionPoints": 72240,
+  "loopWraps": 6,
+  "loopHandoffs": 6,
+  "worstPenetration": 0.0,
+  "maxLoopWrapHandStep": 0.022403450682759285,
+  "maxLoopHandoffHandStep": 0.0010693165240809321,
+  "publicationNote": "Metrics summary. Full per-frame motion traces remain local and are not part of the public source distribution."
+}

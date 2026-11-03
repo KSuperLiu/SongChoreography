@@ -1,0 +1,24 @@
+{
+  "id": "mixkit-872",
+  "providerId": "872",
+  "title": "Gimme that Groove!",
+  "artist": "Michael Ramir C.",
+  "genre": "Funk",
+  "sourceUrl": "https://mixkit.co/free-stock-music/funk/",
+  "downloadUrl": "https://assets.mixkit.co/music/872/872.mp3",
+  "expectedDurationSeconds": 88,
+  "file": "mixkit-872/track.mp3",
+  "durationSeconds": 88.39285714285714,
+  "sampleRate": 44100,
+  "channels": 2,
+  "bytes": 2830463,
+  "sha256": "702e5dffc429b991b31c24dc284d56253fa0993c34fca75c7f32de167e067cff",
+  "licenseName": "Mixkit Stock Music Free License",
+  "licenseUrl": "https://mixkit.co/license/modal/musicFree/",
+  "downloadedAt": "2026-11-03T06:22:27.051717+00:00",
+  "verification": {
+    "fullDecode": true,
+    "rms": 0.16140018790300975,
+    "peak": 1.1000343561172485
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "version": "0.6.0",
+  "build": {
+    "schemaVersion": 3,
+    "characters": 1,
+    "motions": 243,
+    "reviewedMotions": 12,
+    "transitions": 15,
+    "playbackRevision": 6,
+    "version": "0.6.0",
+    "builtAtUtc": "2026-11-03T12:03:15.7727087Z",
+    "characterSignature": "236d2537423188c92093a204e88e528cb55beca213e8e1d0a9ee3b68a1a34191",
+    "requiresGeneration": false
+  },
+  "tests": {
+    "core": 28,
+    "generation": 11,
+    "mixamoRegistration": 5,
+    "audio": 4,
+    "total": 48,
+    "passed": true
+  },
+  "standaloneStartup": {
+    "schemaVersion": 2,
+    "started": true,
+    "characters": 1,
+    "motions": 243,
+    "legacyFallback": false
+  },
+  "packagedAnalyzer": {
+    "completed": true,
+    "detectedBpm": 99.38401442307692,
+    "normalSeconds": 30,
+    "slow075Seconds": 40,
+    "slow050Seconds": 60
+  },
+  "publicMusic": [
+    "original-100"
+  ],
+  "sourceFbxIncluded": false,
+  "apiKeysIncluded": false,
+  "perFrameMotionTracesIncluded": false
+}
